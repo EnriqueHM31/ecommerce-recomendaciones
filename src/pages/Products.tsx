@@ -139,7 +139,7 @@ export default function Products() {
                         <h3 className="text-2xl font-semibold text-theme-primary mb-2">
                             No hay productos disponibles
                         </h3>
-                        <p className="text-theme-secondary">
+                        <p className="text-theme-primary">
                             Pronto tendremos nuevos productos para ti
                         </p>
                     </motion.div>

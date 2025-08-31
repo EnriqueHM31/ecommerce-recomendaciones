@@ -6,7 +6,10 @@ import {
     FaBox,
     FaMobile,
     FaApple,
-    FaAndroid
+    FaAndroid,
+    FaFacebook,
+    FaInstagram,
+    FaTwitter
 } from 'react-icons/fa';
 import Layout from '../components/Layout';
 import { useCartStore } from '../store/cartStore';
@@ -77,7 +80,7 @@ export default function Home() {
                             />
 
                             {/* Base cuadrada */}
-                            <div className="w-40 h-4 bg-gray-800 rounded-md shadow-lg mt-[-80px]" />
+                            <div className="w-40 h-4 bg-gray-800 rounded-md shadow-lg md:mt-[-80px]" />
                         </motion.div>
 
                     </div>
@@ -219,7 +222,7 @@ export default function Home() {
                     className="bg-theme-primary text-theme-accent py-12"
                 >
                     <div className="max-w-7xl mx-auto px-8">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                        <div className="flex justify-between md:flex-row flex-col gap-8 mb-8">
                             <motion.div
                                 initial={{ opacity: 0, x: -50 }}
                                 whileInView={{ opacity: 1, x: 0 }}
@@ -259,33 +262,52 @@ export default function Home() {
                                 </ul>
                             </motion.div>
                             <motion.div
-                                initial={{ opacity: 0, x: 50 }}
+                                initial={{ opacity: 0, x: -50 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.6, delay: 0.4 }}
                                 viewport={{ once: true }}
                             >
-                                <h3 className="text-theme-primary bg-theme-secondary w-fit rounded-2xl px-4 py-1 mb-4 text-xl font-semibold">Suscríbete</h3>
-                                <p className="text-theme-secondary leading-relaxed mb-4">Recibe las últimas ofertas y novedades</p>
-                                <div className="flex gap-2 mt-4">
-                                    <motion.input
-                                        whileFocus={{ scale: 1.02 }}
-                                        type="email"
-                                        placeholder="Tu correo electrónico"
-                                        className="flex-1 py-3 px-4 border-none rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-theme-accent bg-theme-secondary text-theme-primary"
-                                        id='email'
-                                        name='email'
-                                        required
-                                        autoComplete='off'
-                                    />
-                                    <motion.button
-                                        whileHover={{ scale: 1.05, y: -2 }}
-                                        whileTap={{ scale: 0.95 }}
-                                        className="bg-theme-accent text-theme-secondary border-none py-3 px-6 rounded-full cursor-pointer font-medium whitespace-nowrap shadow-theme hover:shadow-theme-dark"
+                                <h3 className="text-theme-primary bg-theme-secondary w-fit rounded-2xl px-4 py-1 mb-4 text-xl font-semibold">
+                                    Contáctanos
+                                </h3>
+                                <p className="text-theme-secondary leading-relaxed mb-4">
+                                    Síguenos en nuestras redes y mantente conectado
+                                </p>
+                                <div className="flex gap-4 mt-4">
+                                    <motion.a
+                                        whileHover={{ scale: 1.2 }}
+                                        href="https://facebook.com"
+                                        target="_blank"
+                                        className="w-10 h-10 flex items-center justify-center rounded-full bg-theme-secondary text-theme-primary shadow-theme hover:shadow-theme-dark"
                                     >
-                                        Suscribirse
-                                    </motion.button>
+                                        <FaFacebook />
+                                    </motion.a>
+                                    <motion.a
+                                        whileHover={{ scale: 1.2 }}
+                                        href="https://twitter.com"
+                                        target="_blank"
+                                        className="w-10 h-10 flex items-center justify-center rounded-full bg-theme-secondary text-theme-primary shadow-theme hover:shadow-theme-dark"
+                                    >
+                                        <FaTwitter />
+                                    </motion.a>
+                                    <motion.a
+                                        whileHover={{ scale: 1.2 }}
+                                        href="https://instagram.com"
+                                        target="_blank"
+                                        className="w-10 h-10 flex items-center justify-center rounded-full bg-theme-secondary text-theme-primary shadow-theme hover:shadow-theme-dark"
+                                    >
+                                        <FaInstagram />
+                                    </motion.a>
+                                    <motion.a
+                                        whileHover={{ scale: 1.2 }}
+                                        href="mailto:contacto@tudominio.com"
+                                        className="w-10 h-10 flex items-center justify-center rounded-full bg-theme-secondary text-theme-primary shadow-theme hover:shadow-theme-dark"
+                                    >
+                                        <FaEnvelope />
+                                    </motion.a>
                                 </div>
                             </motion.div>
+
                         </div>
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}

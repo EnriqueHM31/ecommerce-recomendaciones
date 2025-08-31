@@ -1,13 +1,64 @@
 import { motion } from 'framer-motion';
 import { FaUser, FaEnvelope, FaComments, FaPaperPlane, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 import Layout from '../components/Layout';
+import { toast } from 'sonner';
+import { useUser } from '@clerk/clerk-react';
+import { useEffect, useState } from 'react';
+
 
 export default function Contact() {
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        // Aquí iría la lógica para enviar el formulario
-        alert('¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.');
+
+    const { user } = useUser();
+
+    const [comentario, setComentario] = useState({
+        name: '',
+        email: '',
+        message: '',
+    });
+
+    useEffect(() => {
+        if (user) {
+            setComentario({
+                name: user.fullName ?? '',
+                email: user.emailAddresses?.[0]?.emailAddress ?? '',
+                message: '',
+            });
+        }
+    }, [user]);
+    // Determinar si los campos se deben bloquear
+    const camposBloqueados = Boolean(user);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const nombre = e.target.name;
+        const valor = e.target.value;
+        setComentario(prev => ({ ...prev, [nombre]: valor }));
     };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const { name, email, message } = comentario;
+
+
+        if (!name || !email || !message) {
+            toast.error('Por favor rellena todos los campos');
+            return;
+        }
+
+        const response = await fetch(`${import.meta.env.VITE_API}/api/enviar-mensaje`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nombre: name, correo: email, mensaje: message }),
+        });
+
+        if (response.ok) {
+            toast.success('Mensaje enviado correctamente');
+            setComentario(prev => ({ ...prev, mensaje: '' })); // solo reset mensaje
+        } else {
+            toast.error('Error al enviar el mensaje');
+        }
+    };
+
+
 
     return (
         <Layout>
@@ -37,14 +88,17 @@ export default function Contact() {
                                         Nombre Completo
                                     </label>
                                     <div className="relative">
-                                        <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-theme-secondary text-lg" />
+                                        <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-theme-primary text-lg" />
                                         <input
                                             type="text"
                                             id="name"
                                             name="name"
-                                            required
-                                            className="w-full pl-12 pr-4 py-3 border-2 border-theme rounded-xl bg-theme-secondary text-theme-primary focus:outline-none focus:ring-2 focus:ring-theme-accent focus:border-transparent transition-all duration-300"
+                                            value={user?.fullName ?? ''}
+                                            className={`w-full pl-12 pr-4 py-3 border-2 border-theme rounded-xl bg-theme-secondary  text-theme-primary focus:outline-none focus:ring-2 focus:ring-theme-accent focus:border-transparent transition-all duration-300 `}
                                             placeholder="Tu nombre completo"
+                                            onChange={handleChange}
+                                            disabled={camposBloqueados}
+                                            autoComplete='on'
                                         />
                                     </div>
                                 </motion.div>
@@ -59,14 +113,17 @@ export default function Contact() {
                                         Correo Electrónico
                                     </label>
                                     <div className="relative">
-                                        <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-theme-secondary text-lg" />
+                                        <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-theme-primary text-lg" />
                                         <input
                                             type="email"
                                             id="email"
                                             name="email"
-                                            required
-                                            className="w-full pl-12 pr-4 py-3 border-2 border-theme rounded-xl bg-theme-secondary text-theme-primary focus:outline-none focus:ring-2 focus:ring-theme-accent focus:border-transparent transition-all duration-300"
+                                            value={user?.emailAddresses?.[0]?.emailAddress ?? ''}
+                                            className={`w-full pl-12 pr-4 py-3 border-2 border-theme rounded-xl bg-theme-secondary  text-theme-primary focus:outline-none focus:ring-2 focus:ring-theme-accent focus:border-transparent transition-all duration-300 `}
                                             placeholder="tu@email.com"
+                                            onChange={handleChange}
+                                            disabled={camposBloqueados}
+                                            autoComplete='on'
                                         />
                                     </div>
                                 </motion.div>
@@ -81,14 +138,15 @@ export default function Contact() {
                                         Mensaje
                                     </label>
                                     <div className="relative">
-                                        <FaComments className="absolute left-3 top-3 text-theme-secondary text-lg" />
+                                        <FaComments className="absolute left-3 top-3 text-theme-primary text-lg" />
                                         <textarea
                                             id="message"
                                             name="message"
-                                            required
                                             rows={5}
                                             className="w-full pl-12 pr-4 py-3 border-2 border-theme rounded-xl bg-theme-secondary text-theme-primary focus:outline-none focus:ring-2 focus:ring-theme-accent focus:border-transparent transition-all duration-300 resize-none"
                                             placeholder="Escribe tu mensaje aquí..."
+                                            onChange={handleChange}
+                                            autoComplete='on'
                                         />
                                     </div>
                                 </motion.div>
