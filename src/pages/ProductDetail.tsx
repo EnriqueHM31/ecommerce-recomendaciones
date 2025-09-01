@@ -1,60 +1,25 @@
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
 import { FaArrowLeft, FaShoppingCart } from 'react-icons/fa';
-import { useNavigate, useParams } from 'react-router-dom';
 import Layout from '../components/Landing/Layout';
+import { useNavegacion } from '../hooks/Navigate/navegacion';
+import { useProducto } from '../hooks/ProductoDetalles/producto';
 import Configuracion from '../sections/ProductoDetalles/Configuracion';
 import ProductoNoEncontrado from '../sections/ProductoDetalles/ErrorProducto';
 import Especificaciones from '../sections/ProductoDetalles/Especificaciones';
 import Header from '../sections/ProductoDetalles/Header';
-import { useCartStore } from '../store/cartStore';
-import type { ProductConfiguration } from '../types/productos';
 import VariantesProductoDetalles from '../sections/ProductoDetalles/Variantes';
 
 
 export default function ProductDetail() {
-    const { id } = useParams<{ id: string }>();
-    const navigate = useNavigate();
-    const { getProductById, addToCart } = useCartStore();
 
-    const product = getProductById(Number(id));
-
-    const [selectedConfiguration, setSelectedConfiguration] = useState<ProductConfiguration | null>(null);
-
-    // 🔹 Al montar, revisamos si hay configuración guardada en localStorage
-    useEffect(() => {
-        if (product) {
-            const savedConfig = localStorage.getItem(`selectedConfig-${product.id}`);
-            if (savedConfig) {
-                setSelectedConfiguration(JSON.parse(savedConfig));
-            } else if (product.configurations.length) {
-                setSelectedConfiguration(product.configurations[0]);
-            }
-        }
-    }, [product]);
-
-    // 🔹 Cada vez que cambia la config seleccionada, la guardamos en localStorage
-    useEffect(() => {
-        if (selectedConfiguration && product) {
-            localStorage.setItem(`selectedConfig-${product.id}`, JSON.stringify(selectedConfiguration));
-        }
-    }, [selectedConfiguration, product]);
-
+    const { product, selectedConfiguration, handleAddToCart, handleClickToggleVariantes } = useProducto();
+    const { handleRegresarAnteriorExacto } = useNavegacion();
 
     if (!product) {
         return (
             <ProductoNoEncontrado />
         );
     }
-    const handleAddToCart = () => {
-        if (selectedConfiguration) {
-            addToCart(product, selectedConfiguration);
-        }
-    };
-
-    const handleClickToggleVariantes = (config: ProductConfiguration) => {
-        setSelectedConfiguration(config)
-    };
 
 
     return (
@@ -63,7 +28,7 @@ export default function ProductDetail() {
                 <div className="max-w-7xl mx-auto px-8">
                     {/* Botón volver */}
                     <motion.button
-                        onClick={() => navigate(-1)}
+                        onClick={() => handleRegresarAnteriorExacto()}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         whileHover={{ scale: 1.05, x: -5 }}

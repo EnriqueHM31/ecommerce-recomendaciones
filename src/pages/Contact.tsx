@@ -10,8 +10,6 @@ export default function Contact() {
 
     const { handleChange, handleSubmit, camposBloqueados, datosMensaje: datos } = useMensaje();
 
-
-
     return (
         <Layout>
             <section className="min-h-screen bg-theme-secondary text-theme-primary">
