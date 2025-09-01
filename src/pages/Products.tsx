@@ -1,16 +1,38 @@
-import { motion } from 'framer-motion';
-import { FaFilter, FaSearch } from 'react-icons/fa';
-import { useCartStore } from '../store/cartStore';
-import Layout from '../components/Layout';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useState } from 'react';
+import { FaFilter, FaLongArrowAltUp, FaSearch } from 'react-icons/fa';
+import { IoClose } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
+import Filtros from '../components/Filtros';
+import Layout from '../components/Layout';
 import { COLORES_ECOMMERCE_PRODUCTOS } from '../constants/colores';
+import { useCartStore } from '../store/cartStore';
 
 export default function Products() {
-    const { productFiltrados, addToCart, buscarProducto } = useCartStore();
+    const { productFiltrados, addToCart, buscarProducto, categoriasSeleccionadas, eliminarCategoriaFiltro } = useCartStore();
     const navigate = useNavigate();
+    const [isOpen, setisOpen] = useState(false);
+
+    const handleCerrarFiltros = () => {
+        setisOpen(false)
+    }
+
+    const handleAbrirFiltros = () => {
+        setisOpen(true)
+    }
+
+    console.log(productFiltrados);
+    console.log(categoriasSeleccionadas);
+
 
     return (
         <Layout>
+
+            <AnimatePresence>
+                {
+                    isOpen && <Filtros handleCerrarFiltros={handleCerrarFiltros} />
+                }
+            </AnimatePresence>
             <div className="min-h-screen bg-theme-secondary text-theme-primary">
 
                 {/* Filters and Search */}
@@ -18,22 +40,40 @@ export default function Products() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
-                    className="bg-theme-secondary border-b border-theme py-6 sticky top-0 z-40"
+                    className="bg-theme-secondary border-b border-theme py-6  z-40"
                 >
                     <div className="max-w-7xl mx-auto px-8">
                         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="flex items-center gap-2 bg-theme-accent text-theme-secondary px-4 py-2 rounded-lg font-medium"
-                                >
-                                    <FaFilter />
-                                    Filtros
-                                </motion.button>
-                                <span className="text-theme-secondary">
-                                    {productFiltrados.length} productos disponibles
-                                </span>
+                            <div className="flex flex-col  gap-4">
+                                <div className='flex items-center gap-4'>
+
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        className="flex items-center gap-2 bg-theme-accent text-theme-secondary px-4 py-2 rounded-lg font-medium cursor-pointer"
+                                        onClick={handleAbrirFiltros}
+                                    >
+                                        <FaFilter />
+                                        Filtros
+                                    </motion.button>
+                                    <span className="text-theme-primary">
+                                        {productFiltrados.length} productos disponibles
+                                    </span>
+                                </div>
+                                <div className='flex flex-wrap gap-4'>
+                                    {
+                                        categoriasSeleccionadas.length > 0 && (
+                                            categoriasSeleccionadas.map((cat, index) => (
+                                                <span key={index} className="text-theme-secondary bg-theme-primary px-4 py-1 rounded-full flex items-center gap-2 w-fit text-xs">
+                                                    {cat}
+                                                    <button onClick={() => eliminarCategoriaFiltro(cat)}>
+                                                        <IoClose className="text-2xl" />
+                                                    </button>
+                                                </span>
+                                            ))
+                                        )
+                                    }
+                                </div>
                             </div>
                             <div className="relative">
                                 <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-theme-secondary" />
@@ -68,7 +108,7 @@ export default function Products() {
                                 whileHover={{
                                     y: -8,
                                     scale: 1.02,
-                                    transition: { duration: 0.2 }
+                                    transition: { duration: 0.1 }
                                 }}
                                 className="bg-secondary-dark border border-theme rounded-2xl p-6 shadow-theme hover:shadow-theme-dark transition-all duration-300 cursor-pointer flex flex-col justify-between"
                                 onClick={() => navigate(`/products/${product.id}`)}
@@ -76,9 +116,9 @@ export default function Products() {
                                 {/* Product Image */}
                                 <motion.img
                                     whileHover={{ scale: 1.1, rotate: 5 }}
-                                    src={product.image}
-                                    alt={product.name}
-                                    className="w-48 mx-auto h-48 object-cover bg-theme-primary rounded-xl flex items-center justify-center text-6xl mb-4"
+                                    src={product.specs.image || product.image || ''}
+                                    alt={product.name || ''}
+                                    className="w-full mx-auto h-48  object-contain p-2  rounded-xl flex items-center justify-center text-6xl mb-4"
                                 />
 
                                 <div className="mb-3">
@@ -114,10 +154,16 @@ export default function Products() {
                                     {product.color && (
                                         <div className="flex items-center gap-2 mb-3">
                                             <span className="text-sm text-theme-primary">Color:</span>
-                                            <div
-                                                className="w-6 h-6 rounded-full border border-theme-secondary"
-                                                style={{ backgroundColor: COLORES_ECOMMERCE_PRODUCTOS.find(c => c.nombre === product.color)?.valor }}
-                                            />
+                                            {
+                                                product.configurations.map((config) => (
+                                                    <div
+                                                        key={config.id}
+                                                        className="w-6 h-6 rounded-full border border-theme-secondary"
+                                                        style={{ backgroundColor: COLORES_ECOMMERCE_PRODUCTOS.find(c => c.nombre === config.specs.color)?.valor }}
+                                                    />
+                                                ))
+                                            }
+
                                         </div>
                                     )}
                                 </div>
@@ -158,6 +204,18 @@ export default function Products() {
                     </motion.div>
                 )}
             </div>
+
+            <button
+                className='fixed bottom-8 right-12 bg-theme-primary text-theme-secondary p-3 rounded-full shadow-theme hover:shadow-theme-dark transition-colors duration-300 cursor-pointer hover:scale-110 border border-theme-secondary'
+                onClick={() => {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }}
+            >
+                <FaLongArrowAltUp className='text-3xl' />
+            </button>
         </Layout>
-    );
+    )
 }

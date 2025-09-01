@@ -58,6 +58,7 @@ interface CartStore {
     // Products
     products: Product[];
     productFiltrados: Product[];
+    categoriasSeleccionadas: string[];
 
     // Cart
     cartItems: CartItem[];
@@ -73,6 +74,8 @@ interface CartStore {
     closeCart: () => void;
     buscarProducto: (query: string) => void;
     fetchProductos: () => Promise<void>;
+    filtrarCategoria: ({ categoria, checked }: { categoria: string; checked: boolean }) => void;
+    eliminarCategoriaFiltro: (categoria: string) => void;
 
     // Computed
     getTotalItems: () => number;
@@ -738,6 +741,7 @@ export const useCartStore = create<CartStore>()(
             productFiltrados: [],
             cartItems: [],
             isCartOpen: false,
+            categoriasSeleccionadas: [],
 
             // Actions
             addToCart: (product: Product, configuration: ProductConfiguration) => {
@@ -857,7 +861,58 @@ export const useCartStore = create<CartStore>()(
                     console.error("Error al cargar productos:", error);
                 }
             },
+
+            filtrarCategoria: ({ categoria, checked }: { categoria: string; checked: boolean }) => {
+                const state = get();
+                let nuevasCategorias = [...state.categoriasSeleccionadas];
+
+                // Agregar o quitar categoría
+                if (checked) {
+                    nuevasCategorias.push(categoria);
+                } else {
+                    nuevasCategorias = nuevasCategorias.filter(c => c !== categoria);
+                }
+
+                // Filtrar productos
+                const filtrados = state.products.filter(p => {
+                    // Filtrar por categorías normales
+                    const filtraCategorias = nuevasCategorias
+                        .filter(c => c !== "Recomendados")
+                        .length === 0
+                        ? true
+                        : nuevasCategorias.filter(c => c !== "Recomendados").includes(p.category);
+
+                    // Filtrar por "Recomendados"
+                    const filtraRecomendados = nuevasCategorias.includes("Recomendados")
+                        ? p.recommended === true
+                        : true;
+
+                    return filtraCategorias && filtraRecomendados;
+                });
+
+                set({
+                    categoriasSeleccionadas: nuevasCategorias,
+                    productFiltrados: filtrados,
+                });
+            },
+
+            eliminarCategoriaFiltro: (categoria: string) => {
+                const state = get();
+                let nuevasCategorias = [...state.categoriasSeleccionadas];
+                nuevasCategorias = nuevasCategorias.filter(c => c !== categoria);
+
+                const filtrados =
+                    nuevasCategorias.length === 0
+                        ? state.products // si no hay categoría seleccionada, mostramos todos
+                        : state.products.filter(p => nuevasCategorias.includes(p.category));
+
+                set({
+                    categoriasSeleccionadas: nuevasCategorias,
+                    productFiltrados: filtrados,
+                });
+            }
         }),
+
         {
             name: 'cart-storage', // name of the item in localStorage
             partialize: (state) => ({ cartItems: state.cartItems }), // only persist cartItems

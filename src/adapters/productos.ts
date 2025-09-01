@@ -46,7 +46,7 @@ interface ProductosBD {
     producto: string;
     categoria: string;
     precio_base: string;
-    imagen: string;
+    imagen_url: string;
     descripcion: string;
     variante_id: number;
     color: string;
@@ -79,7 +79,7 @@ export function AdapterProductos(products: ProductosBD[]) {
                 name: p.producto,
                 price: Number(p.precio_base),
                 category: p.categoria,
-                image: p.imagen ?? 'https://img.freepik.com/vector-gratis/cargando-circulos-azul-degradado_78370-2646.jpg?semt=ais_hybrid&w=740&q=80',
+                image: p.imagen_url === '' ? 'https://img.freepik.com/vector-gratis/cargando-circulos-azul-degradado_78370-2646.jpg?semt=ais_hybrid&w=740&q=80' : p.imagen_url,
                 color: p.color,
                 description: p.descripcion,
                 stock: p.stock,
@@ -121,8 +121,7 @@ export function AdapterProductos(products: ProductosBD[]) {
                 ram: p.ram_especificacion,
                 display: p.display,
                 color: p.color,
-                image: p.imagen ?? 'https://img.freepik.com/vector-gratis/cargando-circulos-azul-degradado_78370-2646.jpg?semt=ais_hybrid&w=740&q=80',
-                camera: p.camara,
+                image: p.imagen_url === '' ? 'https://img.freepik.com/vector-gratis/cargando-circulos-azul-degradado_78370-2646.jpg?semt=ais_hybrid&w=740&q=80' : p.imagen_url,
                 battery: p.bateria,
                 connectivity: p.conectividad ?? '',
                 os: p.sistema_operativo

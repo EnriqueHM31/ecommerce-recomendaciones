@@ -213,7 +213,7 @@ export default function Contact() {
                                         repeat: Infinity,
                                         ease: "easeInOut"
                                     }}
-                                    className="w-80 h-80 bg-gradient-to-br from-theme-primary via-theme-accent to-theme-primary-dark rounded-full flex items-center justify-center shadow-2xl relative overflow-hidden"
+                                    className="w-80 h-80 bg-gradient-to-br from-blue-950 via-blue-800 to-blue-650 rounded-full flex items-center justify-center shadow-2xl relative overflow-hidden"
                                 >
                                     {/* Floating Tech Elements */}
                                     <motion.div
@@ -227,7 +227,7 @@ export default function Contact() {
                                             repeat: Infinity,
                                             ease: "linear"
                                         }}
-                                        className="absolute top-8 left-8 w-16 h-16 bg-theme-secondary rounded-full flex items-center justify-center text-2xl text-theme-primary shadow-lg"
+                                        className="absolute top-8 left-8 w-16 h-16 bg-theme-primary rounded-full flex items-center justify-center text-2xl text-theme-primary shadow-lg"
                                     >
                                         💻
                                     </motion.div>

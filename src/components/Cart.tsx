@@ -23,6 +23,8 @@ export default function Cart() {
         closeCart();
     };
 
+    console.log(cartItems);
+
 
     return (
         <AnimatePresence>
@@ -104,7 +106,7 @@ export default function Cart() {
                                 <div className="space-y-4">
                                     {cartItems.map((item, index) => (
                                         <motion.div
-                                            key={item.product.id}
+                                            key={item.configuration.id}
                                             initial={{ opacity: 0, x: 50 }}
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ delay: index * 0.1 }}
@@ -112,8 +114,8 @@ export default function Cart() {
                                         >
                                             <div className="flex items-start gap-4">
                                                 {/* Product Image */}
-                                                <img className="w-16 h-16 bg-theme-accent rounded-lg flex items-center justify-center text-2xl text-theme-secondary flex-shrink-0"
-                                                    src={item.product.image}
+                                                <img className="w-16 h-16 bg-theme-accent rounded-lg flex items-center justify-center text-2xl text-theme-primary flex-shrink-0"
+                                                    src={item.configuration.specs.image || item.product.image}
                                                 >
                                                 </img>
 
@@ -124,11 +126,11 @@ export default function Cart() {
                                                     </h4>
                                                     {
                                                         item.configuration.variant && item.configuration.storage !== "N/A" && item.configuration.ram && item.configuration.ram !== "N/A"
-                                                            ? <p className="text-sm text-theme-secondary mb-1">
+                                                            ? <p className="text-sm text-theme-primary mb-1">
                                                                 {item.configuration.variant} - {item.configuration.storage !== "N/A" ? item.configuration.storage : ""}
                                                                 {item.configuration.ram && item.configuration.ram !== "N/A" ? ` ${item.configuration.ram}` : ""}
                                                             </p>
-                                                            : <p className="text-sm text-theme-secondary mb-1">
+                                                            : <p className="text-sm text-theme-primary mb-1">
                                                                 {item.product.category}
                                                             </p>
                                                     }
