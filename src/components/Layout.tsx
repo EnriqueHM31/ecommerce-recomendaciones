@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from './Navbar';
 import Cart from './Cart';
+import Footer from './Footer';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -12,6 +13,7 @@ export default function Layout({ children }: LayoutProps) {
             <Navbar />
             {children}
             <Cart />
+            <Footer />
         </>
     );
 }

@@ -36,6 +36,7 @@ export default function Contact() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        const form = e.target as HTMLFormElement;
         const { name, email, message } = comentario;
 
 
@@ -53,6 +54,7 @@ export default function Contact() {
         if (response.ok) {
             toast.success('Mensaje enviado correctamente');
             setComentario(prev => ({ ...prev, mensaje: '' })); // solo reset mensaje
+            form.reset();
         } else {
             toast.error('Error al enviar el mensaje');
         }
