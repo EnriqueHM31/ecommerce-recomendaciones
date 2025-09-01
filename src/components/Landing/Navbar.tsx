@@ -7,9 +7,9 @@ import {
     FaBox,
     FaEnvelope
 } from 'react-icons/fa';
-import { useCartStore } from '../store/cartStore';
+import { useCartStore } from '../../store/cartStore';
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
-import { useThemeStore } from '../store/themeStore';
+import { useThemeStore } from '../../store/themeStore';
 
 export default function Navbar() {
     const { theme, toggleTheme } = useThemeStore();

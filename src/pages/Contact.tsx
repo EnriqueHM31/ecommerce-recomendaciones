@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import FormContacto from '../components/Contacto/FormContacto';
 import ImagenAnimada from '../components/Contacto/ImagenAnimada';
-import Layout from '../components/Layout';
+import Layout from '../components/Landing/Layout';
 import DatosEmpresa from '../sections/Contacto/DatosEmpresa';
 
 

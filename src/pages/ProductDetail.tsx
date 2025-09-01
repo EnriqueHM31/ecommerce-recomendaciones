@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { FaArrowLeft, FaShoppingCart } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
-import Layout from '../components/Layout';
+import Layout from '../components/Landing/Layout';
 import Configuracion from '../sections/ProductoDetalles/Configuracion';
 import ProductoNoEncontrado from '../sections/ProductoDetalles/ErrorProducto';
 import Especificaciones from '../sections/ProductoDetalles/Especificaciones';

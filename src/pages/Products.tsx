@@ -1,8 +1,8 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import { FaLongArrowAltUp } from 'react-icons/fa';
-import Filtros from '../components/Filtros';
-import Layout from '../components/Layout';
+import Filtros from '../components/Productos/Filtros';
+import Layout from '../components/Landing/Layout';
 import Producto from '../components/Productos/Producto';
 import FiltrosBusqueda from '../sections/Productos/FiltrosBusqueda';
 import { useCartStore } from '../store/cartStore';

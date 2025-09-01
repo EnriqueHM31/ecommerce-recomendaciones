@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import Layout from '../../components/Layout';
+import Layout from '../../components/Landing/Layout';
 
 export default function ErrorProducto() {
 

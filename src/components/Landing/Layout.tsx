@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from './Navbar';
-import Cart from './Cart';
+import Cart from '../Productos/Cart';
 import Footer from './Footer';
 
 interface LayoutProps {

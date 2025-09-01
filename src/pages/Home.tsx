@@ -1,4 +1,4 @@
-import Layout from '../components/Layout';
+import Layout from '../components/Landing/Layout';
 import SectionHero from '../sections/Home/Hero';
 import SectionMarcas from '../sections/Home/Marcas';
 import SectionProductosRecomendados from '../sections/Home/ProductosRecomendados';
