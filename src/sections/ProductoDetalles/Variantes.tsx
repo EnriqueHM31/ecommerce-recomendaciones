@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion';
 import type { ProductConfiguration, Producto } from '../../types/productos';
+
+
 interface VariantesProductoDetallesProps {
     product: Producto;
     selectedConfiguration: ProductConfiguration | null;

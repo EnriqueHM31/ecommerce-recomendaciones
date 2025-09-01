@@ -1,31 +1,26 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
 import { FaLongArrowAltUp } from 'react-icons/fa';
-import Filtros from '../components/Productos/Filtros';
 import Layout from '../components/Landing/Layout';
+import Filtros from '../components/Productos/Filtros';
 import Producto from '../components/Productos/Producto';
+import ProductosVacios from '../components/Productos/ProductosVacios';
+import { useToggle } from '../hooks/Open/open';
 import FiltrosBusqueda from '../sections/Productos/FiltrosBusqueda';
 import { useCartStore } from '../store/cartStore';
-import ProductosVacios from '../components/Productos/ProductosVacios';
 
 export default function Products() {
     const { productFiltrados } = useCartStore();
-    const [isOpen, setisOpen] = useState(false);
+    const AsideFiltros = useToggle();
 
-    const handleCerrarFiltros = () => {
-        setisOpen(false)
-    }
-
-    const handleAbrirFiltros = () => {
-        setisOpen(true)
-    }
+    const handleCerrarFiltros = AsideFiltros.close;
+    const handleAbrirFiltros = AsideFiltros.open;
 
     return (
         <Layout>
 
             <AnimatePresence>
                 {
-                    isOpen && <Filtros handleCerrarFiltros={handleCerrarFiltros} />
+                    AsideFiltros.isOpen && <Filtros handleCerrarFiltros={handleCerrarFiltros} />
                 }
             </AnimatePresence>
 

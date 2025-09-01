@@ -1,88 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { AdapterProductos } from '../adapters/productos';
+import type { CartStore, Producto, ProductConfiguration } from '../types/productos';
 
-export interface Product {
-    id: number;
-    name: string;
-    price: number;
-    image: string;
-    description: string;
-    color: string;
-    category: string;
-    stock: number;
-    recommended: boolean;
-    variants: string[];
-    storage: string[];
-    specs: {
-        processor?: string;
-        ram?: string;
-        display?: string;
-        camera?: string;
-        color?: string;
-        image?: string;
-        battery?: string;
-        connectivity?: string;
-        os?: string;
-    };
-    configurations: ProductConfiguration[];
-}
-
-export interface ProductConfiguration {
-    id: string;
-    variant: string;
-    storage: string;
-    ram?: string;
-    price: number;
-    stock: number;
-    specs: {
-        processor?: string;
-        ram?: string;
-        display?: string;
-        camera?: string;
-        image?: string;
-        color?: string;
-        battery?: string;
-        connectivity?: string;
-        os?: string;
-    };
-}
-
-export interface CartItem {
-    product: Product;
-    configuration: ProductConfiguration;
-    quantity: number;
-}
-
-interface CartStore {
-    // Products
-    products: Product[];
-    productFiltrados: Product[];
-    categoriasSeleccionadas: string[];
-
-    // Cart
-    cartItems: CartItem[];
-    isCartOpen: boolean;
-
-    // Actions
-    addToCart: (product: Product, configuration: ProductConfiguration) => void;
-    removeFromCart: (productId: number, configurationId: string) => void;
-    increaseQuantity: (productId: number, configurationId: string) => void;
-    decreaseQuantity: (productId: number, configurationId: string) => void;
-    clearCart: () => void;
-    toggleCart: () => void;
-    closeCart: () => void;
-    buscarProducto: (query: string) => void;
-    fetchProductos: () => Promise<void>;
-    filtrarCategoria: ({ categoria, checked }: { categoria: string; checked: boolean }) => void;
-    eliminarCategoriaFiltro: (categoria: string) => void;
-
-    // Computed
-    getTotalItems: () => number;
-    getTotalPrice: () => number;
-    getRecommendedProducts: () => Product[];
-    getProductById: (id: number) => Product | undefined;
-}
 /*
 // Mock products data
 const mockProducts: Product[] = [
@@ -744,7 +664,7 @@ export const useCartStore = create<CartStore>()(
             categoriasSeleccionadas: [],
 
             // Actions
-            addToCart: (product: Product, configuration: ProductConfiguration) => {
+            addToCart: (product: Producto, configuration: ProductConfiguration) => {
                 set((state) => {
                     const existingItem = state.cartItems.find(item =>
                         item.product.id === product.id &&

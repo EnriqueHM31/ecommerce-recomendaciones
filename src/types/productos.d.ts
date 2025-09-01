@@ -43,3 +43,40 @@ export interface ProductConfiguration {
         os?: string;
     };
 }
+
+
+export interface CartItem {
+    product: Product;
+    configuration: ProductConfiguration;
+    quantity: number;
+}
+
+export interface CartStore {
+    // Products
+    products: Product[];
+    productFiltrados: Product[];
+    categoriasSeleccionadas: string[];
+
+    // Cart
+    cartItems: CartItem[];
+    isCartOpen: boolean;
+
+    // Actions
+    addToCart: (product: Product, configuration: ProductConfiguration) => void;
+    removeFromCart: (productId: number, configurationId: string) => void;
+    increaseQuantity: (productId: number, configurationId: string) => void;
+    decreaseQuantity: (productId: number, configurationId: string) => void;
+    clearCart: () => void;
+    toggleCart: () => void;
+    closeCart: () => void;
+    buscarProducto: (query: string) => void;
+    fetchProductos: () => Promise<void>;
+    filtrarCategoria: ({ categoria, checked }: { categoria: string; checked: boolean }) => void;
+    eliminarCategoriaFiltro: (categoria: string) => void;
+
+    // Computed
+    getTotalItems: () => number;
+    getTotalPrice: () => number;
+    getRecommendedProducts: () => Product[];
+    getProductById: (id: number) => Product | undefined;
+}
