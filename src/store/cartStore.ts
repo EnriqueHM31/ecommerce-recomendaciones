@@ -8,6 +8,7 @@ export interface Product {
     price: number;
     image: string;
     description: string;
+    color: string;
     category: string;
     stock: number;
     recommended: boolean;
@@ -18,6 +19,8 @@ export interface Product {
         ram?: string;
         display?: string;
         camera?: string;
+        color?: string;
+        image?: string;
         battery?: string;
         connectivity?: string;
         os?: string;
@@ -37,6 +40,8 @@ export interface ProductConfiguration {
         ram?: string;
         display?: string;
         camera?: string;
+        image?: string;
+        color?: string;
         battery?: string;
         connectivity?: string;
         os?: string;
@@ -75,7 +80,7 @@ interface CartStore {
     getRecommendedProducts: () => Product[];
     getProductById: (id: number) => Product | undefined;
 }
-
+/*
 // Mock products data
 const mockProducts: Product[] = [
     {
@@ -724,7 +729,7 @@ const mockProducts: Product[] = [
         ]
     }
 ];
-
+*/
 export const useCartStore = create<CartStore>()(
     persist(
         (set, get) => ({

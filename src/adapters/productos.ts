@@ -4,6 +4,7 @@ interface Producto {
     name: string;
     price: number;
     category: string;
+    color: string;
     stock: number;
     image: string;
     description: string;
@@ -30,6 +31,8 @@ interface Producto {
             processor?: string;
             ram?: string;
             display?: string;
+            color?: string;
+            image?: string;
             camera?: string;
             battery?: string;
             connectivity?: string;
@@ -77,6 +80,7 @@ export function AdapterProductos(products: ProductosBD[]) {
                 price: Number(p.precio_base),
                 category: p.categoria,
                 image: p.imagen ?? 'https://img.freepik.com/vector-gratis/cargando-circulos-azul-degradado_78370-2646.jpg?semt=ais_hybrid&w=740&q=80',
+                color: p.color,
                 description: p.descripcion,
                 stock: p.stock,
                 recommended: p.recomendado === 1,
@@ -88,6 +92,7 @@ export function AdapterProductos(products: ProductosBD[]) {
                     display: p.display,
                     camera: p.camara,
                     battery: p.bateria,
+
                     connectivity: p.conectividad ?? '',
                     os: p.sistema_operativo
                 },
@@ -115,6 +120,8 @@ export function AdapterProductos(products: ProductosBD[]) {
                 processor: p.procesador,
                 ram: p.ram_especificacion,
                 display: p.display,
+                color: p.color,
+                image: p.imagen ?? 'https://img.freepik.com/vector-gratis/cargando-circulos-azul-degradado_78370-2646.jpg?semt=ais_hybrid&w=740&q=80',
                 camera: p.camara,
                 battery: p.bateria,
                 connectivity: p.conectividad ?? '',

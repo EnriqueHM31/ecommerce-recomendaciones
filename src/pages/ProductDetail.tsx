@@ -11,7 +11,9 @@ export default function ProductDetail() {
     const { getProductById, addToCart } = useCartStore();
     const [selectedConfiguration, setSelectedConfiguration] = useState<string>('');
 
+
     const product = getProductById(Number(id));
+    console.log(product);
 
     if (!product) {
         return (
@@ -92,20 +94,19 @@ export default function ProductDetail() {
                             >
                                 <h4 className="text-lg font-semibold mb-4 text-theme-primary">Variantes del Producto</h4>
                                 <div className="grid grid-cols-4 gap-4">
-                                    {/*product.map((image, index) => (
-                                        <motion.div
-                                            key={index}
-                                            whileHover={{ scale: 1.05 }}
-                                            whileTap={{ scale: 0.95 }}
-                                            onClick={() => setSelectedImageIndex(index)}
-                                            className={`w-full h-24 bg-theme-accent rounded-xl flex items-center justify-center text-2xl cursor-pointer transition-all duration-300 ${selectedImageIndex === index
-                                                ? 'ring-4 ring-theme-accent shadow-theme-dark'
-                                                : 'hover:shadow-theme'
-                                                }`}
+                                    {product.configurations.map((product, index) => (
+                                        <div key={product.id}
                                         >
-                                            {image}
-                                        </motion.div>
-                                    ))*/}
+                                            <motion.div
+                                                key={index}
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
+                                                className={`w-full h-24 bg-theme-accent rounded-xl flex items-center justify-center text-2xl cursor-pointer transition-all duration-300 `}
+                                            >
+                                                <img src={product.specs.image} alt={product.variant} className="w-full h-full object-cover" />
+                                            </motion.div>
+                                        </div>
+                                    ))}
                                 </div>
                             </motion.div>
                         </motion.div>
