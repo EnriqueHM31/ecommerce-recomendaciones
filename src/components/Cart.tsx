@@ -23,9 +23,6 @@ export default function Cart() {
         closeCart();
     };
 
-    console.log(cartItems);
-
-
     return (
         <AnimatePresence>
             {isCartOpen && (

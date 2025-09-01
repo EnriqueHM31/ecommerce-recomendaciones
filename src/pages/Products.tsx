@@ -21,10 +21,6 @@ export default function Products() {
         setisOpen(true)
     }
 
-    console.log(productFiltrados);
-    console.log(categoriasSeleccionadas);
-
-
     return (
         <Layout>
 

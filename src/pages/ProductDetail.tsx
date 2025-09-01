@@ -80,7 +80,6 @@ export default function ProductDetail() {
     }
 
     const handleAddToCart = () => {
-        console.log(selectedConfiguration);
         if (selectedConfiguration) {
             addToCart(product, selectedConfiguration);
         }
