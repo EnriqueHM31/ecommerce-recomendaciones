@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import IMAGENHERO from '../assets/img/img.png';
+import IMAGENHERO from '../../assets/img/img.png';
 
 export default function Hero() {
     return (
