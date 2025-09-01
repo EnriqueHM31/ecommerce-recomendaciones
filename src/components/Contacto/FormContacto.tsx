@@ -19,7 +19,7 @@ export default function FormContacto({ handleSubmit, datos, camposBloqueados, ha
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.3 }}
                 >
-                    <label htmlFor="name" className="block text-theme-primary font-medium mb-2">
+                    <label htmlFor="name" className="block text-theme-accent font-medium mb-2">
                         Nombre Completo
                     </label>
                     <div className="relative">
@@ -44,7 +44,7 @@ export default function FormContacto({ handleSubmit, datos, camposBloqueados, ha
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.4 }}
                 >
-                    <label htmlFor="email" className="block text-theme-primary font-medium mb-2">
+                    <label htmlFor="email" className="block text-theme-accent font-medium mb-2">
                         Correo Electrónico
                     </label>
                     <div className="relative">
@@ -69,7 +69,7 @@ export default function FormContacto({ handleSubmit, datos, camposBloqueados, ha
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.5 }}
                 >
-                    <label htmlFor="message" className="block text-theme-primary font-medium mb-2">
+                    <label htmlFor="message" className="block text-theme-accent font-medium mb-2">
                         Mensaje
                     </label>
                     <div className="relative">

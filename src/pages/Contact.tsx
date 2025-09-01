@@ -1,68 +1,15 @@
-import { useUser } from '@clerk/clerk-react';
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
 import FormContacto from '../components/Contacto/FormContacto';
 import ImagenAnimada from '../components/Contacto/ImagenAnimada';
 import Layout from '../components/Landing/Layout';
+import { useMensaje } from '../hooks/Contacto/mensaje';
 import DatosEmpresa from '../sections/Contacto/DatosEmpresa';
 
 
 export default function Contact() {
 
-    const { user } = useUser();
+    const { handleChange, handleSubmit, camposBloqueados, datosMensaje: datos } = useMensaje();
 
-    const [comentario, setComentario] = useState({
-        name: '',
-        email: '',
-        message: '',
-    });
-
-    useEffect(() => {
-        if (user) {
-            setComentario({
-                name: user.fullName ?? '',
-                email: user.emailAddresses?.[0]?.emailAddress ?? '',
-                message: '',
-            });
-        }
-    }, [user]);
-    // Determinar si los campos se deben bloquear
-    const camposBloqueados = Boolean(user);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const nombre = e.target.name;
-        const valor = e.target.value;
-        setComentario(prev => ({ ...prev, [nombre]: valor }));
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const form = e.target as HTMLFormElement;
-        const { name, email, message } = comentario;
-
-
-        if (!name || !email || !message) {
-            toast.error('Por favor rellena todos los campos');
-            return;
-        }
-
-        const response = await fetch(`${import.meta.env.VITE_API}/api/enviar-mensaje`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nombre: name, correo: email, mensaje: message }),
-        });
-
-        if (response.ok) {
-            toast.success('Mensaje enviado correctamente');
-            setComentario(prev => ({ ...prev, mensaje: '' })); // solo reset mensaje
-            form.reset();
-        } else {
-            toast.error('Error al enviar el mensaje');
-        }
-    };
-
-    const datos = { name: user?.fullName ?? '', email: user?.emailAddresses?.[0]?.emailAddress ?? '' };
 
 
     return (

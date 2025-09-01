@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { IoClose } from "react-icons/io5";
-import { useCartStore } from "../store/cartStore";
+import { useCartStore } from "../../store/cartStore";
 const CATEGORIAS = [
     'Smartphones',
     'Laptops',

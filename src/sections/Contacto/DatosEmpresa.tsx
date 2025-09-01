@@ -10,7 +10,7 @@ export default function DatosEmpresa() {
                 transition={{ duration: 0.8, delay: 0.7 }}
                 className="mt-12 space-y-4"
             >
-                <h3 className="text-xl font-semibold text-theme-primary mb-4">
+                <h3 className="text-xl font-semibold text-theme-accent mb-4">
                     Información de Contacto
                 </h3>
 

@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaTimes, FaTrash, FaMinus, FaPlus, FaCreditCard } from 'react-icons/fa';
-import { useCartStore } from '../store/cartStore';
+import { useCartStore } from '../../store/cartStore';
 
 export default function Cart() {
     const {
