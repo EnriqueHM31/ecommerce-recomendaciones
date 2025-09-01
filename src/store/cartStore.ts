@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { AdapterProductos } from '../adapters/productos';
 
 export interface Product {
     id: number;
@@ -21,7 +22,6 @@ export interface Product {
         connectivity?: string;
         os?: string;
     };
-    images: string[];
     configurations: ProductConfiguration[];
 }
 
@@ -67,6 +67,7 @@ interface CartStore {
     toggleCart: () => void;
     closeCart: () => void;
     buscarProducto: (query: string) => void;
+    fetchProductos: () => Promise<void>;
 
     // Computed
     getTotalItems: () => number;
@@ -728,8 +729,8 @@ export const useCartStore = create<CartStore>()(
     persist(
         (set, get) => ({
             // Initial state
-            products: mockProducts,
-            productFiltrados: mockProducts,
+            products: [],
+            productFiltrados: [],
             cartItems: [],
             isCartOpen: false,
 
@@ -837,6 +838,18 @@ export const useCartStore = create<CartStore>()(
                     set({ productFiltrados: [] });
                 } else {
                     set({ productFiltrados: filtered });
+                }
+            },
+
+            fetchProductos: async () => {
+                try {
+                    const response = await fetch(`${import.meta.env.VITE_API}/api/productos/todos`);
+                    const { data } = await response.json();
+
+                    const productosAdaptados = AdapterProductos(data);
+                    set({ products: productosAdaptados, productFiltrados: productosAdaptados });
+                } catch (error) {
+                    console.error("Error al cargar productos:", error);
                 }
             },
         }),

@@ -23,6 +23,7 @@ export default function Cart() {
         closeCart();
     };
 
+
     return (
         <AnimatePresence>
             {isCartOpen && (
@@ -111,9 +112,10 @@ export default function Cart() {
                                         >
                                             <div className="flex items-start gap-4">
                                                 {/* Product Image */}
-                                                <div className="w-16 h-16 bg-theme-accent rounded-lg flex items-center justify-center text-2xl text-theme-secondary flex-shrink-0">
-                                                    {item.product.image}
-                                                </div>
+                                                <img className="w-16 h-16 bg-theme-accent rounded-lg flex items-center justify-center text-2xl text-theme-secondary flex-shrink-0"
+                                                    src={item.product.image}
+                                                >
+                                                </img>
 
                                                 {/* Product Info */}
                                                 <div className="flex-1 min-w-0">

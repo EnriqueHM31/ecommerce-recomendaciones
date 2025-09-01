@@ -1,16 +1,15 @@
 import { motion } from 'framer-motion';
-import { useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { FaArrowLeft, FaShoppingCart, FaHeart, FaShare, FaStar, FaCheck } from 'react-icons/fa';
-import { useCartStore } from '../store/cartStore';
+import { FaArrowLeft, FaCheck, FaHeart, FaShare, FaShoppingCart, FaStar } from 'react-icons/fa';
+import { useNavigate, useParams } from 'react-router-dom';
 import Layout from '../components/Layout';
+import { useCartStore } from '../store/cartStore';
 
 export default function ProductDetail() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const { getProductById, addToCart } = useCartStore();
     const [selectedConfiguration, setSelectedConfiguration] = useState<string>('');
-    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
     const product = getProductById(Number(id));
 
@@ -76,14 +75,14 @@ export default function ProductDetail() {
                             transition={{ duration: 0.6 }}
                         >
                             {/* Main Image */}
-                            <motion.div
+                            <motion.img
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 0.6, delay: 0.2 }}
-                                className="w-full h-96 bg-theme-accent rounded-2xl flex items-center justify-center text-8xl mb-6 shadow-theme"
+                                className="w-full h-96 bg-theme-primary rounded-2xl flex items-center justify-center text-8xl mb-6 shadow-theme object-contain"
+                                src={product.image}
                             >
-                                {product.images[selectedImageIndex] || product.image}
-                            </motion.div>
+                            </motion.img>
 
                             {/* Variant Images Row */}
                             <motion.div
@@ -93,7 +92,7 @@ export default function ProductDetail() {
                             >
                                 <h4 className="text-lg font-semibold mb-4 text-theme-primary">Variantes del Producto</h4>
                                 <div className="grid grid-cols-4 gap-4">
-                                    {product.images.map((image, index) => (
+                                    {/*product.map((image, index) => (
                                         <motion.div
                                             key={index}
                                             whileHover={{ scale: 1.05 }}
@@ -106,7 +105,7 @@ export default function ProductDetail() {
                                         >
                                             {image}
                                         </motion.div>
-                                    ))}
+                                    ))*/}
                                 </div>
                             </motion.div>
                         </motion.div>

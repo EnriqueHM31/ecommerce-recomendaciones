@@ -23,5 +23,8 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
+  "rules": {
+    "react-hooks/exhaustive-deps": "off"
+  },
   "include": ["src"]
 }

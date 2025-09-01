@@ -8,6 +8,9 @@ export default function Products() {
     const { productFiltrados, addToCart, buscarProducto } = useCartStore();
     const navigate = useNavigate();
 
+    console.log(productFiltrados);
+
+
     return (
         <Layout>
             <div className="min-h-screen bg-theme-secondary text-theme-primary">
@@ -70,12 +73,12 @@ export default function Products() {
                                 onClick={() => navigate(`/products/${product.id}`)}
                             >
                                 {/* Product Image */}
-                                <motion.div
+                                <motion.img
                                     whileHover={{ scale: 1.1, rotate: 5 }}
+                                    src={product.image}
                                     className="w-full h-48 bg-theme-primary rounded-xl flex items-center justify-center text-6xl mb-4"
                                 >
-                                    {product.image}
-                                </motion.div>
+                                </motion.img>
 
                                 <div className="mb-3">
                                     <span className="text-xs text-theme-primary bg-theme-secondary-light px-2 py-1 rounded-full">
