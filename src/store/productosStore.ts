@@ -5,14 +5,12 @@ import { obtenerProductos } from "../services/productos";
 
 interface ProductosStore {
     productos: Producto[];
-    setProductos: (productos: Producto[]) => void;
     fetchProductos: () => Promise<void>;
 }
 
 // Store de Zustand
 export const useProductosStore = create<ProductosStore>((set) => ({
     productos: [],
-    setProductos: (productos) => set({ productos }),
     fetchProductos: async () => {
         const { success, message, data } = await obtenerProductos();
         if (success) {
