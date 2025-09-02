@@ -24,6 +24,33 @@ export interface Producto {
     configurations: ProductConfiguration[];
 }
 
+interface ProductosBD {
+    producto_id: number;
+    producto: string;
+    categoria: string;
+    precio_base: string;
+    imagen_url: string;
+    descripcion: string;
+    variante_id: number;
+    color: string;
+    almacenamiento: string;
+    ram_variante: string;
+    sistema_operativo: string;
+    sku: string;
+    stock: number;
+    estado_stock: string;
+    recomendado: number;
+    procesador: string;
+    ram_especificacion: string;
+    display: string;
+    camara: string;
+    sistema: string;
+    conectividad: string | null;
+    bateria: string;
+    fecha_creacion: string; // ISO 8601
+    fecha_actualizacion: string; // ISO 8601
+}
+
 export interface ProductConfiguration {
     id: string;
     variant: string;
