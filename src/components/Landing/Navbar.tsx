@@ -83,12 +83,10 @@ export default function Navbar() {
                         {/* Toggle theme */}
                         <motion.button
                             onClick={toggleTheme}
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.6, ease: "easeInOut" }}
-                            whileHover={{ scale: 1.1, rotate: 180 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="w-10 h-10 p-0 rounded-full border-2 border-theme-secondary text-theme-secondary bg-transparent hover:bg-theme-secondary hover:text-theme-primary transition-all duration-300 text-xl flex items-center justify-center cursor-pointer"
+                            initial={{ opacity: 0, y: -20, scale: 0.8 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{ duration: 0.5, delay: 0.6, }}
+                            className="w-10 h-10 p-0 rounded-full border-2 border-theme-secondary text-theme-secondary bg-transparent hover:bg-theme-secondary hover:text-theme-primary transition-all duration-300 text-xl flex items-center justify-center cursor-pointer hover:scale-110"
                         >
                             {theme === 'light' ? <FaMoon /> : <FaSun />}
                         </motion.button>

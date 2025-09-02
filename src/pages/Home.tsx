@@ -12,7 +12,7 @@ export default function Home() {
 
                 <SectionProductosRecomendados />
 
-                <SectionMarcas />s
+                <SectionMarcas />
             </div>
         </Layout>
     );

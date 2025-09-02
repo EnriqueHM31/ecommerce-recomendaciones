@@ -1,5 +1,9 @@
 import { motion } from 'framer-motion';
-import { FaApple, FaAndroid, FaBox, FaMobile, FaTags } from 'react-icons/fa';
+import IMG_LOGO_MOTOROLA from '../../assets/img/logo_motorola.webp';
+import IMG_LOGO_STEREN from '../../assets/img/logo_steren.webp';
+import IMG_LOGO_APPLE from '../../assets/img/logo_apple.webp';
+import IMG_LOGO_HUAWEI from '../../assets/img/logo_huawei.webp';
+import IMG_LOGO_ANDROID from '../../assets/img/logo_android.webp';
 
 export default function Marcas() {
     return (
@@ -25,11 +29,11 @@ export default function Marcas() {
                     </motion.h2>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
                         {[
-                            { icon: FaApple, name: "Apple" },
-                            { icon: FaAndroid, name: "Android" },
-                            { icon: FaMobile, name: "Huawei" },
-                            { icon: FaTags, name: "Steren" },
-                            { icon: FaBox, name: "Motorola" }
+                            { icon: IMG_LOGO_APPLE, name: "Apple" },
+                            { icon: IMG_LOGO_ANDROID, name: "Android" },
+                            { icon: IMG_LOGO_HUAWEI, name: "Huawei" },
+                            { icon: IMG_LOGO_STEREN, name: "Steren" },
+                            { icon: IMG_LOGO_MOTOROLA, name: "Motorola" }
                         ].map((brand, index) => (
                             <motion.div
                                 key={brand.name}
@@ -44,16 +48,16 @@ export default function Marcas() {
                                 }}
                                 className="text-center p-8 bg-theme-secondary border border-theme rounded-2xl shadow-theme hover:shadow-theme-dark cursor-pointer"
                             >
-                                <motion.div
+                                <motion.img
                                     whileHover={{
                                         scale: 1.2,
                                         rotate: 10,
                                         transition: { duration: 0.2 }
                                     }}
-                                    className="w-20 h-20 bg-theme-accent rounded-full flex items-center justify-center mx-auto mb-4 text-4xl text-theme-secondary"
+                                    src={brand.icon}
+                                    className="w-20 h-20 bg-theme-accent rounded-full flex items-center justify-center mx-auto mb-4 text-4xl text-theme-secondary object-cover"
                                 >
-                                    <brand.icon />
-                                </motion.div>
+                                </motion.img>
                                 <h3 className="text-theme-primary m-0 text-lg font-semibold">{brand.name}</h3>
                             </motion.div>
                         ))}
