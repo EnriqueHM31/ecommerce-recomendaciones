@@ -162,3 +162,7 @@ span,
 strong {
     font-family: 'Ubuntu', sans-serif;
 }
+
+.scale-rotate-theme {
+    transform: scale(1.1) rotate(180deg);
+}

@@ -5,7 +5,6 @@ type Theme = 'light' | 'dark';
 interface ThemeStore {
     theme: Theme;
     toggleTheme: () => void;
-    setTheme: (theme: Theme) => void;
 }
 
 // Función para obtener el theme inicial
@@ -19,6 +18,7 @@ const getInitialTheme = (): Theme => {
 
 export const useThemeStore = create<ThemeStore>((set) => {
     const initialTheme = getInitialTheme();
+    console.log(initialTheme);
     // Asignar el theme al cargar
     document.documentElement.setAttribute('data-theme', initialTheme);
 
@@ -30,10 +30,6 @@ export const useThemeStore = create<ThemeStore>((set) => {
             document.documentElement.setAttribute('data-theme', newTheme);
             return { theme: newTheme };
         }),
-        setTheme: (theme: Theme) => {
-            localStorage.setItem('theme', theme);
-            document.documentElement.setAttribute('data-theme', theme);
-            set({ theme });
-        },
+
     };
 });
