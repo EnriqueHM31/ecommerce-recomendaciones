@@ -56,8 +56,8 @@ export default function ProductosRecomendados() {
                                 >
                                 </motion.img>
                                 <h3 className="text-theme-primary mb-2 text-xl font-semibold">{product.name}</h3>
-                                <p className="text-theme-primary mb-4">{product.description}</p>
-                                <span className="block text-2xl font-bold text-theme-accent mb-6">${product.price}</span>
+                                <p className="text-theme-primary mb-2">{product.description}</p>
+                                <span className="block text-2xl font-bold text-theme-accent mb-3">${product.price}</span>
 
                                 <motion.button
                                     onClick={(e) => {
@@ -69,7 +69,7 @@ export default function ProductosRecomendados() {
                                     }}
                                     whileHover={{ scale: 1.05, y: -2 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="bg-theme-primary text-theme-secondary border-none py-3 px-6 rounded-full cursor-pointer font-medium w-full shadow-theme hover:shadow-theme-dark mb-3"
+                                    className="bg-theme-primary text-theme-secondary border-none py-3 px-6 rounded-full cursor-pointer font-medium w-full shadow-theme hover:shadow-theme-dark mb-2"
                                 >
                                     Agregar al Carrito
                                 </motion.button>

@@ -60,7 +60,7 @@ export default function Hero() {
                         />
 
                         {/* Base cuadrada */}
-                        <div className="w-40 h-4 bg-gray-800 rounded-md shadow-lg md:mt-[-80px]" />
+                        <div className="w-40 h-4 bg-theme-primary rounded-md shadow-lg md:mt-[-80px]" />
                     </motion.div>
 
                 </div>
