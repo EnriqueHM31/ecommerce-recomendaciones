@@ -73,15 +73,15 @@ export interface ProductConfiguration {
 
 
 export interface CartItem {
-    product: Product;
+    product: Producto;
     configuration: ProductConfiguration;
     quantity: number;
 }
 
 export interface CartStore {
     // Products
-    products: Product[];
-    productFiltrados: Product[];
+    products: Producto[];
+    productFiltrados: Producto[];
     categoriasSeleccionadas: string[];
 
     // Cart
@@ -89,7 +89,7 @@ export interface CartStore {
     isCartOpen: boolean;
 
     // Actions
-    addToCart: (product: Product, configuration: ProductConfiguration) => void;
+    addToCart: (product: Producto, configuration: ProductConfiguration) => void;
     removeFromCart: (productId: number, configurationId: string) => void;
     increaseQuantity: (productId: number, configurationId: string) => void;
     decreaseQuantity: (productId: number, configurationId: string) => void;

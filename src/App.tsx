@@ -5,6 +5,7 @@ import { useThemeStore } from "./store/themeStore";
 import { useEffect } from "react";
 import { useCartStore } from "./store/cartStore";
 
+
 function Routes() {
   const routing = useRoutes(routes);
   return <>{routing}</>;

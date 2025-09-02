@@ -7,8 +7,13 @@ export function useNavegacion() {
         navigate(-1);
     }
 
+    const handleRedirigirPagina = (path: string) => {
+        navigate(path);
+    }
+
     return {
         navigate,
-        handleRegresarAnteriorExacto
+        handleRegresarAnteriorExacto,
+        handleRedirigirPagina,
     }
 }
