@@ -23,7 +23,7 @@ export default function ProductoCarrito({ item, index }: ProductoCarritoProps) {
             >
                 <div className="flex items-start gap-4">
                     {/* Product Image */}
-                    <img className="w-16 h-16 bg-theme-accent rounded-lg flex items-center justify-center text-2xl text-theme-primary flex-shrink-0"
+                    <img className="w-16 h-16 bg-theme-accent rounded-lg flex items-center justify-center text-2xl text-theme-primary flex-shrink-0 object-cover"
                         src={item.product.imagen_url}
                     >
                     </img>
@@ -50,10 +50,10 @@ export default function ProductoCarrito({ item, index }: ProductoCarritoProps) {
 
                     {/* Remove Button */}
                     <motion.button
-                        onClick={() => removeFromCart(item.product.producto_id)}
+                        onClick={() => removeFromCart(item.product.sku)}
                         whileHover={{ scale: 1.1, color: '#ef4444' }}
                         whileTap={{ scale: 0.9 }}
-                        className="text-theme-secondary hover:text-red-500 transition-colors p-1"
+                        className="text-theme-primary hover:text-red-500 transition-colors p-1 cursor-pointer"
                     >
                         <FaTrash size={16} />
                     </motion.button>
@@ -63,10 +63,10 @@ export default function ProductoCarrito({ item, index }: ProductoCarritoProps) {
                 <div className="flex items-center justify-between mt-4">
                     <div className="flex items-center gap-3">
                         <motion.button
-                            onClick={() => decreaseQuantity(item.product.producto_id)}
+                            onClick={() => decreaseQuantity(item.product.sku)}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
-                            className="w-8 h-8 bg-theme-primary text-theme-secondary rounded-full flex items-center justify-center hover:bg-theme-primary-dark transition-colors"
+                            className="w-8 h-8 bg-theme-primary text-theme-secondary rounded-full flex items-center justify-center hover:bg-theme-primary-dark transition-colors cursor-pointer"
                         >
                             <FaMinus size={12} />
                         </motion.button>
@@ -76,10 +76,10 @@ export default function ProductoCarrito({ item, index }: ProductoCarritoProps) {
                         </span>
 
                         <motion.button
-                            onClick={() => increaseQuantity(item.product.producto_id)}
+                            onClick={() => increaseQuantity(item.product.sku)}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
-                            className="w-8 h-8 bg-theme-primary text-theme-secondary rounded-full flex items-center justify-center hover:bg-theme-primary-dark transition-colors"
+                            className="w-8 h-8 bg-theme-primary text-theme-secondary rounded-full flex items-center justify-center hover:bg-theme-primary-dark transition-colors cursor-pointer"
                         >
                             <FaPlus size={12} />
                         </motion.button>

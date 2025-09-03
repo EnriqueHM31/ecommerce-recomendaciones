@@ -120,9 +120,9 @@ export interface CartStore {
 
     // Actions
     addToCart: (product: Producto) => void;
-    removeFromCart: (productId: number) => void;
-    increaseQuantity: (productId: number) => void;
-    decreaseQuantity: (productId: number) => void;
+    removeFromCart: (productId: string) => void;
+    increaseQuantity: (productId: string) => void;
+    decreaseQuantity: (productId: string) => void;
     clearCart: () => void;
     toggleCart: () => void;
     closeCart: () => void;

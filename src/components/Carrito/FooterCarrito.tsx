@@ -31,7 +31,7 @@ export default function FooterCarrito({ handleCheckout }: FooterCarritoProps) {
                     onClick={handleCheckout}
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full bg-theme-accent text-theme-secondary py-4 px-6 rounded-xl font-semibold text-lg flex items-center justify-center gap-3 hover:bg-theme-accent-light transition-colors shadow-theme hover:shadow-theme-dark"
+                    className="w-full bg-theme-accent text-theme-secondary py-4 px-6 rounded-xl font-semibold text-lg flex items-center justify-center gap-3 hover:bg-theme-accent-light transition-colors shadow-theme hover:shadow-theme-dark cursor-pointer"
                 >
                     <FaCreditCard />
                     Proceder al Pago
@@ -42,7 +42,7 @@ export default function FooterCarrito({ handleCheckout }: FooterCarritoProps) {
                     onClick={closeCart}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="w-full mt-3 py-3 px-6 border-2 border-theme-primary text-theme-primary rounded-xl font-medium hover:bg-theme-primary hover:text-theme-secondary transition-colors"
+                    className="w-full mt-3 py-3 px-6 border-2 border-theme-primary text-theme-primary rounded-xl font-medium hover:bg-theme-primary hover:text-theme-secondary transition-colors cursor-pointer"
                 >
                     Continuar Comprando
                 </motion.button>

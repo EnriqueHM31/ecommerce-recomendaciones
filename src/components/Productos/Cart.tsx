@@ -75,7 +75,7 @@ export default function Cart() {
                         animate={{ x: 0 }}
                         exit={{ x: '100%' }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="fixed right-0 top-0 h-full w-full max-w-md bg-theme-secondary shadow-2xl z-50 overflow-y-auto scrollbar-none"
+                        className="fixed right-0 top-0 h-full w-full max-w-md bg-theme-secondary shadow-2xl z-50 overflow-y-auto scrollbar-none min-h-screen "
                     >
                         {/* Cart Header */}
                         <HeaderCarrito />

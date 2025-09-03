@@ -21,7 +21,7 @@ export default function CarritoVacio() {
                     onClick={closeCart}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="bg-theme-primary text-theme-secondary px-6 py-3 rounded-lg font-medium"
+                    className="bg-theme-primary text-theme-secondary px-6 py-3 rounded-lg font-medium cursor-pointer"
                 >
                     Continuar Comprando
                 </motion.button>

@@ -14,7 +14,7 @@ export default function HeaderCarrito() {
                         onClick={closeCart}
                         whileHover={{ scale: 1.1, rotate: 90 }}
                         whileTap={{ scale: 0.9 }}
-                        className="p-2 hover:bg-theme-secondary hover:text-theme-primary rounded-full transition-colors"
+                        className="p-2 hover:bg-theme-secondary hover:text-theme-primary rounded-full transition-colors cursor-pointer"
                     >
                         <FaTimes size={20} />
                     </motion.button>

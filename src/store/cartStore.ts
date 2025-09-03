@@ -690,28 +690,28 @@ export const useCartStore = create<CartStore>()(
                 });
             },
 
-            removeFromCart: (productId: number) => {
+            removeFromCart: (productId: string) => {
                 set((state) => ({
                     cartItems: state.cartItems.filter(item =>
-                        !(item.product.id === productId)
+                        !(item.product.sku === productId)
                     )
                 }));
             },
 
-            increaseQuantity: (productId: number) => {
+            increaseQuantity: (productId: string) => {
                 set((state) => ({
                     cartItems: state.cartItems.map(item =>
-                        item.product.producto_id === productId
+                        item.product.sku === productId
                             ? { ...item, quantity: item.quantity + 1 }
                             : item
                     )
                 }));
             },
 
-            decreaseQuantity: (productId: number) => {
+            decreaseQuantity: (productId: string) => {
                 set((state) => ({
                     cartItems: state.cartItems.map(item =>
-                        item.product.producto_id === productId
+                        item.product.sku === productId
                             ? { ...item, quantity: Math.max(0, item.quantity - 1) }
                             : item
                     ).filter(item => item.quantity > 0) // Remove items with 0 quantity
@@ -746,7 +746,7 @@ export const useCartStore = create<CartStore>()(
                 return state.products.flatMap(product => product.filter(p => p.recomendado));
             },
 
-            getProductById: (id: number) => {
+            getProductById: () => {
                 const state = get();
                 return state.products.find(p => {
                     return p;
@@ -797,26 +797,30 @@ export const useCartStore = create<CartStore>()(
                     nuevasCategorias = nuevasCategorias.filter(c => c !== categoria);
                 }
 
-                // Filtrar productos
-                const filtrados = state.products.filter(p => {
-                    // Filtrar por categorías normales
-                    const filtraCategorias = nuevasCategorias
-                        .filter(c => c !== "Recomendados")
-                        .length === 0
-                        ? true
-                        : nuevasCategorias.filter(c => c !== "Recomendados").includes(p.categoria);
+                const filtrados = state.products
+                    .flat() // 👈 convierte [[{...}], [{...}], ...] en un solo array de objetos
+                    .filter(p => {
+                        // Filtrar por categorías normales
+                        const categoriasSinRecomendados = nuevasCategorias.filter(c => c !== "Recomendados");
 
-                    // Filtrar por "Recomendados"
-                    const filtraRecomendados = nuevasCategorias.includes("Recomendados")
-                        ? Boolean(p.map(p => p.recomendado))
-                        : true;
+                        const filtraCategorias =
+                            categoriasSinRecomendados.length === 0
+                                ? true
+                                : categoriasSinRecomendados.includes(p.categoria);
 
-                    return filtraCategorias && filtraRecomendados;
-                });
+                        // Filtrar por "Recomendados"
+                        const filtraRecomendados = nuevasCategorias.includes("Recomendados")
+                            ? Boolean(p.recomendado)
+                            : true;
 
+                        return filtraCategorias && filtraRecomendados;
+                    });
+
+                const nuevosProductos = agruparProductos(filtrados);
+                console.log({ nuevosProductos });
                 set({
                     categoriasSeleccionadas: nuevasCategorias,
-                    productFiltrados: filtrados,
+                    productFiltrados: nuevosProductos,
                 });
             },
 
