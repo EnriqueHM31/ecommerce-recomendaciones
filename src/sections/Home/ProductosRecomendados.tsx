@@ -8,6 +8,9 @@ export default function ProductosRecomendados() {
 
     const recommendedProducts = getRecommendedProducts();
     const navigate = useNavigate();
+
+    console.log({ recommendedProducts });
+
     return (
         <>
             {/* Featured Products */}
@@ -32,7 +35,7 @@ export default function ProductosRecomendados() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {recommendedProducts.map((product) => (
                             <motion.div
-                                key={product.id}
+                                key={product.sku}
                                 initial={{ opacity: 0, y: 50, scale: 0.9 }}
                                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                                 transition={{ duration: 0.6 }}
@@ -51,20 +54,20 @@ export default function ProductosRecomendados() {
                                         rotate: 5,
                                         transition: { duration: 0.2 }
                                     }}
-                                    src={product.image}
-                                    className="w-32 h-32 bg-theme-accent rounded-full flex items-center justify-center mx-auto mb-6 text-6xl text-theme-secondary"
+                                    src={product.imagen_url}
+                                    className="w-32 h-32 bg-theme-accent rounded-full flex items-center justify-center mx-auto mb-6 text-6xl text-theme-secondary object-cover"
                                 >
                                 </motion.img>
-                                <h3 className="text-theme-primary mb-2 text-xl font-semibold">{product.name}</h3>
-                                <p className="text-theme-primary mb-2">{product.description}</p>
-                                <span className="block text-2xl font-bold text-theme-accent mb-3">${product.price}</span>
+                                <h3 className="text-theme-primary mb-2 text-xl font-semibold">{product.producto}</h3>
+                                <p className="text-theme-primary mb-2">{product.descripcion}</p>
+                                <span className="block text-2xl font-bold text-theme-accent mb-3">${product.precio_base}</span>
 
                                 <motion.button
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         // Usar la primera configuración disponible
                                         if (product.configurations && product.configurations.length > 0) {
-                                            addToCart(product, product.configurations[0]);
+                                            addToCart(product);
                                         }
                                     }}
                                     whileHover={{ scale: 1.05, y: -2 }}

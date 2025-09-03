@@ -46,7 +46,7 @@ export default function Products() {
                         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
                     >
                         {productFiltrados.map((product, index) => (
-                            <Producto key={product.id} product={product} index={index} />
+                            <Producto key={product[0].id} product={product} index={index} />
                         ))}
                     </motion.div>
                 </div>

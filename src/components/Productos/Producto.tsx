@@ -6,7 +6,7 @@ import { useCartStore } from '../../store/cartStore';
 
 
 interface ProductosProps {
-    product: Producto;
+    product: Producto[];
     index: number;
 }
 
@@ -18,7 +18,7 @@ export default function Producto({ product, index }: ProductosProps) {
     return (
         <>
             <motion.div
-                key={product.id}
+                key={product[0].id}
                 initial={{ opacity: 0, y: 50, scale: 0.9 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -28,59 +28,53 @@ export default function Producto({ product, index }: ProductosProps) {
                     transition: { duration: 0.1 }
                 }}
                 className="bg-secondary-dark border border-theme rounded-2xl p-6 shadow-theme hover:shadow-theme-dark transition-all duration-300 cursor-pointer flex flex-col justify-between"
-                onClick={() => navigate(`/products/${product.id}`)}
+                onClick={() => navigate(`/products/${product[0].id}`)}
             >
-                {/* Product Image */}
+                {/* Product[0] Image */}
                 <motion.img
                     whileHover={{ scale: 1.1, rotate: 5 }}
-                    src={product.specs.image || product.image || ''}
-                    alt={product.name || ''}
-                    className="w-full mx-auto h-48  object-contain p-2  rounded-xl flex items-center justify-center text-6xl mb-4"
+                    src={product[0].imagen_url}
+                    alt={product[0].producto}
+                    className="w-full mx-auto h-48  object-contain p-2  rounded-xl flex items-center justify-center text-6xl mb-4 bg-theme-primary"
                 />
 
                 <div className="mb-3">
                     <span className="text-xs text-theme-primary bg-theme-secondary-light px-2 py-1 rounded-full">
-                        {product.category}
+                        {product[0].categoria}
                     </span>
-                    {product.recommended && (
+                    {product[0].recomendado && (
                         <span className="ml-2 text-xs bg-theme-accent text-theme-secondary px-2 py-1 rounded-full">
                             ⭐ Recomendado
                         </span>
                     )}
                 </div>
 
-                {/* Product Info */}
+                {/* Product[0] Info */}
                 <div className="mb-4">
                     <h3 className="text-xl font-semibold text-theme-primary mb-2">
-                        {product.name}
+                        {product[0].producto}
                     </h3>
                     <p className="text-theme-primary text-sm mb-3 line-clamp-2">
-                        {product.description}
+                        {product[0].descripcion}
                     </p>
 
                     <div className="flex items-center justify-between mb-3">
                         <span className="text-2xl font-bold text-theme-accent">
-                            ${product.price}
+                            ${product[0].precio_base}
                         </span>
                         <span className="text-sm text-theme-secondary bg-theme-primary px-2 py-1 rounded-full">
-                            Stock: {product.stock}
+                            Stock: {product[0].stock}
                         </span>
                     </div>
 
                     {/* Color Indicator */}
-                    {product.color && (
+                    {product[0].color && (
                         <div className="flex items-center gap-2 mb-3">
                             <span className="text-sm text-theme-primary">Color:</span>
-                            {
-                                product.configurations.map((config) => (
-                                    <div
-                                        key={config.id}
-                                        className="w-6 h-6 rounded-full border border-theme-secondary"
-                                        style={{ backgroundColor: COLORES_ECOMMERCE_PRODUCTOS.find(c => c.nombre === config.specs.color)?.valor }}
-                                    />
-                                ))
-                            }
-
+                            <div
+                                className="w-6 h-6 rounded-full border border-theme-secondary"
+                                style={{ backgroundColor: COLORES_ECOMMERCE_PRODUCTOS.find(c => c.nombre === product[0].color)?.valor }}
+                            />
                         </div>
                     )}
                 </div>
@@ -89,8 +83,8 @@ export default function Producto({ product, index }: ProductosProps) {
                 <motion.button
                     onClick={(e) => {
                         e.stopPropagation();
-                        if (product.configurations && product.configurations.length > 0) {
-                            addToCart(product, product.configurations[0]);
+                        if (product[0]) {
+                            addToCart(product[0]);
                         }
                     }}
                     whileHover={{ scale: 1.05, y: -2 }}

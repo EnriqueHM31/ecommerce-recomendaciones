@@ -1,39 +1,46 @@
-import { motion } from 'framer-motion';
-import type { ProductConfiguration, Producto } from '../../types/productos';
-
+import { motion } from "framer-motion";
+import type { Producto } from "../../types/productos";
 
 interface VariantesProductoDetallesProps {
-    product: Producto;
-    selectedConfiguration: ProductConfiguration | null;
-    handleClickToggleVariantes: (configuration: ProductConfiguration) => void;
+    productoSeleccionado: Producto;
+    product: Producto[][];
+    handleClickToggleVariantes: (product: Producto) => void;
 }
 
+export default function Variantes({
+    productoSeleccionado,
+    product,
+    handleClickToggleVariantes,
+}: VariantesProductoDetallesProps) {
 
-export default function Variantes({ product, selectedConfiguration, handleClickToggleVariantes }: VariantesProductoDetallesProps) {
+
     return (
         <>
-            <h4 className="text-lg font-semibold mb-4 text-theme-primary">Variantes del Producto</h4>
+            <h4 className="text-lg font-semibold mb-4 text-theme-primary">
+                Variantes del Producto
+            </h4>
             <div className="grid grid-cols-4 gap-4">
-                {product.configurations.map((config) => (
-                    <motion.div
-                        key={config.id}
-                        onClick={() => handleClickToggleVariantes(config)}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className={`w-full h-24  rounded-xl overflow-hidden cursor-pointer p-2 border-2 transition-all duration-300 ${selectedConfiguration?.id === config.id
-                            ? 'border-theme-accent'
-                            : 'border-transparent hover:border-theme'
-                            }`}
-                    >
-                        <img
-                            src={config.specs.image || product.image}
-                            alt={config.variant}
-                            className="w-full h-full object-contain"
-                        />
-                    </motion.div>
-                ))}
+                {
+                    product.map(producto => (
+                        <motion.div
+                            key={producto[0].sku}
+                            onClick={() => handleClickToggleVariantes(producto[0])}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className={`w-full h-24 rounded-xl overflow-hidden cursor-pointer p-2 border-2 transition-all duration-300 ${productoSeleccionado.id === producto[0].id
+                                ? 'border-theme-accent'
+                                : 'border-transparent hover:border-theme'
+                                }`}
+                        >
+                            <img
+                                src={producto[0].imagen_url}
+                                alt={producto[0].producto}
+                                className="w-full h-full object-contain"
+                            />
+                        </motion.div>
+                    ))
+                }
             </div>
         </>
-
-    )
+    );
 }

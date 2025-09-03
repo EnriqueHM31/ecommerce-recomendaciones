@@ -1,31 +1,10 @@
 import { motion } from 'framer-motion';
 import { FaCheckCircle, FaCreditCard, FaDirections, FaShoppingCart } from 'react-icons/fa';
+import type { SessionDetails, LineItem } from '../../types/pago.d';
 import { containerAnimacion, itemAnimacion } from '../../utils/animaciones';
-interface LineItem {
-    id: string;
-    description: string;
-    quantity: number;
-    amount_total: number;
-    currency: string;
-}
 
-interface SessionDetails {
-    id: string;
-    amount: string;
-    currency: string;
-    date: string;
-    email?: string;
-    name?: string;
-    lineItems: LineItem[];
-    address: {
-        city: string;
-        country: string;
-        line1: string;
-        line2: string;
-        postal_code: string;
-        state: string;
-    };
-}
+
+
 export default function Factura({ sessionDetails }: { sessionDetails: SessionDetails | null }) {
     return (
         <>

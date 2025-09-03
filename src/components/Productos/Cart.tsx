@@ -39,14 +39,11 @@ export default function Cart() {
                     }
                 }),
             });
-            console.log(res);
-
             const { data } = await res.json();
 
 
 
             if (data) {
-                console.log({ data })
                 window.location.href = data.url;
             } else {
                 alert("Error al crear la sesión de pago");
@@ -56,6 +53,8 @@ export default function Cart() {
             alert("Hubo un problema con el checkout");
         }
     };
+
+    console.log({ cartItems });
 
     return (
         <AnimatePresence>
@@ -88,7 +87,7 @@ export default function Cart() {
                             ) : (
                                 <div className="space-y-4">
                                     {cartItems.map((item, index) => (
-                                        <ProductoCarrito key={item.configuration.id} item={item} index={index} />
+                                        <ProductoCarrito key={item.product.id} item={item} index={index} />
                                     ))}
                                 </div>
                             )}

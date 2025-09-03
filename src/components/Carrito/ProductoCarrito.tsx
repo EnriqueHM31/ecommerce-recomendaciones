@@ -15,7 +15,7 @@ export default function ProductoCarrito({ item, index }: ProductoCarritoProps) {
     return (
         <>
             <motion.div
-                key={item.configuration.id}
+                key={item.product.id}
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
@@ -24,33 +24,33 @@ export default function ProductoCarrito({ item, index }: ProductoCarritoProps) {
                 <div className="flex items-start gap-4">
                     {/* Product Image */}
                     <img className="w-16 h-16 bg-theme-accent rounded-lg flex items-center justify-center text-2xl text-theme-primary flex-shrink-0"
-                        src={item.configuration.specs.image || item.product.image}
+                        src={item.product.imagen_url}
                     >
                     </img>
 
                     {/* Product Info */}
                     <div className="flex-1 min-w-0">
                         <h4 className="font-semibold text-theme-primary mb-1 truncate">
-                            {item.product.name}
+                            {item.product.producto}
                         </h4>
                         {
-                            item.configuration.variant && item.configuration.storage !== "N/A" && item.configuration.ram && item.configuration.ram !== "N/A"
+                            item.product.sistema_operativo && item.product.stock !== 0 && item.product.ram_especificacion && item.product.ram_especificacion !== "N/A"
                                 ? <p className="text-sm text-theme-primary mb-1">
-                                    {item.configuration.variant} - {item.configuration.storage !== "N/A" ? item.configuration.storage : ""}
-                                    {item.configuration.ram && item.configuration.ram !== "N/A" ? ` ${item.configuration.ram}` : ""}
+                                    {item.product.almacenamiento} - {item.product.stock !== 0 ? item.product.stock : ""}
+                                    {item.product.ram_variante && item.product.ram_especificacion !== "N/A" ? ` ${item.product.ram_variante}` : ""}
                                 </p>
                                 : <p className="text-sm text-theme-primary mb-1">
-                                    {item.product.category}
+                                    {item.product.categoria}
                                 </p>
                         }
                         <p className="text-theme-accent font-bold text-lg">
-                            ${item.configuration.price}
+                            ${item.product.precio_base}
                         </p>
                     </div>
 
                     {/* Remove Button */}
                     <motion.button
-                        onClick={() => removeFromCart(item.product.id, item.configuration.id)}
+                        onClick={() => removeFromCart(item.product.producto_id)}
                         whileHover={{ scale: 1.1, color: '#ef4444' }}
                         whileTap={{ scale: 0.9 }}
                         className="text-theme-secondary hover:text-red-500 transition-colors p-1"
@@ -63,7 +63,7 @@ export default function ProductoCarrito({ item, index }: ProductoCarritoProps) {
                 <div className="flex items-center justify-between mt-4">
                     <div className="flex items-center gap-3">
                         <motion.button
-                            onClick={() => decreaseQuantity(item.product.id, item.configuration.id)}
+                            onClick={() => decreaseQuantity(item.product.producto_id)}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             className="w-8 h-8 bg-theme-primary text-theme-secondary rounded-full flex items-center justify-center hover:bg-theme-primary-dark transition-colors"
@@ -76,7 +76,7 @@ export default function ProductoCarrito({ item, index }: ProductoCarritoProps) {
                         </span>
 
                         <motion.button
-                            onClick={() => increaseQuantity(item.product.id, item.configuration.id)}
+                            onClick={() => increaseQuantity(item.product.producto_id)}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             className="w-8 h-8 bg-theme-primary text-theme-secondary rounded-full flex items-center justify-center hover:bg-theme-primary-dark transition-colors"
@@ -86,7 +86,7 @@ export default function ProductoCarrito({ item, index }: ProductoCarritoProps) {
                     </div>
 
                     <span className="text-lg font-bold text-theme-accent">
-                        ${(item.configuration.price * item.quantity).toFixed(2)}
+                        ${(item.product.precio_base * item.quantity).toFixed(2)}
                     </span>
                 </div>
             </motion.div>

@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { AdapterProductos } from '../adapters/productos';
-import type { CartStore, Producto, ProductConfiguration } from '../types/productos';
 import { obtenerProductos } from '../services/productos';
+import type { CartStore, Producto } from '../types/productos';
+import { agruparProductos } from '../utils/productos';
 
 /*
 // Mock products data
@@ -666,18 +666,17 @@ export const useCartStore = create<CartStore>()(
             categoriasSeleccionadas: [],
 
             // Actions
-            addToCart: (product: Producto, configuration: ProductConfiguration) => {
+            addToCart: (product: Producto) => {
                 set((state) => {
                     const existingItem = state.cartItems.find(item =>
-                        item.product.id === product.id &&
-                        item.configuration.id === configuration.id
+                        item.product.id === product.id
                     );
 
                     if (existingItem) {
                         // If product with same configuration already exists, increase quantity
                         return {
                             cartItems: state.cartItems.map(item =>
-                                item.product.id === product.id && item.configuration.id === configuration.id
+                                item.product.id === product.id
                                     ? { ...item, quantity: item.quantity + 1 }
                                     : item
                             )
@@ -685,34 +684,34 @@ export const useCartStore = create<CartStore>()(
                     } else {
                         // Add new product configuration to cart
                         return {
-                            cartItems: [...state.cartItems, { product, configuration, quantity: 1 }]
+                            cartItems: [...state.cartItems, { product, quantity: 1 }]
                         };
                     }
                 });
             },
 
-            removeFromCart: (productId: number, configurationId: string) => {
+            removeFromCart: (productId: number) => {
                 set((state) => ({
                     cartItems: state.cartItems.filter(item =>
-                        !(item.product.id === productId && item.configuration.id === configurationId)
+                        !(item.product.id === productId)
                     )
                 }));
             },
 
-            increaseQuantity: (productId: number, configurationId: string) => {
+            increaseQuantity: (productId: number) => {
                 set((state) => ({
                     cartItems: state.cartItems.map(item =>
-                        item.product.id === productId && item.configuration.id === configurationId
+                        item.product.producto_id === productId
                             ? { ...item, quantity: item.quantity + 1 }
                             : item
                     )
                 }));
             },
 
-            decreaseQuantity: (productId: number, configurationId: string) => {
+            decreaseQuantity: (productId: number) => {
                 set((state) => ({
                     cartItems: state.cartItems.map(item =>
-                        item.product.id === productId && item.configuration.id === configurationId
+                        item.product.producto_id === productId
                             ? { ...item, quantity: Math.max(0, item.quantity - 1) }
                             : item
                     ).filter(item => item.quantity > 0) // Remove items with 0 quantity
@@ -739,17 +738,20 @@ export const useCartStore = create<CartStore>()(
 
             getTotalPrice: () => {
                 const state = get();
-                return state.cartItems.reduce((total, item) => total + (item.configuration.price * item.quantity), 0);
+                return state.cartItems.reduce((total, item) => total + (item.product.precio_base * item.quantity), 0);
             },
 
             getRecommendedProducts: () => {
                 const state = get();
-                return state.products.filter(product => product.recommended);
+                return state.products.flatMap(product => product.filter(p => p.recomendado));
             },
 
             getProductById: (id: number) => {
                 const state = get();
-                return state.products.find(product => product.id === id);
+                return state.products.find(p => {
+                    return p;
+                }
+                );
             },
 
             buscarProducto: (query: string) => {
@@ -762,7 +764,7 @@ export const useCartStore = create<CartStore>()(
                 }
 
                 const filtered = state.products.filter(product =>
-                    product.name.toLowerCase().includes(query.toLowerCase())
+                    product.map(p => p.producto.toLowerCase()).includes(query.toLowerCase())
                 );
 
                 if (filtered.length === 0) {
@@ -779,7 +781,8 @@ export const useCartStore = create<CartStore>()(
                     console.error("Error al cargar productos:", message);
                     return;
                 }
-                const productosAdaptados = AdapterProductos(data);
+
+                const productosAdaptados = agruparProductos(data)
                 set({ products: productosAdaptados, productFiltrados: productosAdaptados });
             },
 
@@ -801,11 +804,11 @@ export const useCartStore = create<CartStore>()(
                         .filter(c => c !== "Recomendados")
                         .length === 0
                         ? true
-                        : nuevasCategorias.filter(c => c !== "Recomendados").includes(p.category);
+                        : nuevasCategorias.filter(c => c !== "Recomendados").includes(p.categoria);
 
                     // Filtrar por "Recomendados"
                     const filtraRecomendados = nuevasCategorias.includes("Recomendados")
-                        ? p.recommended === true
+                        ? Boolean(p.map(p => p.recomendado))
                         : true;
 
                     return filtraCategorias && filtraRecomendados;
@@ -825,7 +828,7 @@ export const useCartStore = create<CartStore>()(
                 const filtrados =
                     nuevasCategorias.length === 0
                         ? state.products // si no hay categoría seleccionada, mostramos todos
-                        : state.products.filter(p => nuevasCategorias.includes(p.category));
+                        : state.products.filter(p => nuevasCategorias.includes(p[0].categoria));
 
                 set({
                     categoriasSeleccionadas: nuevasCategorias,

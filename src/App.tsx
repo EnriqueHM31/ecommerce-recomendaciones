@@ -18,7 +18,7 @@ export default function App() {
 
   useEffect(() => {
     fetchProductos();
-  }, [fetchProductos]);
+  }, []);
 
   const toastOptions = {
     style: {

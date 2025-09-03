@@ -1,4 +1,4 @@
-export interface Producto {
+export interface ProductoB {
     id: number;
     name: string;
     price: number;
@@ -10,6 +10,10 @@ export interface Producto {
     recommended: boolean;
     variants: string[];
     storage: string[];
+    isMainProduct?: boolean
+    originalProductId?: product.id
+
+
     specs: {
         processor?: string;
         ram?: string;
@@ -51,6 +55,33 @@ interface ProductosBD {
     fecha_actualizacion: string; // ISO 8601
 }
 
+export interface Producto {
+    activo: number;
+    almacenamiento: string;
+    bateria: string;
+    camara: string;
+    categoria: string;
+    color: string;
+    conectividad: string;
+    created_at: string;
+    descripcion: string;
+    display: string;
+    id: number;
+    imagen_url: string;
+    marca: string;
+    precio_base: number;
+    procesador: string;
+    producto: string;
+    producto_id: number;
+    ram_especificacion: string;
+    ram_variante: string;
+    recomendado: number;
+    sistema_operativo: string;
+    sku: string;
+    stock: number;
+    updated_at: string;
+}
+
 export interface ProductConfiguration {
     id: string;
     variant: string;
@@ -74,14 +105,13 @@ export interface ProductConfiguration {
 
 export interface CartItem {
     product: Producto;
-    configuration: ProductConfiguration;
     quantity: number;
 }
 
 export interface CartStore {
     // Products
-    products: Producto[];
-    productFiltrados: Producto[];
+    products: Producto[][];
+    productFiltrados: Producto[][];
     categoriasSeleccionadas: string[];
 
     // Cart
@@ -89,10 +119,10 @@ export interface CartStore {
     isCartOpen: boolean;
 
     // Actions
-    addToCart: (product: Producto, configuration: ProductConfiguration) => void;
-    removeFromCart: (productId: number, configurationId: string) => void;
-    increaseQuantity: (productId: number, configurationId: string) => void;
-    decreaseQuantity: (productId: number, configurationId: string) => void;
+    addToCart: (product: Producto) => void;
+    removeFromCart: (productId: number) => void;
+    increaseQuantity: (productId: number) => void;
+    decreaseQuantity: (productId: number) => void;
     clearCart: () => void;
     toggleCart: () => void;
     closeCart: () => void;

@@ -8,18 +8,44 @@ import ProductoNoEncontrado from '../sections/ProductoDetalles/ErrorProducto';
 import Especificaciones from '../sections/ProductoDetalles/Especificaciones';
 import Header from '../sections/ProductoDetalles/Header';
 import VariantesProductoDetalles from '../sections/ProductoDetalles/Variantes';
+import { useCartStore } from '../store/cartStore';
+import type { Producto } from '../types/productos';
+import { useEffect, useState } from 'react';
 
 
 export default function ProductDetail() {
 
-    const { product, selectedConfiguration, handleAddToCart, handleClickToggleVariantes } = useProducto();
+    const { productoEscogido, productoEscogidoArray, handleAddToCart, handleClickToggleVariantes } = useProducto();
     const { handleRegresarAnteriorExacto } = useNavegacion();
+    const { products } = useCartStore();
+    const [configuracionSeleccionada, setConfiguracionSeleccionada] = useState<Producto | undefined>();
 
-    if (!product) {
+    useEffect(() => {
+        if (productoEscogido) {
+            setConfiguracionSeleccionada(productoEscogido);
+        }
+    }, [productoEscogido]);
+
+    if (!productoEscogido) {
         return (
             <ProductoNoEncontrado />
         );
     }
+
+
+    const handleToogleConfiguracion = (product: Producto) => {
+        setConfiguracionSeleccionada(product);
+    };
+
+
+    function getGruposByProductoId(productos: Producto[][], productoId: number): Producto[][] {
+        return productos.filter(grupo => {
+            return grupo.some(p => p.producto_id === productoId)
+        });
+    }
+
+    const gruposVariantes = getGruposByProductoId(products, productoEscogido.producto_id);
+
 
 
     return (
@@ -46,17 +72,20 @@ export default function ProductDetail() {
                             transition={{ duration: 0.6 }}
                         >
                             <motion.img
-                                key={selectedConfiguration?.id}
+                                key={productoEscogido?.id}
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 0.6 }}
                                 className="w-full h-96  rounded-2xl flex items-center justify-center text-8xl mb-6 shadow-theme object-contain"
-                                src={selectedConfiguration?.specs.image || product.image}
-                                alt={selectedConfiguration?.variant || product.name}
+                                src={productoEscogido?.imagen_url}
+                                alt={productoEscogido?.producto}
                             />
 
                             {/* Thumbnails de variantes */}
-                            <VariantesProductoDetalles product={product} selectedConfiguration={selectedConfiguration} handleClickToggleVariantes={handleClickToggleVariantes} />
+                            <VariantesProductoDetalles
+                                productoSeleccionado={productoEscogido}
+                                product={gruposVariantes}
+                                handleClickToggleVariantes={handleClickToggleVariantes} />
                         </motion.div>
 
                         {/* Información del producto */}
@@ -66,22 +95,25 @@ export default function ProductDetail() {
                             transition={{ duration: 0.6, delay: 0.2 }}
                             className="space-y-6"
                         >
-                            <Header product={product} selectedConfiguration={selectedConfiguration} />
+                            <Header product={productoEscogido} />
 
                             {/* Configuración seleccionada */}
-                            {selectedConfiguration && (
-                                <Configuracion selectedConfiguration={selectedConfiguration} />
+                            {configuracionSeleccionada && (
+                                <Configuracion selectedConfiguration={productoEscogidoArray ?? []}
+                                    handlhandleClickToggleVariantes={handleToogleConfiguracion}
+                                    configuracionSeleccionada={configuracionSeleccionada}
+                                />
                             )}
 
                             {/* Especificaciones */}
-                            {selectedConfiguration && selectedConfiguration.specs && (
-                                <Especificaciones selectedConfiguration={selectedConfiguration} />
+                            {productoEscogido && (
+                                <Especificaciones selectedConfiguration={productoEscogido} />
                             )}
 
                             {/* Botón agregar carrito */}
                             <motion.button
-                                onClick={handleAddToCart}
-                                disabled={!selectedConfiguration || selectedConfiguration.stock === 0}
+                                onClick={() => handleAddToCart(productoEscogido)}
+                                disabled={!productoEscogido || productoEscogido.stock === 0}
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 className="w-full bg-theme-primary text-theme-secondary py-4 px-8 rounded-xl font-semibold text-lg flex items-center justify-center gap-3 hover:bg-theme-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"

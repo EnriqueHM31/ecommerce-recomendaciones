@@ -1,22 +1,21 @@
 import { motion } from 'framer-motion';
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 import { useEffect, useState } from 'react';
 import {
     FaCheckCircle,
-    FaDownload,
     FaHome
 } from 'react-icons/fa';
+import DownloadFacturaButton from '../components/Pago/BotonDescarga';
+import Factura from '../components/Pago/Factura';
 import { useNavegacion } from '../hooks/Navigate/navegacion';
 import { useCartStore } from '../store/cartStore';
-import { containerAnimacion, itemAnimacion } from '../utils/animaciones';
-import Factura from '../components/Pago/Factura';
 import type { SessionDetails } from '../types/pago.d';
+import { containerAnimacion, itemAnimacion } from '../utils/animaciones';
 
 export default function PaymentSuccess() {
     const [sessionDetails, setSessionDetails] = useState<SessionDetails | null>(null);
     const { handleRedirigirPagina } = useNavegacion();
     const { clearCart } = useCartStore();
+
 
     useEffect(() => {
         const fetchSession = async () => {
@@ -29,7 +28,6 @@ export default function PaymentSuccess() {
                 if (!res.ok) throw new Error("Error al obtener la sesión");
 
                 const { data } = await res.json();
-                console.log({ data });
 
                 setSessionDetails({
                     id: data.id,
@@ -61,40 +59,6 @@ export default function PaymentSuccess() {
         fetchSession();
     }, []);
 
-    const handleDownloadInvoice = async ({ id }: { id: string }) => {
-        // Obtener el elemento Factura
-        const invoiceElement = document.getElementById('invoice');
-        if (!invoiceElement) return;
-
-        // Clonar el nodo para no afectar el DOM original
-        const clone = invoiceElement.cloneNode(true) as HTMLElement;
-        clone.style.width = getComputedStyle(invoiceElement).width; // mantener ancho
-        clone.style.height = getComputedStyle(invoiceElement).height; // mantener altura
-
-        // Corregir colores que html2canvas no soporta
-        clone.querySelectorAll<HTMLElement>("*").forEach((el) => {
-            const style = getComputedStyle(el);
-            if (style.color.includes("oklch")) el.style.color = "#000";
-            if (style.backgroundColor.includes("oklch")) el.style.backgroundColor = "#fff";
-        });
-
-        // Agregar temporalmente al body (html2canvas necesita que esté en DOM)
-        clone.style.position = "absolute";
-        clone.style.top = "-9999px";
-        document.body.appendChild(clone);
-
-        // Generar canvas
-        const canvas = await html2canvas(clone, { scale: 2, useCORS: true });
-        document.body.removeChild(clone); // limpiar DOM
-
-        const imgData = canvas.toDataURL("image/png");
-        const pdf = new jsPDF("p", "mm", "a4");
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-        pdf.save(`Factura_${id}.pdf`);
-    };
 
 
     return (
@@ -118,17 +82,7 @@ export default function PaymentSuccess() {
                         </p>
                     </motion.div>
                     <motion.div className="" variants={itemAnimacion(0.9)}>
-                        <button
-                            onClick={() => {
-                                const invoiceEl = document.getElementById("invoice");
-                                if (invoiceEl) {
-                                    setTimeout(() => handleDownloadInvoice({ id: sessionDetails?.id || "" }), 2000);
-                                }
-                            }}
-                            className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center gap-2 cursor-pointer"
-                        >
-                            <FaDownload className="w-4 h-4" /> Descargar Recibo
-                        </button>
+                        <DownloadFacturaButton sessionDetails={sessionDetails} />
                     </motion.div>
 
                     <motion.button
