@@ -3,7 +3,7 @@ import type { Producto } from "../../types/productos";
 
 interface VariantesProductoDetallesProps {
     productoSeleccionado: Producto;
-    product: Producto[][];
+    product: Producto[];
     handleClickToggleVariantes: (product: Producto) => void;
 }
 
@@ -23,18 +23,18 @@ export default function Variantes({
                 {
                     product.map(producto => (
                         <motion.div
-                            key={producto[0].sku}
-                            onClick={() => handleClickToggleVariantes(producto[0])}
+                            key={producto.sku}
+                            onClick={() => handleClickToggleVariantes(producto)}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className={`w-full h-24 rounded-xl overflow-hidden cursor-pointer p-2 border-2 transition-all duration-300 ${productoSeleccionado.id === producto[0].id
+                            className={`w-full h-24 rounded-xl overflow-hidden cursor-pointer p-2 border-2 transition-all duration-300 ${productoSeleccionado.id === producto.id
                                 ? 'border-theme-accent'
                                 : 'border-transparent hover:border-theme'
                                 }`}
                         >
                             <img
-                                src={producto[0].imagen_url}
-                                alt={producto[0].producto}
+                                src={producto.imagen_url}
+                                alt={producto.producto + " " + producto.color}
                                 className="w-full h-full object-contain"
                             />
                         </motion.div>

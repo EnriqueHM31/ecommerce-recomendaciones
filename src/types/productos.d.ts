@@ -113,6 +113,7 @@ export interface CartStore {
     products: Producto[][];
     productFiltrados: Producto[][];
     categoriasSeleccionadas: string[];
+    productosPlanos: Producto[];
 
     // Cart
     cartItems: CartItem[];

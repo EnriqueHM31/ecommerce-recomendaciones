@@ -33,16 +33,17 @@ export default function ProductoCarrito({ item, index }: ProductoCarritoProps) {
                         <h4 className="font-semibold text-theme-primary mb-1 truncate">
                             {item.product.producto}
                         </h4>
-                        {
-                            item.product.sistema_operativo && item.product.stock !== 0 && item.product.ram_especificacion && item.product.ram_especificacion !== "N/A"
-                                ? <p className="text-sm text-theme-primary mb-1">
-                                    {item.product.almacenamiento} - {item.product.stock !== 0 ? item.product.stock : ""}
-                                    {item.product.ram_variante && item.product.ram_especificacion !== "N/A" ? ` ${item.product.ram_variante}` : ""}
-                                </p>
-                                : <p className="text-sm text-theme-primary mb-1">
-                                    {item.product.categoria}
-                                </p>
-                        }
+                        <div className='flex items-center gap-2'>
+                            <p className="text-theme-secondary text-xs">
+                                {item.product.marca}
+                            </p>
+                            <p className="text-theme-secondary text-xs">
+                                {item.product.ram_variante}
+                            </p>
+                            <p className="text-theme-secondary text-xs">
+                                ${item.product.almacenamiento}
+                            </p>
+                        </div>
                         <p className="text-theme-accent font-bold text-lg">
                             ${item.product.precio_base}
                         </p>

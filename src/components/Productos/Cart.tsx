@@ -54,8 +54,6 @@ export default function Cart() {
         }
     };
 
-    console.log({ cartItems });
-
     return (
         <AnimatePresence>
             {isCartOpen && (

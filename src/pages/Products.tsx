@@ -15,6 +15,8 @@ export default function Products() {
     const handleCerrarFiltros = AsideFiltros.close;
     const handleAbrirFiltros = AsideFiltros.open;
 
+    console.log(productFiltrados)
+
     return (
         <Layout>
 

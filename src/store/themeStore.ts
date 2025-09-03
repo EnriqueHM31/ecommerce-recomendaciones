@@ -18,7 +18,6 @@ const getInitialTheme = (): Theme => {
 
 export const useThemeStore = create<ThemeStore>((set) => {
     const initialTheme = getInitialTheme();
-    console.log(initialTheme);
     // Asignar el theme al cargar
     document.documentElement.setAttribute('data-theme', initialTheme);
 

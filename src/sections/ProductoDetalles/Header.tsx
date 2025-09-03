@@ -7,15 +7,15 @@ export default function Header({ product }: { product: Producto }) {
             <div>
                 {/* Header */}
                 <div className="flex items-center gap-2 mb-3">
-                    <span className="text-sm bg-theme-secondary-light text-theme-primary px-3 py-1 rounded-full">
-                        {product.categoria}
+                    <span className="text-sm bg-theme-accent text-theme-secondary px-3 py-1 rounded-full flex items-center gap-1">
+                        Categoria: {product.categoria}
                     </span>
-                    {product.recomendado && (
+                    {product.recomendado ? (
                         <span className="text-sm bg-theme-accent text-theme-secondary px-3 py-1 rounded-full flex items-center gap-1">
                             <FaStar className="text-xs" />
                             Recomendado
                         </span>
-                    )}
+                    ) : null}
                 </div>
 
                 <h1 className="text-4xl font-bold text-theme-primary mb-4">

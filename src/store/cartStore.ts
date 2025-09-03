@@ -661,6 +661,7 @@ export const useCartStore = create<CartStore>()(
             // Initial state
             products: [],
             productFiltrados: [],
+            productosPlanos: [],
             cartItems: [],
             isCartOpen: false,
             categoriasSeleccionadas: [],
@@ -746,12 +747,8 @@ export const useCartStore = create<CartStore>()(
                 return state.products.flatMap(product => product.filter(p => p.recomendado));
             },
 
-            getProductById: () => {
-                const state = get();
-                return state.products.find(p => {
-                    return p;
-                }
-                );
+            getProductById: (id: number) => {
+                return get().productosPlanos.find(p => p.id === id);
             },
 
             buscarProducto: (query: string) => {
@@ -783,7 +780,8 @@ export const useCartStore = create<CartStore>()(
                 }
 
                 const productosAdaptados = agruparProductos(data)
-                set({ products: productosAdaptados, productFiltrados: productosAdaptados });
+                const productosPlanos = productosAdaptados.flatMap(product => product);
+                set({ products: productosAdaptados, productFiltrados: productosAdaptados, productosPlanos });
             },
 
             filtrarCategoria: ({ categoria, checked }: { categoria: string; checked: boolean }) => {
