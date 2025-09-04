@@ -4,6 +4,11 @@ export interface LineItem {
     quantity: number;
     amount_total: number;
     currency: string;
+    price?: {
+        product: {
+            images: [string];
+        }
+    }
 }
 
 export interface SessionDetails {

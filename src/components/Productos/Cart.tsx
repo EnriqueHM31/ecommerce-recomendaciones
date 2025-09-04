@@ -6,6 +6,7 @@ import HeaderCarrito from '../Carrito/HeaderCarrtio';
 import ProductoCarrito from '../Carrito/ProductoCarrito';
 import { useUsuario } from '../../hooks/Usuarios/Usuario';
 import { useClerk } from '@clerk/clerk-react';
+import { toast } from 'sonner';
 
 export default function Cart() {
     const {
@@ -46,11 +47,11 @@ export default function Cart() {
             if (data) {
                 window.location.href = data.url;
             } else {
-                alert("Error al crear la sesión de pago");
+                toast.error("Error al crear la sesión de pago");
             }
         } catch (error) {
             console.error(error);
-            alert("Hubo un problema con el checkout");
+            toast.error("Hubo un problema con el checkout");
         }
     };
 

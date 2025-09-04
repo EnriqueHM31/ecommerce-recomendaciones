@@ -1,5 +1,5 @@
 // utils/pdfGenerator.tsx
-import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { Document, Page, StyleSheet, Text, View, Image } from "@react-pdf/renderer";
 import React from "react";
 import type { SessionDetails } from "../types/pago";
 import { toast } from "sonner";
@@ -60,6 +60,16 @@ const styles = StyleSheet.create({
         textAlign: "center",
         padding: 5,
     },
+    image: {
+        flex: 1,
+        borderWidth: 1,
+        borderColor: "#032b53",
+        textAlign: "center",
+        padding: 5,
+        width: 50,
+        height: 50,
+        objectFit: "contain",
+    },
 });
 
 interface PdfFacturaProps {
@@ -72,6 +82,8 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => {
         toast.error("No se encontró la factura");
         return
     }
+
+    console.log(sessionDetails);
 
     return (
         <Document>
@@ -146,6 +158,7 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => {
                     <Text style={styles.sectionHeader}>Detalles de la transacción</Text>
                     <View style={styles.table}>
                         <View style={styles.tableRow}>
+                            <Text style={styles.tableColHeader}>Imagen</Text>
                             <Text style={styles.tableColHeader}>Producto</Text>
                             <Text style={styles.tableColHeader}>Cantidad</Text>
                             <Text style={styles.tableColHeader}>Precio Unitario</Text>
@@ -154,6 +167,10 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => {
 
                         {sessionDetails.lineItems.map((item) => (
                             <View style={styles.tableRow} key={item.id}>
+                                <Image
+                                    src={item.price?.product?.images[0] || "https://via.placeholder.com/50"}
+                                    style={styles.image}
+                                />
                                 <Text style={styles.tableCol}>{item.description}</Text>
                                 <Text style={styles.tableCol}>{item.quantity}</Text>
                                 <Text style={styles.tableCol}>
