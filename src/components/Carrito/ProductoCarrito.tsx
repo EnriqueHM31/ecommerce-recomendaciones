@@ -23,10 +23,13 @@ export default function ProductoCarrito({ item, index }: ProductoCarritoProps) {
             >
                 <div className="flex items-start gap-4">
                     {/* Product Image */}
-                    <img className="w-16 h-16 bg-theme-accent rounded-lg flex items-center justify-center text-2xl text-theme-primary flex-shrink-0 object-cover"
-                        src={item.product.imagen_url}
-                    >
-                    </img>
+                    <div className='size-16 flex items-center justify-center p-2 rounded-full mx-auto mb-4 bg-white'>
+                        <img className="size-12  rounded-lg flex items-center justify-center text-theme-primary flex-shrink-0 object-contain"
+                            src={item.product.imagen_url}
+                        >
+                        </img>
+
+                    </div>
 
                     {/* Product Info */}
                     <div className="flex-1 min-w-0">
@@ -41,7 +44,10 @@ export default function ProductoCarrito({ item, index }: ProductoCarritoProps) {
                                 {item.product.ram_variante}
                             </p>
                             <p className="text-theme-secondary text-xs">
-                                ${item.product.almacenamiento}
+                                {item.product.almacenamiento}
+                            </p>
+                            <p className="text-theme-secondary text-xs">
+                                {item.product.color}
                             </p>
                         </div>
                         <p className="text-theme-accent font-bold text-lg">

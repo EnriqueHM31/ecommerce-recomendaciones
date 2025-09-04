@@ -755,20 +755,20 @@ export const useCartStore = create<CartStore>()(
             buscarProducto: (query: string) => {
                 const state = get();
 
+                const productosFiltradosAgrupados = state.products.flat().filter((obj, index, self) => index === self.findIndex(o => o.producto === obj.producto));
+
                 if (!query.trim()) {
                     // input vacío → mostrar todos
-                    set({ productFiltrados: state.products.flat() });
+                    set({ productosAgrupados: productosFiltradosAgrupados });
                     return;
                 }
 
-                const filtered = state.products.filter(product =>
-                    product.map(p => p.producto.toLowerCase()).includes(query.toLowerCase())
-                );
+                const filtered = productosFiltradosAgrupados.filter(product => product.producto.toLowerCase().includes(query.toLowerCase()));
 
                 if (filtered.length === 0) {
-                    set({ productFiltrados: [] });
+                    set({ productosAgrupados: [] });
                 } else {
-                    set({ productFiltrados: filtered.flat() });
+                    set({ productosAgrupados: filtered });
                 }
             },
 
@@ -783,7 +783,7 @@ export const useCartStore = create<CartStore>()(
                 const productosAdaptados = agruparProductos(data)
                 const productosPlanos = productosAdaptados.flatMap(product => product);
 
-                const productosAgrupados = productosPlanos.filter((obj, index, self) => index === self.findIndex(o => o.producto_id === obj.producto_id));
+                const productosAgrupados = productosPlanos.filter((obj, index, self) => index === self.findIndex(o => o.producto === obj.producto));
                 set({ products: productosAdaptados, productFiltrados: productosAdaptados.flat(), productosPlanos, productosAgrupados });
             },
 

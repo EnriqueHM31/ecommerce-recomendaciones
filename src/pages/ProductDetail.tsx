@@ -103,7 +103,7 @@ export default function ProductDetail() {
 
                             {/* Botón agregar carrito */}
                             <motion.button
-                                onClick={() => handleAddToCart(product)}
+                                onClick={() => handleAddToCart(configuracionSeleccionada ?? product)}
                                 disabled={!product || product.stock === 0}
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
