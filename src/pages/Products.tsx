@@ -9,13 +9,13 @@ import FiltrosBusqueda from '../sections/Productos/FiltrosBusqueda';
 import { useCartStore } from '../store/cartStore';
 
 export default function Products() {
-    const { productFiltrados } = useCartStore();
+    const { productFiltrados, productosAgrupados } = useCartStore();
     const AsideFiltros = useToggle();
 
     const handleCerrarFiltros = AsideFiltros.close;
     const handleAbrirFiltros = AsideFiltros.open;
 
-    console.log(productFiltrados)
+
 
     return (
         <Layout>
@@ -47,8 +47,8 @@ export default function Products() {
                         transition={{ duration: 0.6, delay: 0.4 }}
                         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
                     >
-                        {productFiltrados.map((product, index) => (
-                            <Producto key={product[0].id} product={product} index={index} />
+                        {productosAgrupados.map((product, index) => (
+                            <Producto key={product.id} product={product} index={index} />
                         ))}
                     </motion.div>
                 </div>

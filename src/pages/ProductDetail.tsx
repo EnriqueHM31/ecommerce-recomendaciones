@@ -67,7 +67,7 @@ export default function ProductDetail() {
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 0.6 }}
-                                className="w-full h-96  rounded-2xl flex items-center justify-center text-8xl mb-6 shadow-theme object-contain"
+                                className="w-full h-96  rounded-2xl flex items-center justify-center text-8xl mb-6 shadow-theme object-contain bg-white"
                                 src={configuracionSeleccionada?.imagen_url}
                                 alt={configuracionSeleccionada?.producto + " " + configuracionSeleccionada?.color}
                             />
@@ -86,7 +86,7 @@ export default function ProductDetail() {
                             transition={{ duration: 0.6, delay: 0.2 }}
                             className="space-y-6"
                         >
-                            <Header product={product} />
+                            <Header product={configuracionSeleccionada ?? product} />
 
                             {/* Configuración seleccionada */}
                             {configuracionSeleccionada && (

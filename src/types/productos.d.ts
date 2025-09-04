@@ -111,9 +111,10 @@ export interface CartItem {
 export interface CartStore {
     // Products
     products: Producto[][];
-    productFiltrados: Producto[][];
+    productFiltrados: Producto[];
     categoriasSeleccionadas: string[];
     productosPlanos: Producto[];
+    productosAgrupados: Producto[];
 
     // Cart
     cartItems: CartItem[];

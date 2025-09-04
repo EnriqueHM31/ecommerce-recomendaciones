@@ -665,6 +665,7 @@ export const useCartStore = create<CartStore>()(
             cartItems: [],
             isCartOpen: false,
             categoriasSeleccionadas: [],
+            productosAgrupados: [],
 
             // Actions
             addToCart: (product: Producto) => {
@@ -756,7 +757,7 @@ export const useCartStore = create<CartStore>()(
 
                 if (!query.trim()) {
                     // input vacío → mostrar todos
-                    set({ productFiltrados: state.products });
+                    set({ productFiltrados: state.products.flat() });
                     return;
                 }
 
@@ -767,7 +768,7 @@ export const useCartStore = create<CartStore>()(
                 if (filtered.length === 0) {
                     set({ productFiltrados: [] });
                 } else {
-                    set({ productFiltrados: filtered });
+                    set({ productFiltrados: filtered.flat() });
                 }
             },
 
@@ -781,7 +782,9 @@ export const useCartStore = create<CartStore>()(
 
                 const productosAdaptados = agruparProductos(data)
                 const productosPlanos = productosAdaptados.flatMap(product => product);
-                set({ products: productosAdaptados, productFiltrados: productosAdaptados, productosPlanos });
+
+                const productosAgrupados = productosPlanos.filter((obj, index, self) => index === self.findIndex(o => o.producto_id === obj.producto_id));
+                set({ products: productosAdaptados, productFiltrados: productosAdaptados.flat(), productosPlanos, productosAgrupados });
             },
 
             filtrarCategoria: ({ categoria, checked }: { categoria: string; checked: boolean }) => {
@@ -795,8 +798,11 @@ export const useCartStore = create<CartStore>()(
                     nuevasCategorias = nuevasCategorias.filter(c => c !== categoria);
                 }
 
-                const filtrados = state.products
-                    .flat() // 👈 convierte [[{...}], [{...}], ...] en un solo array de objetos
+                const productFiltradosPlanos = state.productosPlanos.filter((obj, index, self) =>
+                    index === self.findIndex(o => o.producto_id === obj.producto_id)
+                );
+
+                const filtrados = productFiltradosPlanos
                     .filter(p => {
                         // Filtrar por categorías normales
                         const categoriasSinRecomendados = nuevasCategorias.filter(c => c !== "Recomendados");
@@ -818,7 +824,7 @@ export const useCartStore = create<CartStore>()(
                 console.log({ nuevosProductos });
                 set({
                     categoriasSeleccionadas: nuevasCategorias,
-                    productFiltrados: nuevosProductos,
+                    productFiltrados: nuevosProductos.flat(),
                 });
             },
 
@@ -827,14 +833,16 @@ export const useCartStore = create<CartStore>()(
                 let nuevasCategorias = [...state.categoriasSeleccionadas];
                 nuevasCategorias = nuevasCategorias.filter(c => c !== categoria);
 
+                const productFiltradosPlanos = state.productosPlanos.filter((obj, index, self) => index === self.findIndex(o => o.producto_id === obj.producto_id));
+
                 const filtrados =
                     nuevasCategorias.length === 0
-                        ? state.products // si no hay categoría seleccionada, mostramos todos
+                        ? productFiltradosPlanos   // si no hay categoría seleccionada, mostramos todos
                         : state.products.filter(p => nuevasCategorias.includes(p[0].categoria));
 
                 set({
                     categoriasSeleccionadas: nuevasCategorias,
-                    productFiltrados: filtrados,
+                    productFiltrados: filtrados.flat(),
                 });
             }
         }),

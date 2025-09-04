@@ -10,7 +10,10 @@ interface FiltrosBusquedaProps {
 export default function FiltrosBusqueda({ handleAbrirFiltros }: FiltrosBusquedaProps) {
 
 
-    const { eliminarCategoriaFiltro, buscarProducto, productFiltrados, categoriasSeleccionadas } = useCartStore();
+    const { eliminarCategoriaFiltro, buscarProducto, categoriasSeleccionadas, productFiltrados } = useCartStore();
+
+    const productFiltradosPlanos = productFiltrados.filter((obj, index, self) => index === self.findIndex(o => o.producto_id === obj.producto_id));
+
     return (
         <>
             <div className="max-w-7xl mx-auto px-8">
@@ -28,7 +31,7 @@ export default function FiltrosBusqueda({ handleAbrirFiltros }: FiltrosBusquedaP
                                 Filtros
                             </motion.button>
                             <span className="text-theme-primary">
-                                {productFiltrados.length} productos disponibles
+                                {productFiltradosPlanos.length} productos disponibles
                             </span>
                         </div>
                         <div className='flex flex-wrap gap-4'>

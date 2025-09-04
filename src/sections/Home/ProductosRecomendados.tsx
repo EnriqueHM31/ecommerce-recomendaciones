@@ -9,7 +9,10 @@ export default function ProductosRecomendados() {
     const recommendedProducts = getRecommendedProducts();
     const navigate = useNavigate();
 
-    console.log({ recommendedProducts });
+    const filtrados = recommendedProducts.filter((obj, index, self) =>
+        index === self.findIndex(o => o.producto_id === obj.producto_id)
+    );
+
 
     return (
         <>
@@ -33,7 +36,7 @@ export default function ProductosRecomendados() {
                         Productos Recomendados
                     </motion.h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {recommendedProducts.map((product) => (
+                        {filtrados.map((product) => (
                             <motion.div
                                 key={product.sku}
                                 initial={{ opacity: 0, y: 50, scale: 0.9 }}
@@ -48,16 +51,19 @@ export default function ProductosRecomendados() {
                                 className="bg-theme-secondary border border-theme rounded-2xl p-8 text-center shadow-theme hover:shadow-theme-dark cursor-pointer flex flex-col justify-between min-h-50"
                                 onClick={() => navigate(`/products/${product.id}`)}
                             >
-                                <motion.img
-                                    whileHover={{
-                                        scale: 1.1,
-                                        rotate: 5,
-                                        transition: { duration: 0.2 }
-                                    }}
-                                    src={product.imagen_url}
-                                    className="w-32 h-32 bg-theme-accent rounded-full flex items-center justify-center mx-auto mb-6 text-6xl text-theme-secondary object-cover"
-                                >
-                                </motion.img>
+                                <div className='flex size-36 items-center justify-center p-3 rounded-full mx-auto mb-4 bg-white'>
+
+                                    <motion.img
+                                        whileHover={{
+                                            scale: 1.1,
+                                            rotate: 5,
+                                            transition: { duration: 0.2 }
+                                        }}
+                                        src={product.imagen_url}
+                                        className="size-25 object-contain"
+                                    >
+                                    </motion.img>
+                                </div>
                                 <h3 className="text-theme-primary mb-2 text-xl font-semibold">{product.producto}</h3>
                                 <p className="text-theme-primary mb-2">{product.descripcion}</p>
                                 <span className="block text-2xl font-bold text-theme-accent mb-3">${product.precio_base}</span>
