@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
 import IMAGENHERO from '../../assets/img/img.png';
+import { useUsuario } from '../../hooks/Usuarios/Usuario';
 
 export default function Hero() {
+    const { user } = useUsuario();
     return (
         <>
             {/* Hero Section */}
@@ -19,6 +21,20 @@ export default function Hero() {
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
                     >
+                        {
+                            user && (
+                                <motion.p
+                                    initial={{ x: -50, opacity: 0 }}
+                                    animate={{ x: 0, opacity: 1 }}
+                                    transition={{ duration: 0.8, delay: 0.2 }}
+                                    className="text-sm text-theme-primary bg-theme-primary w-fit px-4 py-2 rounded-2xl mb-4 leading-tight "
+
+                                >
+                                    {`Bienvenido ${user?.firstName} ${user?.lastName}`}
+                                </motion.p>
+                            )
+                        }
+
                         <motion.h1
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}

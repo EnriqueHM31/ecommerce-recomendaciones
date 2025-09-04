@@ -11,6 +11,7 @@ import { useCartStore } from '../../store/cartStore';
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 import { useThemeStore } from '../../store/themeStore';
 import { useUsuario } from '../../hooks/Usuarios/Usuario';
+import { AuthCheck } from '../../hooks/Usuarios/AuthUsuario';
 
 export default function Navbar() {
     const { theme, toggleTheme } = useThemeStore();
@@ -147,6 +148,7 @@ export default function Navbar() {
                                 )
                             }
                         </motion.div>
+                        <AuthCheck />
                     </div>
                 </div>
             </nav>
