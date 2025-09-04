@@ -10,10 +10,12 @@ import {
 import { useCartStore } from '../../store/cartStore';
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 import { useThemeStore } from '../../store/themeStore';
+import { useUsuario } from '../../hooks/Usuarios/Usuario';
 
 export default function Navbar() {
     const { theme, toggleTheme } = useThemeStore();
     const { toggleCart, getTotalItems } = useCartStore();
+    const { user } = useUsuario();
 
     return (
         <motion.div
@@ -37,8 +39,10 @@ export default function Navbar() {
                         {[
                             { icon: FaHome, name: "Inicio", href: "/" },
                             { icon: FaBox, name: "Productos", href: "/products" },
-                            { icon: FaEnvelope, name: "Contacto", href: "/contact" }
+                            { icon: FaEnvelope, name: "Contacto", href: "/contact" },
+
                         ].map((item, index) => (
+
                             <motion.li
                                 key={item.name}
                                 initial={{ opacity: 0, y: -20 }}
@@ -55,6 +59,25 @@ export default function Navbar() {
                                 </a>
                             </motion.li>
                         ))}
+                        {
+                            user && (
+                                <motion.li
+                                    key="compras"
+                                    initial={{ opacity: 0, y: -20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.5, delay: 0.5 }}
+                                    whileHover={{ y: -2 }}
+                                >
+                                    <a
+                                        href="/compras"
+                                        className="text-theme-secondary no-underline font-medium hover:text-theme-accent transition-colors duration-300 flex items-center gap-2"
+                                    >
+                                        <FaShoppingCart className="text-lg" />
+                                        Mis compras
+                                    </a>
+                                </motion.li>
+                            )
+                        }
                     </ul>
 
                     {/* Botones lado derecho */}
@@ -64,7 +87,7 @@ export default function Navbar() {
                             onClick={toggleCart}
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.5 }}
+                            transition={{ duration: 0.5, delay: user ? 0.5 : 0.6 }}
                             whileTap={{ scale: 0.95 }}
                             className="w-10 h-10 p-0 rounded-full border-2 border-theme-secondary text-theme-secondary bg-transparent hover:bg-theme-secondary hover:text-theme-primary transition-all duration-300 text-xl flex items-center justify-center relative cursor-pointer"
                         >
@@ -85,7 +108,7 @@ export default function Navbar() {
                             onClick={toggleTheme}
                             initial={{ opacity: 0, y: -20, scale: 0.8 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
-                            transition={{ duration: 0.5, delay: 0.6, }}
+                            transition={{ duration: 0.5, delay: user ? 0.6 : 0.7 }}
                             className="w-10 h-10 p-0 rounded-full border-2 border-theme-secondary text-theme-secondary bg-transparent hover:bg-theme-secondary hover:text-theme-primary transition-all duration-300 text-xl flex items-center justify-center cursor-pointer hover:scale-110"
                         >
                             {theme === 'light' ? <FaMoon /> : <FaSun />}
@@ -95,7 +118,7 @@ export default function Navbar() {
                         <motion.div className="flex items-center "
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.7 }}
+                            transition={{ duration: 0.5, delay: user ? 0.7 : 0.8 }}
                             whileHover={{ y: -2 }}
                             whileTap={{ scale: 0.95 }}
                         >
@@ -106,18 +129,23 @@ export default function Navbar() {
                                     </button>
                                 </SignInButton>
                             </SignedOut>
-                            <div className="size-10 flex items-center justify-center rounded-full border-2 border-white">
-                                <SignedIn>
-                                    <UserButton
-                                        appearance={{
-                                            elements: {
-                                                userButtonAvatarBox: 'w-8 h-8 rounded-full',
-                                                userButtonBox: 'rounded-full transition-all duration-300 hover:bg-theme-secondary hover:text-theme-primary cursor-pointer',
-                                            },
-                                        }}
-                                    />
-                                </SignedIn>
-                            </div>
+                            {
+                                user && (
+                                    <div className="size-10 flex items-center justify-center rounded-full border-2 border-white">
+                                        <SignedIn>
+                                            <UserButton
+                                                appearance={{
+                                                    elements: {
+                                                        userButtonAvatarBox: 'w-8 h-8 rounded-full',
+                                                        userButtonBox: 'rounded-full transition-all duration-300 hover:bg-theme-secondary hover:text-theme-primary cursor-pointer',
+                                                    },
+                                                }}
+                                            />
+                                        </SignedIn>
+                                    </div>
+
+                                )
+                            }
                         </motion.div>
                     </div>
                 </div>

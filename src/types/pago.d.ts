@@ -23,3 +23,28 @@ export interface SessionDetails {
         state: string;
     };
 }
+
+export interface PaymentSession {
+    id: string;
+    amount: string;
+    currency: string;
+    created: string;
+    email?: string;
+    name?: string;
+    line_items: LineItem[];
+    amount_total: number;
+    customer?: {
+        address: {
+            city: string;
+            country: string;
+            line1: string;
+            line2: string;
+            postal_code: string;
+            state: string;
+        };
+        email: string;
+        name: string;
+    }
+    status: string;
+}
+

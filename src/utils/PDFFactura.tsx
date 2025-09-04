@@ -1,7 +1,8 @@
 // utils/pdfGenerator.tsx
 import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import React from "react";
-import type { SessionDetails } from "../types/pago.d";
+import type { SessionDetails } from "../types/pago";
+import { toast } from "sonner";
 
 const styles = StyleSheet.create({
     page: { padding: 20, fontSize: 12, fontFamily: "Helvetica" },
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
         borderRadius: 6,
     },
     sectionHeader: {
-        backgroundColor: "#1e3a8a",
+        backgroundColor: "#032b53",
         color: "#fff",
         fontSize: 12,
         fontWeight: "bold",
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
     },
     sectionBody: { padding: 8 },
     row: { flexDirection: "row", marginBottom: 4 },
-    label: { fontWeight: "bold", width: 70 },
+    label: { fontWeight: "bold", width: 150 },
     value: { flex: 1 },
 
     // Tabla
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
     tableRow: { flexDirection: "row" },
     tableColHeader: {
         flex: 1,
-        backgroundColor: "#1e3a8a",
+        backgroundColor: "#032b53",
         color: "#fff",
         fontWeight: "bold",
         textAlign: "center",
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
     tableCol: {
         flex: 1,
         borderWidth: 1,
-        borderColor: "#1e3a8a",
+        borderColor: "#032b53",
         textAlign: "center",
         padding: 5,
     },
@@ -66,7 +67,11 @@ interface PdfFacturaProps {
 }
 
 export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => {
-    if (!sessionDetails) return null;
+
+    if (!sessionDetails) {
+        toast.error("No se encontró la factura");
+        return
+    }
 
     return (
         <Document>
@@ -109,13 +114,30 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => {
                 <View style={styles.section}>
                     <Text style={styles.sectionHeader}>Detalles de la dirección</Text>
                     <View style={styles.sectionBody}>
-                        <Text>{sessionDetails.address.line1}</Text>
-                        <Text>{sessionDetails.address.line2}</Text>
-                        <Text>
-                            {sessionDetails.address.city}, {sessionDetails.address.state}{" "}
-                            {sessionDetails.address.postal_code}
-                        </Text>
-                        <Text>{sessionDetails.address.country}</Text>
+                        <View style={styles.row}>
+                            <Text style={styles.label}>Direccion 1:</Text>
+                            <Text style={styles.value}>{sessionDetails.address.line1}</Text>
+                        </View>
+                        <View style={styles.row}>
+                            <Text style={styles.label}>Direccion 2:</Text>
+                            <Text style={styles.value}>{sessionDetails.address.line2}</Text>
+                        </View>
+                        <View style={styles.row}>
+                            <Text style={styles.label}>Ciudad:</Text>
+                            <Text style={styles.value}>{sessionDetails.address.city}</Text>
+                        </View>
+                        <View style={styles.row}>
+                            <Text style={styles.label}>Estado:</Text>
+                            <Text style={styles.value}>{sessionDetails.address.state}</Text>
+                        </View>
+                        <View style={styles.row}>
+                            <Text style={styles.label}>Código Postal:</Text>
+                            <Text style={styles.value}>{sessionDetails.address.postal_code}</Text>
+                        </View>
+                        <View style={styles.row}>
+                            <Text style={styles.label}>País:</Text>
+                            <Text style={styles.value}>{sessionDetails.address.country}</Text>
+                        </View>
                     </View>
                 </View>
 

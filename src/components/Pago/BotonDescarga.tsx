@@ -1,6 +1,6 @@
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import type { SessionDetails } from "../../types/pago.d";
-import PdfFactura from "../../utils/descargarPDF";
+import PdfFactura from "../../utils/PDFFactura";
 
 export const DownloadFacturaButton: React.FC<{ sessionDetails: SessionDetails | null }> = ({ sessionDetails }) => {
     if (!sessionDetails) return null;
