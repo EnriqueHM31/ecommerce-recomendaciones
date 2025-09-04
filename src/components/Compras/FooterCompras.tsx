@@ -1,14 +1,18 @@
-import type { PaymentSession } from "../../types/pago";
+import { useComprasStore } from "../../store/comprasStore";
 import { formatearPrecio } from "../../utils/Formateo";
+import { motion } from "framer-motion";
 
 
-interface FooterComprasProps {
-    pedidos: PaymentSession[];
-}
-export default function FooterCompras({ pedidos }: FooterComprasProps) {
+export default function FooterCompras() {
+
+    const { pedidos } = useComprasStore();
     return (
         <>
-            <section className="mt-8 bg-white rounded-xl shadow-lg border border-gray-200 p-6">
+            <motion.section className="mt-8 bg-white rounded-xl shadow-lg border border-theme-primary p-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 * pedidos.length + 0.3 }}
+            >
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Resumen</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="text-center">
@@ -28,7 +32,7 @@ export default function FooterCompras({ pedidos }: FooterComprasProps) {
                         <div className="text-sm text-gray-500">Total gastado</div>
                     </div>
                 </div>
-            </section>
+            </motion.section>
         </>
     )
 }

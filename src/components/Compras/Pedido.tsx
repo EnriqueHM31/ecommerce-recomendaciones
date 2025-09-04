@@ -1,25 +1,31 @@
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import { motion } from 'framer-motion';
 import { FaCalendarAlt, FaDownload, FaEye } from 'react-icons/fa';
+import { useComprasStore } from '../../store/comprasStore';
 import type { PaymentSession } from '../../types/pago';
-import { formatearFecha, formatearPrecio, formatoRecibo, tranformarStatus, colorStatus } from '../../utils/Formateo';
+import { colorStatus, formatearFecha, formatearPrecio, formatoRecibo, tranformarStatus } from '../../utils/Formateo';
 import PdfFactura from '../../utils/PDFFactura';
-import { PDFDownloadLink } from '@react-pdf/renderer';
 import DetallesCompra from './DetallesCompra';
 
 interface PedidoProps {
     pedido: PaymentSession;
     toggle: () => void;
     isOpen: boolean;
-    pedidos: PaymentSession[];
+    index: number;
 }
 
-export default function Pedido({ pedido, toggle, isOpen, pedidos }: PedidoProps) {
+export default function Pedido({ pedido, toggle, isOpen, index }: PedidoProps) {
+
+    const { pedidos } = useComprasStore();
     return (
 
         <>
-            <div
+            <motion.div
                 key={pedido.id}
-                className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                className="bg-white rounded-xl shadow-lg border border-theme-primary/50 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 + 0.3 }}
             >
                 <div className="p-6">
                     <div className="flex items-start justify-between">
@@ -90,27 +96,15 @@ export default function Pedido({ pedido, toggle, isOpen, pedidos }: PedidoProps)
 
                 {
                     isOpen && (
-                        <motion.div
-                            className="flex flex-col gap-2"
-                            initial={{ opacity: 0, y: -100 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.4 }}
-                            viewport={{ once: true }}
-                            exit={{ opacity: 0, y: -100 }}
-                        >
-                            <h1>Productos:</h1>
-                            {
-                                pedidos.map((pedido) => (
-                                    <DetallesCompra pedido={pedido} />
-                                ))
-                            }
-                        </motion.div>
+                        pedidos.map((pedido) => (
+                            <DetallesCompra pedido={pedido} />
+                        ))
                     )
                 }
                 <div className="h-1 bg-gray-200">
                     <div className="h-1 bg-gradient-to-r from-blue-400 to-blue-600 w-3/4 rounded-r animate-pulse"></div>
                 </div>
-            </div>
+            </motion.div>
         </>
     )
 }

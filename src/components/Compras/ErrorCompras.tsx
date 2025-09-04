@@ -1,11 +1,12 @@
 import { FaSyncAlt, FaTimesCircle } from "react-icons/fa";
+import { useComprasStore } from "../../store/comprasStore";
+import { useUsuario } from "../../hooks/Usuarios/Usuario";
 
-interface ComprasVaciasProps {
-    error: string;
-    recargarPedidos: () => void;
-}
 
-export default function ErrorCompras({ error, recargarPedidos }: ComprasVaciasProps) {
+export default function ErrorCompras() {
+
+    const { fetchPedidos, error } = useComprasStore();
+    const { user } = useUsuario();
     return (
         <div className="min-h-[90vh] flex items-center justify-center">
             <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
@@ -15,7 +16,7 @@ export default function ErrorCompras({ error, recargarPedidos }: ComprasVaciasPr
                 </h3>
                 <p className="text-red-600 mb-4">{error}</p>
                 <button
-                    onClick={recargarPedidos}
+                    onClick={() => fetchPedidos(user?.emailAddresses?.[0]?.emailAddress ?? "")}
                     className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                 >
                     <FaSyncAlt className="w-4 h-4 mr-2" />

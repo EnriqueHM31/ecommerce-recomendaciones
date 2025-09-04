@@ -1,5 +1,6 @@
 import type { PaymentSession } from "../../types/pago";
 import { formatearPrecio } from "../../utils/Formateo";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface DetallesCompraProps {
     pedido: PaymentSession;
@@ -7,12 +8,16 @@ interface DetallesCompraProps {
 
 export default function DetallesCompra({ pedido }: DetallesCompraProps) {
     return (
-        <>
-            <div
+        <AnimatePresence mode="wait">
+            <motion.div
                 key={pedido.id}
-                className="bg-theme-primary rounded-xl shadow-lg border border-gray-200 overflow-hidden p-4 flex flex-col gap-3"
+                className="bg-theme-primary text-theme-secondary rounded-xl shadow-lg border border-gray-200 overflow-hidden p-4 flex flex-col gap-3"
+                initial={{ opacity: 0, y: -80 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -80 }}
+                transition={{ duration: 0.5 }}
             >
-                <h2 >Detalles del pedido: </h2>
+                <h2 className="" >Detalles del pedido: </h2>
                 <table className="table-auto w-full text-center ">
                     <thead>
                         <tr>
@@ -41,7 +46,7 @@ export default function DetallesCompra({ pedido }: DetallesCompraProps) {
                         }
                     </tbody>
                 </table>
-            </div>
-        </>
+            </motion.div>
+        </AnimatePresence >
     )
 }
