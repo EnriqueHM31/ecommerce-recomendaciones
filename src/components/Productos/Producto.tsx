@@ -32,12 +32,15 @@ export default function Producto({ product, index }: ProductosProps) {
                 onClick={() => navigate(`/products/${product.id}`)}
             >
                 {/* Product Image */}
-                <motion.img
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    src={product.imagen_url}
-                    alt={product.producto + " " + product.color}
-                    className="w-full mx-auto h-48  object-contain p-2  rounded-xl flex items-center justify-center text-6xl mb-4 bg-white"
-                />
+                <div className='bg-white p-3 flex items-center justify-center rounded-2xl mb-4'>
+                    <motion.img
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        src={product.imagen_url}
+                        alt={product.producto + " " + product.color}
+                        className="w-full mx-auto h-44  object-contain p-2  rounded-xl flex items-center justify-center text-6xl mb-4"
+                    />
+
+                </div>
 
                 <div className="mb-3">
                     <span className="ml-2 text-xs bg-theme-accent text-theme-secondary px-2 py-1 rounded-full">

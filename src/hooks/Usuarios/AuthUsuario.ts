@@ -35,7 +35,7 @@ export const AuthCheck = () => {
         };
 
         crearUsuarioSiNoExiste();
-    }, [user]);
+    }, []);
 
     return null; // Solo un hook de efecto, no renderiza nada
 };
