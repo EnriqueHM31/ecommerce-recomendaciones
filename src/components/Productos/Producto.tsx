@@ -14,7 +14,14 @@ interface ProductosProps {
 export default function Producto({ product, index }: ProductosProps) {
 
     const navigate = useNavigate();
-    const { addToCart } = useCartStore();
+    const { addToCart, productFiltrados } = useCartStore();
+
+    const filtrados = productFiltrados.filter(p => p.producto === product.producto);
+
+    // Dejar solo un objeto por color
+    const unicosColores = Array.from(
+        new Map(filtrados.map(p => [p.color, p])).values()
+    );
 
     return (
         <>
@@ -72,13 +79,19 @@ export default function Producto({ product, index }: ProductosProps) {
                     </div>
 
                     {/* Color Indicator */}
-                    {product.color && (
-                        <div className="flex items-center gap-2 mb-3">
+                    {unicosColores.length > 0 && (
+                        <div className="flex items-center gap-2 mb-3" >
                             <span className="text-sm text-theme-primary">Color:</span>
-                            <div
-                                className="w-6 h-6 rounded-full border border-theme-secondary"
-                                style={{ backgroundColor: COLORES_ECOMMERCE_PRODUCTOS.find(c => c.nombre === product.color)?.valor }}
-                            />
+                            {
+                                unicosColores.map(p => (
+                                    <div
+                                        key={p.sku}
+                                        className="w-6 h-6 rounded-full border border-theme-secondary"
+                                        style={{ backgroundColor: COLORES_ECOMMERCE_PRODUCTOS.find(c => c.nombre === p.color)?.valor }}
+                                    />
+                                ))
+
+                            }
                         </div>
                     )}
                 </div>

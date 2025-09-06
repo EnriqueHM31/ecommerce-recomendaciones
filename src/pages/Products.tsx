@@ -9,7 +9,7 @@ import FiltrosBusqueda from '../sections/Productos/FiltrosBusqueda';
 import { useCartStore } from '../store/cartStore';
 
 export default function Products() {
-    const { productFiltrados, productosAgrupados } = useCartStore();
+    const { productosAgrupados } = useCartStore();
     const AsideFiltros = useToggle();
 
     const handleCerrarFiltros = AsideFiltros.close;
@@ -54,7 +54,7 @@ export default function Products() {
                 </div>
 
                 {/* Empty State */}
-                {productFiltrados.length === 0 && (
+                {productosAgrupados.length === 0 && (
                     <ProductosVacios />
                 )}
             </div>

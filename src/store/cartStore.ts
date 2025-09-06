@@ -666,6 +666,7 @@ export const useCartStore = create<CartStore>()(
             isCartOpen: false,
             categoriasSeleccionadas: [],
             productosAgrupados: [],
+            query: "",
 
             // Actions
             addToCart: (product: Producto) => {
@@ -752,26 +753,6 @@ export const useCartStore = create<CartStore>()(
                 return get().productosPlanos.find(p => p.id === id);
             },
 
-            buscarProducto: (query: string) => {
-                const state = get();
-
-                const productosFiltradosAgrupados = state.products.flat().filter((obj, index, self) => index === self.findIndex(o => o.producto === obj.producto));
-
-                if (!query.trim()) {
-                    // input vacío → mostrar todos
-                    set({ productosAgrupados: productosFiltradosAgrupados });
-                    return;
-                }
-
-                const filtered = productosFiltradosAgrupados.filter(product => product.producto.toLowerCase().includes(query.toLowerCase()));
-
-                if (filtered.length === 0) {
-                    set({ productosAgrupados: [] });
-                } else {
-                    set({ productosAgrupados: filtered });
-                }
-            },
-
             fetchProductos: async () => {
                 const { success, message, data } = await obtenerProductos();
 
@@ -786,65 +767,117 @@ export const useCartStore = create<CartStore>()(
                 const productosAgrupados = productosPlanos.filter((obj, index, self) => index === self.findIndex(o => o.producto === obj.producto));
                 set({ products: productosAdaptados, productFiltrados: productosAdaptados.flat(), productosPlanos, productosAgrupados });
             },
+            buscarProducto: (query: string) => {
+                set({ query }); // guardamos la búsqueda en el estado
 
+                const { productosPlanos, categoriasSeleccionadas } = get();
+
+                const filtrados = productosPlanos.filter(p => {
+                    // --- Categorías ---
+                    const categoriasSinRecomendados = categoriasSeleccionadas.filter(c => c !== "Recomendados");
+
+                    const filtraCategorias =
+                        categoriasSinRecomendados.length === 0
+                            ? true
+                            : categoriasSinRecomendados.includes(p.categoria);
+
+                    const filtraRecomendados = categoriasSeleccionadas.includes("Recomendados")
+                        ? Boolean(p.recomendado)
+                        : true;
+
+                    // --- Búsqueda ---
+                    const filtraBusqueda = query.trim().length === 0
+                        ? true
+                        : p.producto.toLowerCase().includes(query.toLowerCase());
+
+                    return filtraCategorias && filtraRecomendados && filtraBusqueda;
+                });
+
+                const productosAgrupados = filtrados.filter(
+                    (obj, index, self) => index === self.findIndex(o => o.producto === obj.producto)
+                );
+
+                set({ productosAgrupados });
+            },
             filtrarCategoria: ({ categoria, checked }: { categoria: string; checked: boolean }) => {
                 const state = get();
                 let nuevasCategorias = [...state.categoriasSeleccionadas];
 
-                // Agregar o quitar categoría
                 if (checked) {
                     nuevasCategorias.push(categoria);
                 } else {
                     nuevasCategorias = nuevasCategorias.filter(c => c !== categoria);
                 }
 
-                const productFiltradosPlanos = state.productosPlanos.filter((obj, index, self) =>
-                    index === self.findIndex(o => o.producto_id === obj.producto_id)
+                set({ categoriasSeleccionadas: nuevasCategorias });
+
+                const { productosPlanos, query } = get();
+
+                const filtrados = productosPlanos.filter(p => {
+                    // --- Categorías ---
+                    const categoriasSinRecomendados = nuevasCategorias.filter(c => c !== "Recomendados");
+
+                    const filtraCategorias =
+                        categoriasSinRecomendados.length === 0
+                            ? true
+                            : categoriasSinRecomendados.includes(p.categoria);
+
+                    const filtraRecomendados = nuevasCategorias.includes("Recomendados")
+                        ? Boolean(p.recomendado)
+                        : true;
+
+                    // --- Búsqueda ---
+                    const filtraBusqueda = query.trim().length === 0
+                        ? true
+                        : p.producto.toLowerCase().includes(query.toLowerCase());
+
+                    return filtraCategorias && filtraRecomendados && filtraBusqueda;
+                });
+
+                const productosAgrupados = filtrados.filter(
+                    (obj, index, self) => index === self.findIndex(o => o.producto === obj.producto)
                 );
 
-                const filtrados = productFiltradosPlanos
-                    .filter(p => {
-                        // Filtrar por categorías normales
-                        const categoriasSinRecomendados = nuevasCategorias.filter(c => c !== "Recomendados");
-
-                        const filtraCategorias =
-                            categoriasSinRecomendados.length === 0
-                                ? true
-                                : categoriasSinRecomendados.includes(p.categoria);
-
-                        // Filtrar por "Recomendados"
-                        const filtraRecomendados = nuevasCategorias.includes("Recomendados")
-                            ? Boolean(p.recomendado)
-                            : true;
-
-                        return filtraCategorias && filtraRecomendados;
-                    });
-
-                const nuevosProductos = agruparProductos(filtrados);
-                console.log({ nuevosProductos });
-                set({
-                    categoriasSeleccionadas: nuevasCategorias,
-                    productFiltrados: nuevosProductos.flat(),
-                });
+                set({ productosAgrupados });
             },
+
 
             eliminarCategoriaFiltro: (categoria: string) => {
                 const state = get();
-                let nuevasCategorias = [...state.categoriasSeleccionadas];
-                nuevasCategorias = nuevasCategorias.filter(c => c !== categoria);
+                const nuevasCategorias = state.categoriasSeleccionadas.filter(c => c !== categoria);
 
-                const productFiltradosPlanos = state.productosPlanos.filter((obj, index, self) => index === self.findIndex(o => o.producto_id === obj.producto_id));
+                set({ categoriasSeleccionadas: nuevasCategorias });
 
-                const filtrados =
-                    nuevasCategorias.length === 0
-                        ? productFiltradosPlanos   // si no hay categoría seleccionada, mostramos todos
-                        : state.products.filter(p => nuevasCategorias.includes(p[0].categoria));
+                const { productosPlanos, query } = get();
 
-                set({
-                    categoriasSeleccionadas: nuevasCategorias,
-                    productFiltrados: filtrados.flat(),
+                const filtrados = productosPlanos.filter(p => {
+                    // --- Categorías ---
+                    const categoriasSinRecomendados = nuevasCategorias.filter(c => c !== "Recomendados");
+
+                    const filtraCategorias =
+                        categoriasSinRecomendados.length === 0
+                            ? true
+                            : categoriasSinRecomendados.includes(p.categoria);
+
+                    const filtraRecomendados = nuevasCategorias.includes("Recomendados")
+                        ? Boolean(p.recomendado)
+                        : true;
+
+                    // --- Búsqueda ---
+                    const filtraBusqueda = query.trim().length === 0
+                        ? true
+                        : p.producto.toLowerCase().includes(query.toLowerCase());
+
+                    return filtraCategorias && filtraRecomendados && filtraBusqueda;
                 });
+
+                const productosAgrupados = filtrados.filter(
+                    (obj, index, self) => index === self.findIndex(o => o.producto === obj.producto)
+                );
+
+                set({ productosAgrupados });
             }
+
         }),
 
         {

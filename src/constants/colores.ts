@@ -9,6 +9,7 @@ export const COLORES_ECOMMERCE_PRODUCTOS = [
     { nombre: "Crema", valor: "#FFFDD0" },
     { nombre: "Violeta", valor: "#8A2BE2" },
     { nombre: "Gris Titanio", valor: "#7E7E7E" },
+    { nombre: "Gris Espacial", valor: "#4B4B4B" },
     { nombre: "Negro Titanio", valor: "#141414" },
     { nombre: "Violeta Titanio", valor: "#6A5ACD" },
     { nombre: "Obsidiana", valor: "#0B0B0B" },
@@ -19,7 +20,7 @@ export const COLORES_ECOMMERCE_PRODUCTOS = [
     { nombre: "Oro", valor: "#DAA520" },
     { nombre: "Plata", valor: "#C0C0C0" },
     { nombre: "Gris", valor: "#808080" },
-    { nombre: "Azul", valor: "#0000FF" },
+    { nombre: "Azul", valor: "#434F69" },
     { nombre: "Platino", valor: "#E5E4E2" },
     { nombre: "Beige", valor: "#F5F5DC" },
     { nombre: "Graphite", valor: "#383838" },
@@ -29,5 +30,7 @@ export const COLORES_ECOMMERCE_PRODUCTOS = [
     { nombre: "Medianoche", valor: "#191970" },
     { nombre: "Titanio", valor: "#8D8D8D" },
     { nombre: "Antracita", valor: "#2F4F4F" },
-    { nombre: "Tiza", valor: "#EDEDED" }
+    { nombre: "Tiza", valor: "#EDEDED" },
+    { nombre: "Rojo", valor: "#FE0000" },
+
 ];

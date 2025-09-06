@@ -74,7 +74,7 @@ export default function ProductDetail() {
 
                             {/* Thumbnails de variantes */}
                             <VariantesProductoDetalles
-                                productoSeleccionado={product}
+                                productoSeleccionado={configuracionSeleccionada as Producto}
                                 product={productosArray}
                                 handleClickToggleVariantes={handleToggle} />
                         </motion.div>

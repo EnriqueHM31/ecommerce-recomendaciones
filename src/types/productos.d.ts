@@ -115,6 +115,7 @@ export interface CartStore {
     categoriasSeleccionadas: string[];
     productosPlanos: Producto[];
     productosAgrupados: Producto[];
+    query: string;
 
     // Cart
     cartItems: CartItem[];

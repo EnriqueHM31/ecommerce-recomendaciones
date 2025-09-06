@@ -13,7 +13,6 @@ export default function Variantes({
     handleClickToggleVariantes,
 }: VariantesProductoDetallesProps) {
 
-
     return (
         <>
             <h4 className="text-lg font-semibold mb-4 text-theme-primary">
@@ -27,9 +26,9 @@ export default function Variantes({
                             onClick={() => handleClickToggleVariantes(producto)}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className={`w-full h-24 rounded-xl overflow-hidden cursor-pointer p-2 border-2 transition-all duration-300 bg-white ${productoSeleccionado.id === producto.id
-                                ? 'border-theme-accent'
-                                : 'border-transparent hover:border-theme'
+                            className={`w-full h-24 rounded-xl overflow-hidden cursor-pointer p-2  transition-all duration-300 border-4 bg-white ${productoSeleccionado.sku === producto.sku
+                                ? 'border-blue-500'
+                                : 'border-transparent hover:border-primary'
                                 }`}
                         >
                             <img
