@@ -34,7 +34,7 @@ export const useComprasStore = create<ComprasStore>()((set, get) => ({
 
     // Estado inicial de paginación
     page: 1,
-    pageSize: 5, // 👈 fijo en 5
+    pageSize: 6, // 👈 fijo en 5
     total: 0,
     totalPages: 0,
     hasMore: true,
