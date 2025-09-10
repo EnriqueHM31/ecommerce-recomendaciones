@@ -7,13 +7,12 @@ import ProductoCarrito from '../Carrito/ProductoCarrito';
 import { useUsuario } from '../../hooks/Usuarios/Usuario';
 import { useClerk } from '@clerk/clerk-react';
 import { toast } from 'sonner';
+import { comprarProductos } from '../../services/compras';
+import { useNavegacion } from '../../hooks/Navigate/navegacion';
 
 export default function Cart() {
-    const {
-        cartItems,
-        isCartOpen,
-        closeCart,
-    } = useCartStore();
+    const { cartItems, isCartOpen, closeCart } = useCartStore();
+    const { handleRedirigirPagina } = useNavegacion();
 
     const { user } = useUsuario();
     const { openSignIn } = useClerk();
@@ -28,24 +27,15 @@ export default function Cart() {
         if (cartItems.length === 0) return;
 
         try {
-            const res = await fetch(`${import.meta.env.VITE_API}/api/compra/checkout-session`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    items: cartItems,
-                    customer: {
-                        id: user?.id,
-                        email: user?.emailAddresses[0].emailAddress,
-                        name: user?.fullName,
-                    }
-                }),
-            });
-            const { data } = await res.json();
-
-
+            const userCompra = {
+                id: user?.id ?? "",
+                email: user?.emailAddresses[0].emailAddress ?? "",
+                fullName: user?.fullName ?? "",
+            }
+            const { data } = await comprarProductos({ user: userCompra, cartItems });
 
             if (data) {
-                window.location.href = data.url;
+                handleRedirigirPagina(data.url);
             } else {
                 toast.error("Error al crear la sesión de pago");
             }

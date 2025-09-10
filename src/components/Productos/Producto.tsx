@@ -18,7 +18,6 @@ export default function Producto({ product, index }: ProductosProps) {
 
     const filtrados = productFiltrados.filter(p => p.producto === product.producto);
 
-    // Dejar solo un objeto por color
     const unicosColores = Array.from(
         new Map(filtrados.map(p => [p.color, p])).values()
     );
