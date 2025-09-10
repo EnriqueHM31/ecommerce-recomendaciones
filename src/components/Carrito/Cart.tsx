@@ -1,9 +1,9 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCartStore } from '../../store/cartStore';
-import CarritoVacio from '../Carrito/CarritoVacio';
-import FooterCarrito from '../Carrito/FooterCarrito';
-import HeaderCarrito from '../Carrito/HeaderCarrtio';
-import ProductoCarrito from '../Carrito/ProductoCarrito';
+import CarritoVacio from './CarritoVacio';
+import FooterCarrito from './FooterCarrito';
+import HeaderCarrito from './HeaderCarrtio';
+import ProductoCarrito from './ProductoCarrito';
 import { useUsuario } from '../../hooks/Usuarios/Usuario';
 import { useClerk } from '@clerk/clerk-react';
 import { toast } from 'sonner';

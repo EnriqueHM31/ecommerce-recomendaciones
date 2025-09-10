@@ -1,7 +1,9 @@
-import { FaEnvelope, FaFacebook, FaHome, FaInstagram, FaTwitter, FaBox } from "react-icons/fa";
+import { FaEnvelope, FaFacebook, FaHome, FaInstagram, FaTwitter, FaBox, FaShoppingCart } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { useUsuario } from "../../hooks/Usuarios/Usuario";
 
 export default function Footer() {
+    const { user } = useUsuario();
     return (
         <motion.footer
             initial={{ opacity: 0, y: 50 }}
@@ -60,6 +62,25 @@ export default function Footer() {
                                     </a>
                                 </motion.li>
                             ))}
+                            {
+                                user && (
+                                    <motion.li
+                                        key="compras"
+                                        initial={{ opacity: 0, y: -20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.5, delay: 0.5 }}
+                                        whileHover={{ y: -2 }}
+                                    >
+                                        <a
+                                            href="/compras"
+                                            className="text-theme-secondary no-underline font-medium hover:text-theme-accent transition-colors duration-300 flex items-center gap-2"
+                                        >
+                                            <FaShoppingCart className="text-lg" />
+                                            Mis compras
+                                        </a>
+                                    </motion.li>
+                                )
+                            }
                         </ul>
                     </motion.div>
 
