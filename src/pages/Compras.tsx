@@ -11,6 +11,7 @@ import Layout from "../components/Landing/Layout";
 import { useUsuario } from "../hooks/Usuarios/Usuario";
 import { useComprasStore } from "../store/comprasStore";
 import type { PaymentSession } from "../types/pago";
+import { IoClose } from "react-icons/io5";
 
 const Compras: React.FC = () => {
     const { user } = useUsuario();
@@ -18,7 +19,7 @@ const Compras: React.FC = () => {
         fetchPedidos,
         loading,
         error,
-        pedidos, // 👈 ya son solo los visibles
+        pedidos,
         page,
         totalPages,
         pages,
@@ -40,11 +41,12 @@ const Compras: React.FC = () => {
         setPedidoSeleccionado(pedido)
     }
 
-    if (loading && pedidos.length === 0 && !user) return <Loading />
+    if (loading) return <Loading />
 
     if (error && pedidos.length === 0) return <ErrorCompras />
 
     if (!loading && !error && pedidos.length === 0) return <ComprasVacias />
+
     return (
         <Layout>
             <AnimatePresence>
@@ -151,7 +153,7 @@ const Compras: React.FC = () => {
                         exit={{ opacity: 0 }}
                     >
                         <motion.div
-                            className="bg-white rounded-xl shadow-2xl max-w-3xl w-full p-6 relative"
+                            className="bg-theme-secondary rounded-xl shadow-2xl max-w-4xl w-full p-16 relative max-h-[80vh] overflow-x-auto"
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
@@ -160,9 +162,9 @@ const Compras: React.FC = () => {
                             {/* Botón cerrar */}
                             <button
                                 onClick={() => setPedidoSeleccionado(null)}
-                                className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+                                className="absolute top-3 right-3 text-gray-500 hover:text-gray-500 cursor-pointer"
                             >
-                                ✕
+                                <IoClose className="text-5xl" />
                             </button>
 
                             <DetallesCompra pedido={pedidoSeleccionado} />
