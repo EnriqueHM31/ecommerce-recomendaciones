@@ -2,7 +2,9 @@ import { create } from "zustand";
 import type { PaymentSession } from "../types/pago";
 
 interface ComprasStore {
-    pedidos: PaymentSession[];
+    // 🔹 Estado de pedidos
+    allPedidos: PaymentSession[]; // todos
+    pedidos: PaymentSession[];    // visibles
     loading: boolean;
     error: string | null;
     detalles: boolean;
@@ -13,10 +15,10 @@ interface ComprasStore {
     total: number;
     totalPages: number;
     hasMore: boolean;
-    pages: number[]; // array de páginas [1, 2, 3, ...]
+    pages: number[];
 
     // Actions
-    fetchPedidos: (email: string, page?: number) => Promise<void>;
+    fetchPedidos: (email: string) => Promise<void>;
     setPage: (page: number) => void;
     nextPage: () => void;
     prevPage: () => void;
@@ -24,6 +26,7 @@ interface ComprasStore {
 }
 
 export const useComprasStore = create<ComprasStore>()((set, get) => ({
+    allPedidos: [],
     pedidos: [],
     loading: false,
     error: null,
@@ -37,24 +40,18 @@ export const useComprasStore = create<ComprasStore>()((set, get) => ({
     hasMore: true,
     pages: [],
 
-    // 🔹 Traer pedidos con paginación
-    fetchPedidos: async (email: string, page?: number) => {
+    // 🔹 Traer todos los pedidos y luego dividir en páginas en frontend
+    fetchPedidos: async (email: string) => {
         if (!email) {
-            set({
-                error: "No se encontró el email del usuario",
-                loading: false,
-            });
+            set({ error: "No se encontró el email del usuario", loading: false });
             return;
         }
 
         try {
             set({ loading: true, error: null });
 
-            const currentPage = page ?? get().page;
-            const pageSize = get().pageSize;
-
             const response = await fetch(
-                `${import.meta.env.VITE_API}/api/compra/pedidos/${email}?page=${currentPage}&pageSize=${pageSize}`,
+                `${import.meta.env.VITE_API}/api/compra/pedidos/${email}`,
                 { method: "GET" }
             );
 
@@ -62,15 +59,23 @@ export const useComprasStore = create<ComprasStore>()((set, get) => ({
                 throw new Error("Error al obtener los pedidos");
             }
 
-            // 🔹 El backend debe devolver { data: PaymentSession[], total: number }
-            const { data, total } = await response.json();
+            const { data } = await response.json();
 
-            const totalPages = Math.ceil((total ?? 0) / pageSize);
+            const pageSize = get().pageSize;
+            const total = data.length;
+            const totalPages = Math.ceil(total / pageSize);
             const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
+            // 👇 calcular los pedidos visibles para la página actual
+            const currentPage = 1;
+            const start = (currentPage - 1) * pageSize;
+            const end = start + pageSize;
+            const visible = data.slice(start, end);
+
             set({
-                pedidos: data || [],
-                total: total ?? 0,
+                allPedidos: data,
+                pedidos: visible,
+                total,
                 totalPages,
                 pages,
                 hasMore: currentPage < totalPages,
@@ -85,24 +90,35 @@ export const useComprasStore = create<ComprasStore>()((set, get) => ({
         }
     },
 
-    // 🔹 Cambiar de página manualmente
-    setPage: (page: number) => set({ page }),
+    // 🔹 Cambiar de página (calcula los visibles a partir de allPedidos)
+    setPage: (page: number) => {
+        const { allPedidos, pageSize, totalPages } = get();
 
-    // 🔹 Página siguiente
+        const currentPage = Math.min(Math.max(page, 1), totalPages);
+        const start = (currentPage - 1) * pageSize;
+        const end = start + pageSize;
+        const visible = allPedidos.slice(start, end);
+
+        set({
+            page: currentPage,
+            pedidos: visible,
+            hasMore: currentPage < totalPages,
+        });
+    },
+
     nextPage: () => {
-        const { page, totalPages, setPage } = get();
+        const { page, setPage, totalPages } = get();
         if (page < totalPages) setPage(page + 1);
     },
 
-    // 🔹 Página anterior
     prevPage: () => {
         const { page, setPage } = get();
         if (page > 1) setPage(page - 1);
     },
 
-    // 🔹 Resetear pedidos y paginación
     resetPedidos: () =>
         set({
+            allPedidos: [],
             pedidos: [],
             page: 1,
             total: 0,

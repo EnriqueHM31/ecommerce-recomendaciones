@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export default function FooterCompras() {
 
-    const { pedidos } = useComprasStore();
+    const { allPedidos: pedidos } = useComprasStore();
     return (
         <>
             <motion.section className="mt-8 bg-white rounded-xl shadow-lg border border-theme-primary p-6"

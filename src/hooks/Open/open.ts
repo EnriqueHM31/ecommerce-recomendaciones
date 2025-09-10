@@ -10,18 +10,34 @@ export function useToggle(initial: boolean = false) {
     const toggle = useCallback(() => setIsOpen(prev => !prev), []);
 
     // 🔹 Estado por id (nuevo)
-    const [openId, setOpenId] = useState<string | number | null>(null);
+    const [openIds, setOpenIds] = useState<Record<string | number, boolean>>({});
 
-    const openById = useCallback((id: string | number) => setOpenId(id), []);
-    const closeById = useCallback(() => setOpenId(null), []);
-    const toggleById = useCallback(
-        (id: string | number) => setOpenId(prev => (prev === id ? null : id)),
-        []
-    );
+    const toggleById = useCallback((id: string | number) => {
+        setOpenIds((prev) => ({
+            ...prev,
+            [id]: !prev[id], // cambia solo ese id
+        }));
+    }, []);
+
+    const openById = useCallback((id: string | number) => {
+        setOpenIds((prev) => ({
+            ...prev,
+            [id]: true,
+        }));
+    }, []);
+
+    const closeById = useCallback((id: string | number) => {
+        setOpenIds((prev) => ({
+            ...prev,
+            [id]: false,
+        }));
+    }, []);
+
     const isOpenById = useCallback(
-        (id: string | number) => openId === id,
-        [openId]
+        (id: string | number) => !!openIds[id],
+        [openIds]
     );
+
 
     return {
         // 🔹 Originales
@@ -31,7 +47,7 @@ export function useToggle(initial: boolean = false) {
         toggle,
 
         // 🔹 Nuevos por id
-        openId,
+        openIds,
         openById,
         closeById,
         toggleById,

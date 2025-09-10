@@ -23,7 +23,7 @@ export default function Pedido({ pedido, toggle, isOpen, index }: PedidoProps) {
     return (
         <motion.div
             key={pedido.id}
-            className="bg-white rounded-xl shadow-lg border border-theme-primary/50 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+            className="bg-white rounded-xl shadow-lg border border-theme-primary/50 overflow-hidden hover:shadow-xl "
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: index * 0.1 + 0.3 }}
@@ -101,7 +101,8 @@ export default function Pedido({ pedido, toggle, isOpen, index }: PedidoProps) {
             </div>
 
             {/* Detalles del pedido */}
-            {isOpen && <DetallesCompra pedido={pedido} key={pedido.id} />}
+            {isOpen && <DetallesCompra pedido={pedido} />}
+
 
             {/* Barra animada */}
             <div className="h-1 bg-gray-200">

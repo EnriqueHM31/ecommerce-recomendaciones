@@ -17,7 +17,7 @@ const Compras: React.FC = () => {
         fetchPedidos,
         loading,
         error,
-        pedidos,
+        pedidos, // 👈 ya son solo los visibles
         page,
         totalPages,
         pages,
@@ -31,8 +31,9 @@ const Compras: React.FC = () => {
 
     useEffect(() => {
         if (!user) return;
-        fetchPedidos(user?.emailAddresses?.[0]?.emailAddress ?? "", page);
-    }, [user, page]); // 👈 importante: depende de page
+        // 👇 ya no pasamos page porque el store lo maneja solo
+        fetchPedidos(user?.emailAddresses?.[0]?.emailAddress ?? "");
+    }, [user]);
 
     return (
         <Layout>
@@ -73,7 +74,7 @@ const Compras: React.FC = () => {
                                 <div className="flex flex-col items-center justify-center mt-4">
                                     <motion.button
                                         onClick={() =>
-                                            fetchPedidos(user?.emailAddresses?.[0]?.emailAddress ?? "", page)
+                                            fetchPedidos(user?.emailAddresses?.[0]?.emailAddress ?? "")
                                         }
                                         className="inline-flex items-center px-3 py-2 text-sm bg-theme-primary text-theme-secondary hover:text-theme-accent transition-colors rounded-2xl cursor-pointer"
                                         disabled={loading}
@@ -112,14 +113,13 @@ const Compras: React.FC = () => {
                                     Anterior
                                 </button>
 
-                                {/* Botones de página */}
                                 {pages.map((p) => (
                                     <button
                                         key={p}
                                         onClick={() => setPage(p)}
                                         className={`px-3 py-1 rounded-lg border ${p === page
-                                            ? "bg-blue-600 text-white font-bold"
-                                            : "bg-white text-gray-700 hover:bg-gray-100"
+                                                ? "bg-blue-600 text-white font-bold"
+                                                : "bg-white text-gray-700 hover:bg-gray-100"
                                             }`}
                                     >
                                         {p}
