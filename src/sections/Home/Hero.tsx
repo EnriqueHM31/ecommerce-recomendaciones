@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion';
 import IMAGENHERO from '../../assets/img/img.png';
 import { useUsuario } from '../../hooks/Usuarios/Usuario';
+import { useNavegacion } from '../../hooks/Navigate/navegacion';
 
 export default function Hero() {
     const { user } = useUsuario();
+    const { handleRedirigirPagina } = useNavegacion();
     return (
         <>
             {/* Hero Section */}
@@ -27,7 +29,7 @@ export default function Hero() {
                                     initial={{ x: -50, opacity: 0 }}
                                     animate={{ x: 0, opacity: 1 }}
                                     transition={{ duration: 0.8, delay: 0.2 }}
-                                    className="text-sm text-theme-primary bg-theme-primary w-fit px-4 py-2 rounded-2xl mb-4 leading-tight "
+                                    className="text-sm text-theme-secondary bg-theme-primary w-fit px-4 py-2 rounded-2xl mb-4 leading-tight "
 
                                 >
                                     {`Bienvenido ${user?.firstName} ${user?.lastName}`}
@@ -52,7 +54,7 @@ export default function Hero() {
                             Bienvenido a tu tienda de tecnología de confianza, donde la innovación se encuentra con la comodidad. Aquí encontrarás una amplia gama de productos que van desde smartphones, laptops y accesorios, hasta los últimos gadgets diseñados para simplificar tu vida.
                         </motion.p>
                         <motion.button
-                            onClick={() => (window.location.href = '/products')}
+                            onClick={() => handleRedirigirPagina("/products")}
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ duration: 0.8, delay: 0.8 }}

@@ -3,14 +3,14 @@ import { useEffect } from 'react';
 import { toast } from 'sonner';
 
 export const AuthCheck = () => {
-    const { user } = useUser(); // Clerk user
+    const { user } = useUser();
 
     useEffect(() => {
         const crearUsuarioSiNoExiste = async () => {
-            if (!user) return;
+            if (!user) return; // todavía no cargó el user de Clerk
 
             try {
-                await fetch(`${import.meta.env.VITE_API}/api/usuario/auth`, {
+                const res = await fetch(`${import.meta.env.VITE_API}/api/usuario/auth`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -21,21 +21,22 @@ export const AuthCheck = () => {
                         correo: user.emailAddresses[0].emailAddress,
                         avatar: user.imageUrl
                     })
-                }).then(res => res.json()).then(data => {
-                    const { creado, mesage } = data;
-                    if (creado) {
-                        toast.success(mesage);
-                    }
-                })
+                });
 
+                const data = await res.json();
+                const { creado, message } = data;
 
+                if (creado) {
+                    toast.success(message || "Usuario creado");
+                }
             } catch (error) {
                 console.error("Error al crear usuario en BD:", error);
+                toast.error("Error al sincronizar usuario");
             }
         };
 
         crearUsuarioSiNoExiste();
-    }, []);
+    }, [user]); // 👈 importante: depende de user
 
-    return null; // Solo un hook de efecto, no renderiza nada
+    return null;
 };
