@@ -22,13 +22,9 @@ export function useProducto() {
         addToCart(product);
     };
 
-    const handleClickToggleVariantes = (product: Producto) => {
-        console.log("hola", product);
-    };
 
     return {
         product,
         handleAddToCart,
-        handleClickToggleVariantes,
     }
 }

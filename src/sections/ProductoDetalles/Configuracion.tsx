@@ -16,7 +16,6 @@ export default function Configuracion({ arrayConfiguraciones, handleToggle, conf
                     arrayConfiguraciones.map(config => (
                         <div key={config.sku} className={`p-4 rounded-lg border-2 border-theme-accent bg-theme-secondary-light ${config.sku === configuracionSeleccionada?.sku ? 'border-theme-accent bg-theme-primary text-theme-secondary' : 'border-transparent hover:border-theme-accent'} cursor-pointer`}
                             onClick={() => {
-                                console.log(config);
                                 handleToggle(config)
                             }}
                         >

@@ -83,8 +83,6 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => {
         return
     }
 
-    console.log(sessionDetails);
-
     return (
         <Document>
             <Page style={styles.page}>
