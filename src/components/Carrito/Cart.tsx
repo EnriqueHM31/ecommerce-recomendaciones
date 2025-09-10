@@ -1,18 +1,16 @@
+import { useClerk } from '@clerk/clerk-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { toast } from 'sonner';
+import { useUsuario } from '../../hooks/Usuarios/Usuario';
+import { comprarProductos } from '../../services/compras';
 import { useCartStore } from '../../store/cartStore';
 import CarritoVacio from './CarritoVacio';
 import FooterCarrito from './FooterCarrito';
 import HeaderCarrito from './HeaderCarrtio';
 import ProductoCarrito from './ProductoCarrito';
-import { useUsuario } from '../../hooks/Usuarios/Usuario';
-import { useClerk } from '@clerk/clerk-react';
-import { toast } from 'sonner';
-import { comprarProductos } from '../../services/compras';
-import { useNavegacion } from '../../hooks/Navigate/navegacion';
 
 export default function Cart() {
     const { cartItems, isCartOpen, closeCart } = useCartStore();
-    const { handleRedirigirPagina } = useNavegacion();
 
     const { user } = useUsuario();
     const { openSignIn } = useClerk();
@@ -33,12 +31,7 @@ export default function Cart() {
                 fullName: user?.fullName ?? "",
             }
             const { data } = await comprarProductos({ user: userCompra, cartItems });
-
-            if (data) {
-                handleRedirigirPagina(data.url);
-            } else {
-                toast.error("Error al crear la sesión de pago");
-            }
+            window.location.href = data;
         } catch (error) {
             console.error(error);
             toast.error("Hubo un problema con el checkout");

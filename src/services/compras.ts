@@ -22,9 +22,8 @@ export async function comprarProductos({ user, cartItems }: Compras) {
             }
         }),
     });
-    if (res.ok) {
-        return { data: await res.json() };
-    } else {
-        throw new Error("Error al crear la sesión de pago");
-    }
+    if (!res.ok) throw new Error("Hubo un error al crear la sesión de pago");
+
+    const { data } = await res.json();
+    return { data };
 }
