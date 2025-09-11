@@ -21,7 +21,7 @@ export default function Pedido({ pedido, onOpenDetalles, index }: PedidoProps) {
     return (
         <motion.div
             key={pedido.id}
-            className="bg-white rounded-2xl shadow-md border border-theme-primary hover:shadow-xl transition-all p-6 flex flex-col justify-between"
+            className="bg-white rounded-2xl shadow-md border border-theme-primary hover:shadow-xl transition-all p-6 flex flex-col justify-between relative"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, delay: index * 0.1 }}

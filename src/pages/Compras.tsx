@@ -43,9 +43,9 @@ const Compras: React.FC = () => {
 
     if (loading) return <Loading />
 
-    if (error && pedidos.length === 0) return <ErrorCompras />
+    if (error) return <ErrorCompras />
 
-    if (!loading && !error && pedidos.length === 0) return <ComprasVacias />
+    if (pedidos.length === 0) return <ComprasVacias />
 
     return (
         <Layout>
@@ -162,7 +162,7 @@ const Compras: React.FC = () => {
                             {/* Botón cerrar */}
                             <button
                                 onClick={() => setPedidoSeleccionado(null)}
-                                className="absolute top-3 right-3 text-gray-500 hover:text-gray-500 cursor-pointer"
+                                className="absolute top-3 right-3 text-gray-500 hover:text-gray-500 curspor-pointer"
                             >
                                 <IoClose className="text-5xl" />
                             </button>
