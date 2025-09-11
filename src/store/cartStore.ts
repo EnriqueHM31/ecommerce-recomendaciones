@@ -765,6 +765,10 @@ export const useCartStore = create<CartStore>()(
                 const productosPlanos = productosAdaptados.flatMap(product => product);
 
                 const productosAgrupados = productosPlanos.filter((obj, index, self) => index === self.findIndex(o => o.producto === obj.producto));
+
+
+
+
                 set({ products: productosAdaptados, productFiltrados: productosAdaptados.flat(), productosPlanos, productosAgrupados });
             },
             buscarProducto: (query: string) => {

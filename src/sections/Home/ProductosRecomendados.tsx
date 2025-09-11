@@ -71,10 +71,7 @@ export default function ProductosRecomendados() {
                                 <motion.button
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        // Usar la primera configuración disponible
-                                        if (product.configurations && product.configurations.length > 0) {
-                                            addToCart(product);
-                                        }
+                                        addToCart(product);
                                     }}
                                     whileHover={{ scale: 1.05, y: -2 }}
                                     whileTap={{ scale: 0.95 }}

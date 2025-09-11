@@ -6,13 +6,6 @@ const CATEGORIAS = [
     'Laptops',
     'Tablets',
     'Accesorios',
-    'Gaming',
-    'Audio',
-    'Smartwatch',
-    'TV & Video',
-    'Hogar Inteligente',
-    'Cámaras',
-    'Recomendados'
 ];
 
 export default function Filtros({ handleCerrarFiltros }: { handleCerrarFiltros: () => void }) {
@@ -37,10 +30,10 @@ export default function Filtros({ handleCerrarFiltros }: { handleCerrarFiltros: 
                 animate={{ x: 0 }}
                 exit={{ x: "-100%" }}
                 transition={{ type: "tween", duration: 0.3 }}
-                className="fixed top-0 left-0 h-full w-80 bg-theme-secondary shadow-lg z-100 p-6 overflow-y-auto"
+                className="fixed top-0 left-0 h-full w-80 bg-theme-secondary shadow-lg z-100 p-6 overflow-y-auto flex flex-col justify-center"
             >
-                <h2 className="text-xl font-semibold mb-4 mt-8">Filtros por categoría</h2>
-                <ul className="flex flex-col gap-3 my-8">
+                <h2 className="text-2xl font-semibold mt-8">Filtros por categoría</h2>
+                <ul className="flex flex-col gap-6 my-8">
                     {CATEGORIAS.map((cat, index) => (
                         <li key={index}>
                             <label className="flex items-center gap-2 cursor-pointer">
@@ -58,7 +51,7 @@ export default function Filtros({ handleCerrarFiltros }: { handleCerrarFiltros: 
 
                 <button
                     onClick={handleCerrarFiltros}
-                    className="mt-6 p-2 bg-theme-accent text-theme-secondary rounded-full font-medium absolute top-0 right-5"
+                    className="mt-6 p-2 bg-theme-accent text-theme-secondary rounded-full font-medium absolute top-0 right-5 cursor-pointer"
                 >
                     <IoClose className="text-2xl font-bold" />
                 </button>
