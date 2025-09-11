@@ -13,10 +13,10 @@ export default function Hero() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1 }}
-                className="bg-theme-secondary-light py-16 flex items-center min-h-[80vh]"
+                className="max-w-7xl mx-auto bg-theme-secondary-light py-16 flex items-center min-h-[80vh]"
                 id="home"
             >
-                <div className="max-w-11/12 mx-auto  grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative ">
+                <div className="max-w-full mx-auto  grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative ">
 
                     <motion.div
                         initial={{ x: -100, opacity: 0 }}

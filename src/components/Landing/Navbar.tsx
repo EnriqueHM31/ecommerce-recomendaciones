@@ -23,7 +23,7 @@ export default function Navbar() {
             className="sticky top-0 z-50"
         >
             <nav className="bg-[#023d65] py-4 shadow-theme-dark">
-                <div className="max-w-7xl mx-auto flex justify-between items-center px-8">
+                <div className="max-w-7xl mx-auto flex justify-between items-center">
                     {/* Logo */}
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
@@ -49,11 +49,11 @@ export default function Navbar() {
                                 initial={{ opacity: 0, y: -20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: index * 0.1 + 0.1 }}
-                                whileHover={{ y: -2 }}
+                                whileHover={{ y: -5 }}
                             >
                                 <a
                                     href={item.href}
-                                    className="text-theme-secondary no-underline font-medium hover:text-theme-accent transition-colors duration-300 flex items-center gap-2"
+                                    className="text-theme-secondary no-underline font-medium hover:text-theme-accent transition-colors duration-200 flex items-center gap-2"
                                 >
                                     <item.icon className="text-lg" />
                                     {item.name}

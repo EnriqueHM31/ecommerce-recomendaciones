@@ -17,7 +17,7 @@ export default function Marcas() {
                 className="py-16 bg-theme-secondary-light"
                 id="brands"
             >
-                <div className="max-w-7xl mx-auto px-8">
+                <div className="max-w-7xl mx-auto">
                     <motion.h2
                         initial={{ y: 20, opacity: 0 }}
                         whileInView={{ y: 0, opacity: 1 }}
