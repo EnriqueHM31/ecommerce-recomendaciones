@@ -10,6 +10,9 @@ import { esES } from '@clerk/localizations';
 import { dark } from '@clerk/themes';
 import { experimental__simple } from '@clerk/themes';
 import { useThemeStore } from './store/themeStore.ts';
+import { Buffer } from "buffer";
+window.Buffer = Buffer;
+
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY

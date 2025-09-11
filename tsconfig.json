@@ -6,5 +6,8 @@
   ],
   "rules": {
     "react-hooks/exhaustive-deps": "off"
+  },
+  "compilerOptions": {
+    "types": ["node"]
   }
 }

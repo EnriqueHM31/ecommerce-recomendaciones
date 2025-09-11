@@ -8,7 +8,7 @@ import DownloadFacturaButton from '../components/Pago/BotonDescarga';
 import Factura from '../components/Pago/Factura';
 import { useNavegacion } from '../hooks/Navigate/navegacion';
 import { useCartStore } from '../store/cartStore';
-import type { SessionDetails } from '../types/pago.d';
+import type { SessionDetails, StripeCheckoutSession, StripeLineItem } from '../types/pago.d';
 import { containerAnimacion, itemAnimacion } from '../utils/animaciones';
 
 export default function PaymentSuccess() {
@@ -27,7 +27,7 @@ export default function PaymentSuccess() {
                 const res = await fetch(`${import.meta.env.VITE_API}/api/compra/checkout-session?sessionId=${sessionId}`);
                 if (!res.ok) throw new Error("Error al obtener la sesión");
 
-                const { data } = await res.json();
+                const { data }: { data: StripeCheckoutSession } = await res.json();
 
                 setSessionDetails({
                     id: data.id,
@@ -42,16 +42,35 @@ export default function PaymentSuccess() {
                     }),
                     email: data.customer?.email ?? "No disponible",
                     name: data.customer?.name ?? "No disponible",
-                    lineItems: data.line_items?.data ?? [],
+
+                    // ✅ Map correcto de los productos
+                    lineItems: data.line_items?.data.map((item: StripeLineItem) => ({
+                        id: item.id,
+                        description: item.description,
+                        quantity: Number(item.quantity),
+                        amount_total: Number((item.amount_total / 100).toFixed(2)),
+                        currency: item.currency?.toUpperCase(),
+                        price: {
+                            price: Number((item.price.unit_amount / 100).toFixed(2)),
+                            product: {
+                                images: item.price.product.images ?? ["https://via.placeholder.com/150x150.png?text=Sin+Imagen"], // ✅ imagen por producto
+                                name: item.price.product.name,
+                                description: item.price.product.description,
+                            }
+                        } // precio unitario
+                    })) ?? [],
+
+                    // ✅ Address solo con los datos del cliente
                     address: data.customer?.address ?? {
                         city: "No disponible",
                         country: "No disponible",
                         line1: "No disponible",
                         line2: "No disponible",
-                        postalCode: "No disponible",
+                        postal_code: "No disponible",
                         state: "No disponible",
                     },
                 });
+
             } catch (err) {
                 console.error("Error al obtener detalles de sesión:", err);
             }
