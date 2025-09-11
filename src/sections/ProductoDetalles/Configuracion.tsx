@@ -39,7 +39,7 @@ export default function Configuracion({ arrayConfiguraciones, handleToggle, conf
                     ))
                 }
 
-            </div>
+            </div >
         </>
     )
 }
