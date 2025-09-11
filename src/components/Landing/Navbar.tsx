@@ -22,7 +22,7 @@ export default function Navbar() {
         <motion.div
             className="sticky top-0 z-50"
         >
-            <nav className="bg-[#023d65] py-4 shadow-theme-dark">
+            <nav className="bg-[#05395f] py-4 shadow-theme-dark">
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
                     {/* Logo */}
                     <motion.div
