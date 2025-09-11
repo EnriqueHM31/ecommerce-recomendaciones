@@ -1,7 +1,7 @@
 // utils/pdfGenerator.tsx
 import { Document, Page, StyleSheet, Text, View, Image } from "@react-pdf/renderer";
 import React from "react";
-import type { SessionDetails } from "../types/pago";
+import type { SessionDetails } from "../../types/pago";
 
 const styles = StyleSheet.create({
     page: { padding: 20, fontSize: 12, fontFamily: "Helvetica" },

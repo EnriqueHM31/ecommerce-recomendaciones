@@ -9,7 +9,7 @@ import {
     formatoRecibo,
     tranformarStatus,
 } from "../../utils/Formateo";
-import PdfFactura from "../../utils/PDFFactura";
+import PdfFactura from "../Pago/PDFFactura";
 
 interface PedidoProps {
     pedido: PaymentSession;
