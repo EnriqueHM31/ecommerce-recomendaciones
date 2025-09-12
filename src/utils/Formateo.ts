@@ -1,10 +1,9 @@
 import type { PaymentSession } from "../types/pago";
-
 export const formatearPrecio = (amount: number, currency?: string) =>
     new Intl.NumberFormat("es-MX", {
         style: "currency",
         currency: currency?.toUpperCase() || "USD",
-    }).format(amount / 100);
+    }).format(amount);
 
 
 export const formatearFecha = (timestamp: number) => {

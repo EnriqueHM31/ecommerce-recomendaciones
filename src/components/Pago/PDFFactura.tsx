@@ -5,6 +5,8 @@ import type { SessionDetails } from "../../types/pago";
 
 const styles = StyleSheet.create({
     page: { padding: 20, fontSize: 12, fontFamily: "Helvetica" },
+
+    // HEADER
     headerBox: {
         backgroundColor: "#dcfce7",
         borderRadius: 8,
@@ -19,6 +21,8 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     subtitle: { fontSize: 12, marginTop: 4, color: "#374151" },
+
+    // SECCIONES
     section: { marginBottom: 15, borderWidth: 1, borderColor: "#d1d5db", borderRadius: 6 },
     sectionHeader: {
         backgroundColor: "#032b53",
@@ -28,11 +32,20 @@ const styles = StyleSheet.create({
         padding: 6,
     },
     sectionBody: { padding: 8 },
-    row: { flexDirection: "row", marginBottom: 4 },
+    row: {
+        flexDirection: "row",
+        marginBottom: 4,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+    },
     label: { fontWeight: "bold", width: 150 },
     value: { flex: 1 },
+
+    // TABLA
     table: { display: "flex", width: "auto" },
     tableRow: { flexDirection: "row" },
+
     tableColHeader: {
         flex: 1,
         backgroundColor: "#032b53",
@@ -41,20 +54,20 @@ const styles = StyleSheet.create({
         textAlign: "center",
         padding: 5,
     },
+
     tableCol: {
         flex: 1,
         borderWidth: 1,
         borderColor: "#032b53",
-        textAlign: "center",
+        alignItems: "center",       // centra horizontal
+        justifyContent: "center",   // centra vertical
         padding: 5,
+        display: "flex",
     },
+
     image: {
-        flex: 1,
-        borderWidth: 1,
-        borderColor: "#032b53",
-        textAlign: "center",
-        width: 50,
-        height: 50,
+        width: 40,
+        height: 40,
         objectFit: "contain",
     },
 });
@@ -63,7 +76,7 @@ const formatCurrency = (value: number, currency: string) =>
     new Intl.NumberFormat("es-MX", {
         style: "currency",
         currency,
-    }).format(value / 100);
+    }).format(value);
 
 interface PdfFacturaProps {
     sessionDetails: SessionDetails;
@@ -93,7 +106,7 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => (
                     <View style={styles.row}>
                         <Text style={styles.label}>Monto:</Text>
                         <Text style={styles.value}>
-                            {formatCurrency(Number(sessionDetails.amount) / 100, sessionDetails.currency)}
+                            {formatCurrency(Number(sessionDetails.amount), sessionDetails.currency)}
                         </Text>
                     </View>
                     <View style={styles.row}>
@@ -134,6 +147,7 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => (
             <View style={styles.section}>
                 <Text style={styles.sectionHeader}>Productos</Text>
                 <View style={styles.table}>
+                    {/* Header */}
                     <View style={styles.tableRow}>
                         <Text style={styles.tableColHeader}>Imagen</Text>
                         <Text style={styles.tableColHeader}>Producto</Text>
@@ -142,20 +156,34 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => (
                         <Text style={styles.tableColHeader}>Total</Text>
                     </View>
 
+                    {/* Filas */}
                     {sessionDetails.lineItems.map((item) => (
                         <View style={styles.tableRow} key={item.id}>
-                            <Image
-                                src={item.price?.product?.images?.[0] ?? "https://via.placeholder.com/50"}
-                                style={styles.image}
-                            />
-                            <Text style={styles.tableCol}>{item.description}</Text>
-                            <Text style={styles.tableCol}>{item.quantity}</Text>
-                            <Text style={styles.tableCol}>
-                                {formatCurrency(item.amount_total / item.quantity, item.currency)}
-                            </Text>
-                            <Text style={styles.tableCol}>
-                                {formatCurrency(item.amount_total, item.currency)}
-                            </Text>
+                            <View style={styles.tableCol}>
+                                <Image
+                                    src={item.price?.product?.images?.[0] ?? "https://via.placeholder.com/50"}
+                                    style={styles.image}
+                                />
+                            </View>
+                            <View style={styles.tableCol}>
+                                <Text>{item.description}</Text>
+                            </View>
+                            <View style={styles.tableCol}>
+                                <Text>{item.quantity}</Text>
+                            </View>
+                            <View style={styles.tableCol}>
+                                <Text>
+                                    {formatCurrency(
+                                        item.amount_total / item.quantity,
+                                        item.currency
+                                    )}
+                                </Text>
+                            </View>
+                            <View style={styles.tableCol}>
+                                <Text>
+                                    {formatCurrency(item.amount_total, item.currency)}
+                                </Text>
+                            </View>
                         </View>
                     ))}
                 </View>

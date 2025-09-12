@@ -10,6 +10,7 @@ import { useNavegacion } from '../hooks/Navigate/navegacion';
 import { useCartStore } from '../store/cartStore';
 import type { SessionDetails, StripeCheckoutSession, StripeLineItem } from '../types/pago.d';
 import { containerAnimacion, itemAnimacion } from '../utils/animaciones';
+import FacturaSkeleton from '../components/Success/Skeleton';
 
 export default function PaymentSuccess() {
     const [sessionDetails, setSessionDetails] = useState<SessionDetails | null>(null);
@@ -82,41 +83,48 @@ export default function PaymentSuccess() {
 
     return (
         <div className="min-h-[110dvh] bg-bliue-950 flex items-center justify-center p-4">
-            <motion.div
-                className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-8 text-center min-h-[110dvh] flex flex-col justify-between"
-                variants={containerAnimacion(0.15)}
-                initial="hidden"
-                animate="show"
-            >
+            {
+                sessionDetails ? (
 
-                <Factura sessionDetails={sessionDetails} />
-
-                {/* Botones */}
-                <section className='flex flex-col justify-between gap-3'>
-                    {/* Confirmación */}
-                    <motion.div className="bg-green-50 border border-green-200 rounded-lg p-4 " variants={itemAnimacion(0.8)}>
-                        <p className="text-green-800 text-sm flex items-center gap-2">
-                            <FaCheckCircle className="text-green-600" />
-                            Se ha enviado tu recibo a tu email
-                        </p>
-                    </motion.div>
-                    <motion.div className="" variants={itemAnimacion(0.9)}>
-                        <DownloadFacturaButton sessionDetails={sessionDetails} />
-                    </motion.div>
-
-                    <motion.button
-                        onClick={() => {
-                            handleRedirigirPagina("/");
-                            clearCart();
-                        }}
-                        className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg flex items-center justify-center gap-2 cursor-pointer"
-                        variants={itemAnimacion(1)}
+                    <motion.div
+                        className="bg-white rounded-2xl shadow-2xl max-w-1/2 w-full p-8 text-center min-h-[110dvh] flex flex-col justify-between"
+                        variants={containerAnimacion(0.15)}
+                        initial="hidden"
+                        animate="show"
                     >
-                        <FaHome className="w-4 h-4" /> Volver al Inicio
-                    </motion.button>
 
-                </section>
-            </motion.div>
+                        <Factura sessionDetails={sessionDetails} />
+
+                        {/* Botones */}
+                        <section className='flex flex-col justify-between gap-3'>
+                            {/* Confirmación */}
+                            <motion.div className="bg-green-50 border border-green-200 rounded-lg p-4 " variants={itemAnimacion(0.8)}>
+                                <p className="text-green-800 text-sm flex items-center gap-2">
+                                    <FaCheckCircle className="text-green-600" />
+                                    Se ha enviado tu recibo a tu email
+                                </p>
+                            </motion.div>
+                            <motion.div className="" variants={itemAnimacion(0.9)}>
+                                <DownloadFacturaButton sessionDetails={sessionDetails} />
+                            </motion.div>
+
+                            <motion.button
+                                onClick={() => {
+                                    handleRedirigirPagina("/");
+                                    clearCart();
+                                }}
+                                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg flex items-center justify-center gap-2 cursor-pointer"
+                                variants={itemAnimacion(1)}
+                            >
+                                <FaHome className="w-4 h-4" /> Volver al Inicio
+                            </motion.button>
+
+                        </section>
+                    </motion.div>
+                ) : (
+                    <FacturaSkeleton />
+                )
+            }
         </div>
     );
 }

@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { FaCheckCircle, FaCreditCard, FaDirections, FaShoppingCart } from 'react-icons/fa';
 import type { SessionDetails, LineItem } from '../../types/pago.d';
 import { containerAnimacion, itemAnimacion } from '../../utils/animaciones';
+import { formatearPrecio } from '../../utils/formateo';
 
 
 
@@ -49,7 +50,7 @@ export default function Factura({ sessionDetails }: { sessionDetails: SessionDet
                         </div>
                         <div className="flex gap-4">
                             <span className="text-gray-600 flex-1">Monto:</span>
-                            <span className="font-medium text-black flex-4 text-start">${sessionDetails?.amount} {sessionDetails?.currency}</span>
+                            <span className="font-medium text-black flex-4 text-start">{formatearPrecio(Number(sessionDetails?.amount), sessionDetails?.currency)}</span>
                         </div>
                         <div className="flex items-center gap-4">
                             <span className="text-gray-600 flex-1">Fecha:</span>
@@ -110,6 +111,7 @@ export default function Factura({ sessionDetails }: { sessionDetails: SessionDet
                             <table className="min-w-full border border-gray-200 rounded-lg text-sm w-full">
                                 <thead className="bg-gray-100">
                                     <tr>
+                                        <th className="px-4 py-2 text-left border-b border-gray-200 bg-blue-950 text-white">Image</th>
                                         <th className="px-4 py-2 text-left border-b border-gray-200 bg-blue-950 text-white">Producto</th>
                                         <th className="px-4 py-2 text-center border-b border-gray-200 bg-blue-950 text-white">Cantidad</th>
                                         <th className="px-4 py-2 text-right border-b border-gray-200 bg-blue-950 text-white">Precio Unitario</th>
@@ -119,6 +121,9 @@ export default function Factura({ sessionDetails }: { sessionDetails: SessionDet
                                 <tbody>
                                     {sessionDetails?.lineItems.map((item: LineItem) => (
                                         <tr key={item.id} className="even:bg-gray-50">
+                                            <td className="px-4 py-2 text-black flex items-center justify-center">
+                                                <motion.img src={item.price?.product?.images[0]} alt="producto" className="size-10 object-contain" />
+                                            </td>
                                             <td className="px-4 py-2 text-black">
                                                 <motion.div >{item.description}</motion.div>
                                             </td>
@@ -127,12 +132,12 @@ export default function Factura({ sessionDetails }: { sessionDetails: SessionDet
                                             </td>
                                             <td className="px-4 py-2 text-right text-black">
                                                 <motion.div >
-                                                    ${(item.amount_total / item.quantity / 100).toFixed(2)} {item.currency}
+                                                    {formatearPrecio(item.amount_total, item.currency)}
                                                 </motion.div>
                                             </td>
                                             <td className="px-4 py-2 text-right font-medium text-black">
                                                 <motion.div >
-                                                    ${(item.amount_total / 100).toFixed(2)} {item.currency}
+                                                    {formatearPrecio(item.amount_total, item.currency)}
                                                 </motion.div>
                                             </td>
 
