@@ -5,10 +5,10 @@ import type { PaymentSession } from "../../types/pago";
 import {
     colorStatus,
     formatearFecha,
-    formatearPrecio,
+    formatearPrecio2,
     formatoRecibo,
     tranformarStatus,
-} from "../../utils/Formateo";
+} from "../../utils/formateo";
 import PdfFactura from "../Pago/PDFFactura";
 
 interface PedidoProps {
@@ -39,7 +39,7 @@ export default function Pedido({ pedido, onOpenDetalles, index }: PedidoProps) {
 
                 <div className="mt-auto">
                     <div className="text-xl font-bold text-gray-900 mb-2">
-                        {formatearPrecio(Number(pedido.amount_total), pedido.currency)}
+                        {formatearPrecio2(Number(pedido.amount_total.toFixed(2)), pedido.currency)}
                     </div>
 
                     <div

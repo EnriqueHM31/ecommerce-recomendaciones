@@ -1,3 +1,4 @@
+import { toast } from 'sonner';
 import { create } from 'zustand';
 
 type Theme = 'light' | 'dark';
@@ -27,6 +28,7 @@ export const useThemeStore = create<ThemeStore>((set) => {
             const newTheme: Theme = state.theme === 'light' ? 'dark' : 'light';
             localStorage.setItem('theme', newTheme);
             document.documentElement.setAttribute('data-theme', newTheme);
+            toast.success(`Se cambió el tema a ${newTheme.charAt(0).toUpperCase() + newTheme.slice(1)}.`);
             return { theme: newTheme };
         }),
 

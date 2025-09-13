@@ -2,6 +2,7 @@
 import { Document, Page, StyleSheet, Text, View, Image } from "@react-pdf/renderer";
 import React from "react";
 import type { SessionDetails } from "../../types/pago";
+import { formatearPrecio2 } from "../../utils/formateo";
 
 const styles = StyleSheet.create({
     page: { padding: 20, fontSize: 12, fontFamily: "Helvetica" },
@@ -72,11 +73,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const formatCurrency = (value: number, currency: string) =>
-    new Intl.NumberFormat("es-MX", {
-        style: "currency",
-        currency,
-    }).format(value);
+
 
 interface PdfFacturaProps {
     sessionDetails: SessionDetails;
@@ -106,7 +103,7 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => (
                     <View style={styles.row}>
                         <Text style={styles.label}>Monto:</Text>
                         <Text style={styles.value}>
-                            {formatCurrency(Number(sessionDetails.amount), sessionDetails.currency)}
+                            {formatearPrecio2(Number(sessionDetails.amount), sessionDetails.currency)}
                         </Text>
                     </View>
                     <View style={styles.row}>
@@ -173,7 +170,7 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => (
                             </View>
                             <View style={styles.tableCol}>
                                 <Text>
-                                    {formatCurrency(
+                                    {formatearPrecio2(
                                         item.amount_total / item.quantity,
                                         item.currency
                                     )}
@@ -181,7 +178,7 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => (
                             </View>
                             <View style={styles.tableCol}>
                                 <Text>
-                                    {formatCurrency(item.amount_total, item.currency)}
+                                    {formatearPrecio2(item.amount_total, item.currency)}
                                 </Text>
                             </View>
                         </View>

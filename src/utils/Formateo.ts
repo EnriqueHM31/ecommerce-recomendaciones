@@ -5,6 +5,14 @@ export const formatearPrecio = (amount: number, currency?: string) =>
         currency: currency?.toUpperCase() || "USD",
     }).format(amount);
 
+export const formatearPrecio2 = (amount: number, currency?: string) =>
+    new Intl.NumberFormat("es-MX", {
+        style: "currency",
+        currency: currency?.toUpperCase() || "MXN",
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    }).format(amount / 100);
+
 
 export const formatearFecha = (timestamp: number) => {
     return new Date(timestamp * 1000).toLocaleDateString('es-MX', {

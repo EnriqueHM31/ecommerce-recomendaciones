@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import type { PaymentSession } from "../../types/pago";
-import { formatearFecha, formatearPrecio } from "../../utils/formateo";
+import { formatearFecha, formatearPrecio2 } from "../../utils/formateo";
 import { FaShoppingCart, FaUser, FaCalendarAlt, FaCheckCircle, FaClock } from "react-icons/fa";
 
 interface DetallesCompraProps {
@@ -92,7 +92,7 @@ export default function DetallesCompra({ pedido }: DetallesCompraProps) {
                                 <td className="px-3 py-3">{item.description}</td>
                                 <td className="px-3 py-3 text-center">{item.quantity}</td>
                                 <td className="px-3 py-3 text-center">
-                                    {formatearPrecio(item.amount_total, item.currency)}
+                                    {formatearPrecio2(item.amount_total, item.currency)}
                                 </td>
                             </tr>
                         ))}
@@ -105,7 +105,7 @@ export default function DetallesCompra({ pedido }: DetallesCompraProps) {
                 <div className="bg-gray-50 px-6 py-3 rounded-xl shadow-sm">
                     <p className="text-sm text-gray-600">Total pagado</p>
                     <p className="text-lg font-semibold text-theme-accent">
-                        {formatearPrecio(pedido.amount_total, pedido.currency)}
+                        {formatearPrecio2(pedido.amount_total, pedido.currency)}
                     </p>
                 </div>
             </div>

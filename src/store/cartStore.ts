@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import { obtenerProductos } from '../services/productos';
 import type { CartStore, Producto } from '../types/productos';
 import { agruparProductos } from '../utils/productos';
+import { toast } from 'sonner';
 
 /*
 // Mock products data
@@ -809,8 +810,10 @@ export const useCartStore = create<CartStore>()(
 
                 if (checked) {
                     nuevasCategorias.push(categoria);
+                    toast.success(`Se agregó el filtro: ${categoria}.`);
                 } else {
                     nuevasCategorias = nuevasCategorias.filter(c => c !== categoria);
+                    toast.info(`Se eliminó el filtro: ${categoria}.`);
                 }
 
                 set({ categoriasSeleccionadas: nuevasCategorias });
@@ -878,6 +881,7 @@ export const useCartStore = create<CartStore>()(
                 const productosAgrupados = filtrados.filter(
                     (obj, index, self) => index === self.findIndex(o => o.producto === obj.producto)
                 );
+                toast.success(`Se eliminio el filtro ${categoria}.`);
 
                 set({ productosAgrupados });
             }

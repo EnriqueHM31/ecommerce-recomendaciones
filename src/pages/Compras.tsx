@@ -28,24 +28,25 @@ const Compras: React.FC = () => {
         setPage,
     } = useComprasStore();
 
-    // Hook para abrir/cerrar pedidos por ID
+    const [pedidosCargados, setPedidosCargados] = useState(false);
+
     useEffect(() => {
         if (!user) return;
-        // 👇 ya no pasamos page porque el store lo maneja solo
-        fetchPedidos(user?.emailAddresses?.[0]?.emailAddress ?? "");
-    }, [user]);
 
+        const email = user?.emailAddresses?.[0]?.emailAddress ?? "";
+        if (!email) return;
+
+        fetchPedidos(email).then(() => setPedidosCargados(true));
+    }, [user]);
     const [pedidoSeleccionado, setPedidoSeleccionado] = useState<PaymentSession | null>(null);
 
     const onOpenDetalles = (pedido: PaymentSession) => {
         setPedidoSeleccionado(pedido)
     }
 
-    if (loading) return <Loading />
+    if (loading || !pedidosCargados) return <Loading />;
 
     if (error) return <ErrorCompras />
-
-    if (pedidos.length === 0) return <ComprasVacias />
 
     return (
         <Layout>
@@ -97,14 +98,20 @@ const Compras: React.FC = () => {
 
                         {/* Lista de pedidos */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 grid-rows-2">
-                            {pedidos.map((pedido, index) => (
-                                <Pedido
-                                    key={pedido.id}
-                                    pedido={pedido}
-                                    index={index}
-                                    onOpenDetalles={onOpenDetalles}
-                                />
-                            ))}
+                            {
+                                pedidos.length === 0 ? (
+                                    <ComprasVacias />
+                                ) : (
+                                    pedidos.map((pedido, index) => (
+                                        <Pedido
+                                            key={pedido.id}
+                                            pedido={pedido}
+                                            index={index}
+                                            onOpenDetalles={onOpenDetalles}
+                                        />
+                                    ))
+                                )
+                            }
                         </div>
 
                         {/* 🔹 Paginación */}
