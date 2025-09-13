@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { COLORES_ECOMMERCE_PRODUCTOS } from '../../constants/colores';
 import type { Producto } from '../../types/productos';
 import { useCartStore } from '../../store/cartStore';
+import { toast } from 'sonner';
 
 
 interface ProductosProps {
@@ -101,6 +102,8 @@ export default function Producto({ product, index }: ProductosProps) {
                         e.stopPropagation();
                         if (product) {
                             addToCart(product);
+                            toast.success(`Se agregó el producto ${product.producto} ${product.color}  al carrito.`);
+
                         }
                     }}
                     whileHover={{ scale: 1.05, y: -2 }}

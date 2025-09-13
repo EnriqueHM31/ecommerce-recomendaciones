@@ -11,6 +11,7 @@ import { useCartStore } from '../store/cartStore';
 import type { SessionDetails, StripeCheckoutSession, StripeLineItem } from '../types/pago.d';
 import { containerAnimacion, itemAnimacion } from '../utils/animaciones';
 import FacturaSkeleton from '../components/Success/Skeleton';
+import { toast } from 'sonner';
 
 export default function PaymentSuccess() {
     const [sessionDetails, setSessionDetails] = useState<SessionDetails | null>(null);
@@ -112,6 +113,7 @@ export default function PaymentSuccess() {
                                 onClick={() => {
                                     handleRedirigirPagina("/");
                                     clearCart();
+                                    toast.success('Se realizo su compra con éxito.');
                                 }}
                                 className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg flex items-center justify-center gap-2 cursor-pointer"
                                 variants={itemAnimacion(1)}

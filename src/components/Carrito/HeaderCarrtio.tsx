@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { FaTimes, FaTrash } from 'react-icons/fa';
 import { useCartStore } from '../../store/cartStore';
+import { toast } from 'sonner';
 
 export default function HeaderCarrito() {
 
@@ -25,7 +26,10 @@ export default function HeaderCarrito() {
                     </span>
                     {cartItems.length > 0 && (
                         <motion.button
-                            onClick={clearCart}
+                            onClick={() => {
+                                clearCart()
+                                toast.success('Se limpió el carrito.');
+                            }}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             className="flex items-center gap-2 bg-theme-secondary text-theme-primary px-4 py-2 rounded-full cursor-pointer font-medium hover:bg-theme-accent-light transition-colors"
