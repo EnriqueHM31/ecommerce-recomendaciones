@@ -42,7 +42,7 @@ export default function ProductDetail() {
     return (
         <Layout>
             <div className="min-h-screen bg-theme-secondary text-theme-primary pb-26 pt-10  ">
-                <div className="max-w-7xl mx-auto px-8">
+                <div className="max-w-7xl mx-auto px-4">
                     {/* Botón volver */}
                     <motion.button
                         onClick={() => handleRegresarAnteriorExacto()}
@@ -67,7 +67,7 @@ export default function ProductDetail() {
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 0.6 }}
-                                className="w-full h-96  rounded-2xl flex items-center justify-center text-8xl mb-6 shadow-theme object-contain bg-white"
+                                className="w-full h-50 md:h-96  rounded-2xl flex items-center justify-center text-8xl mb-6 shadow-theme object-contain bg-white p-3 md:p-0"
                                 src={configuracionSeleccionada?.imagen_url}
                                 alt={configuracionSeleccionada?.producto + " " + configuracionSeleccionada?.color}
                             />

@@ -26,7 +26,7 @@ export default function Variantes({
             <h4 className="text-lg font-semibold mb-4 text-theme-primary">
                 Variantes del Producto
             </h4>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {
                     uniqueProducts.map(producto => (
                         <motion.div
@@ -34,7 +34,7 @@ export default function Variantes({
                             onClick={() => handleClickToggleVariantes(producto)}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className={`w-full h-24 rounded-xl overflow-hidden cursor-pointer p-2  transition-all duration-300 border-4 bg-white ${productoSeleccionado.color === producto.color
+                            className={`w-full h-18 md:h-24 rounded-xl overflow-hidden cursor-pointer p-1 md:p-2  transition-all duration-300 border-4 bg-white ${productoSeleccionado.color === producto.color
                                 ? 'border-blue-500'
                                 : 'border-transparent hover:border-primary'
                                 }`}

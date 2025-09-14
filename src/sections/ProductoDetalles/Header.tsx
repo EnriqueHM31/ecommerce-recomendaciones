@@ -6,7 +6,7 @@ export default function Header({ product }: { product: Producto }) {
         <>
             <div>
                 {/* Header */}
-                <div className="flex items-center gap-2 mb-3">
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-2 mb-3">
                     <span className="text-sm bg-theme-accent text-theme-secondary px-3 py-1 rounded-full flex items-center gap-1">
                         Categoria: {product.categoria}
                     </span>
