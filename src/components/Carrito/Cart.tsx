@@ -57,13 +57,13 @@ export default function Cart() {
                         animate={{ x: 0 }}
                         exit={{ x: '100%' }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="fixed right-0 top-0 h-full w-full max-w-md bg-theme-secondary shadow-2xl z-50 overflow-y-auto scrollbar-none min-h-screen "
+                        className="fixed right-0 top-0 h-full w-full max-w-full md:max-w-md bg-theme-secondary shadow-2xl z-50 overflow-y-auto scrollbar-none min-h-screen "
                     >
                         {/* Cart Header */}
                         <HeaderCarrito />
 
                         {/* Cart Items */}
-                        <div className="flex-1 overflow-y-auto p-6">
+                        <div className="flex-1 overflow-y-auto p-3 md:p-6">
                             {cartItems.length === 0 ? (
                                 <CarritoVacio />
                             ) : (

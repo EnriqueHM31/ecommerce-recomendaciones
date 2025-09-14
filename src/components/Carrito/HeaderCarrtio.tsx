@@ -8,9 +8,9 @@ export default function HeaderCarrito() {
     const { getTotalItems, clearCart, closeCart, cartItems } = useCartStore();
     return (
         <>
-            <div className="bg-theme-primary p-6 text-theme-secondary">
+            <div className="bg-theme-primary p-4 text-theme-secondary">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-2xl font-bold">Carrito de Compras</h2>
+                    <h2 className="text-lg md:text-2xl font-bold">Carrito de Compras</h2>
                     <motion.button
                         onClick={closeCart}
                         whileHover={{ scale: 1.1, rotate: 90 }}
@@ -21,7 +21,7 @@ export default function HeaderCarrito() {
                     </motion.button>
                 </div>
                 <div className="flex items-center justify-between">
-                    <span className="text-theme-secondary opacity-90">
+                    <span className="text-theme-secondary opacity-90 text-base md:text-base">
                         {getTotalItems()} {getTotalItems() === 1 ? 'producto' : 'productos'}
                     </span>
                     {cartItems.length > 0 && (
@@ -32,7 +32,7 @@ export default function HeaderCarrito() {
                             }}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="flex items-center gap-2 bg-theme-secondary text-theme-primary px-4 py-2 rounded-full cursor-pointer font-medium hover:bg-theme-accent-light transition-colors"
+                            className="flex items-center gap-2 bg-theme-secondary text-theme-primary px-4 py-2 rounded-full cursor-pointer font-medium hover:bg-theme-accent-light transition-colors text-sm md:text-base"
                         >
                             <FaTrash />
                             Limpiar Carrito
