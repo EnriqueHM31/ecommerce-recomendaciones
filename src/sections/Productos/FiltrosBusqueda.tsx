@@ -15,7 +15,7 @@ export default function FiltrosBusqueda({ handleAbrirFiltros }: FiltrosBusquedaP
 
     return (
         <>
-            <div className="max-w-7xl mx-auto px-8">
+            <div className="max-w-7xl mx-auto px-3">
                 <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
                     <div className="flex flex-col  gap-4">
                         <div className='flex items-center gap-4'>
@@ -29,7 +29,7 @@ export default function FiltrosBusqueda({ handleAbrirFiltros }: FiltrosBusquedaP
                                 <FaFilter />
                                 Filtros
                             </motion.button>
-                            <span className="text-theme-primary">
+                            <span className="text-sm md:text-base text-theme-primary">
                                 {productosAgrupados.length} productos disponibles
                             </span>
                         </div>
