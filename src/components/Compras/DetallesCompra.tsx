@@ -10,7 +10,7 @@ interface DetallesCompraProps {
 export default function DetallesCompra({ pedido }: DetallesCompraProps) {
     return (
         <motion.div
-            className="rounded-2xl shadow-xl p-6 flex flex-col gap-6 bg-theme-secondary"
+            className="rounded-2xl shadow-xl md:p-6 py-8 px-3 flex flex-col gap-6 bg-theme-secondary"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}

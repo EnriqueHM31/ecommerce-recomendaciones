@@ -53,9 +53,9 @@ export default function Pedido({ pedido, onOpenDetalles, index }: PedidoProps) {
             </div>
 
             {/* Acciones */}
-            <div className="flex items-center justify-between pt-4 mt-4 border-t border-gray-100">
+            <div className="flex flex-col md:flex-row gap-3 items-center justify-between pt-4 mt-4 border-t border-gray-100">
                 <button
-                    className="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                    className="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors w-full md:w-auto text-center md:text-start justify-center md:justify-start cursor-pointer"
                     onClick={() => onOpenDetalles(pedido)}
                 >
                     <FaEye className="w-4 h-4 mr-1" />
@@ -65,30 +65,21 @@ export default function Pedido({ pedido, onOpenDetalles, index }: PedidoProps) {
                 {(() => {
                     const ObtenerRecibo = formatoRecibo(pedido);
                     return (
-                        <BlobProvider
-                            document={<PdfFactura sessionDetails={ObtenerRecibo} />}
-                        >
-                            {({ url, loading }) =>
-                                loading ? (
-                                    <button
-                                        className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-400 bg-gray-100 rounded-lg cursor-not-allowed"
-                                    >
-                                        Generando...
-                                    </button>
-                                ) : (
-                                    <a
-                                        href={url || "#"}
-                                        download={`Factura_${ObtenerRecibo.id}.pdf`}
-                                        className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
-                                    >
-                                        <FaDownload className="w-4 h-4 mr-1" />
-                                        Recibo
-                                    </a>
-                                )
-                            }
+                        <BlobProvider document={<PdfFactura sessionDetails={ObtenerRecibo} />}>
+                            {({ url }) => (
+                                <a
+                                    href={url || "#"}
+                                    download={`Factura_${ObtenerRecibo.id}.pdf`}
+                                    className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors w-full md:w-auto text-center md:text-start justify-center md:justify-start cursor-pointer"
+                                >
+                                    <FaDownload className="w-4 h-4 mr-1" />
+                                    Recibo
+                                </a>
+                            )}
                         </BlobProvider>
                     );
                 })()}
+
             </div>
 
         </motion.div>
