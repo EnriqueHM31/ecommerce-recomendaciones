@@ -124,7 +124,7 @@ export default function Footer() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.6 }}
                     viewport={{ once: true }}
-                    className="text-center pt-8 border-t border-theme-dark text-theme-secondary"
+                    className="text-center pt-8 border-t border-white text-theme-secondary"
                 >
                     <p>&copy; 2025 StoreTec BPL. Todos los derechos reservados.</p>
                 </motion.div>
