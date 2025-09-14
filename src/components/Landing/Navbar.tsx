@@ -32,7 +32,7 @@ export default function Navbar() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
                         whileHover={{ y: -2 }}
-                        className="text-theme-secondary flex items-center justify-between w-full md:w-auto"
+                        className="text-theme-secondary flex items-center justify-between w-full md:w-auto z-500"
                     >
                         <h2 className="text-2xl font-bold m-0">StoreTec BPL</h2>
 
@@ -46,7 +46,7 @@ export default function Navbar() {
                     </motion.div>
 
                     {/* Menú Desktop */}
-                    <ul className="hidden md:flex list-none m-0 p-0 gap-8">
+                    <ul className="hidden md:flex list-none m-0 p-0 gap-8 z-100">
                         {[
                             { icon: FaHome, name: 'Inicio', href: '/' },
                             { icon: FaBox, name: 'Productos', href: '/products' },
