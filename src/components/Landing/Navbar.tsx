@@ -1,11 +1,14 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
     FaShoppingCart,
     FaSun,
     FaMoon,
     FaHome,
     FaBox,
-    FaEnvelope
+    FaEnvelope,
+    FaBars,
+    FaTimes,
 } from 'react-icons/fa';
 import { useCartStore } from '../../store/cartStore';
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
@@ -17,33 +20,38 @@ export default function Navbar() {
     const { theme, toggleTheme } = useThemeStore();
     const { toggleCart, getTotalItems } = useCartStore();
     const { user } = useUsuario();
+    const [menuOpen, setMenuOpen] = useState(false);
 
     return (
-        <motion.div
-            className="sticky top-0 z-50"
-        >
+        <motion.div className="sticky top-0 z-50">
             <nav className="bg-[#05395f] py-4 shadow-theme-dark">
-                <div className="max-w-7xl mx-auto flex justify-between items-center">
+                <div className="max-w-7xl mx-auto flex justify-between items-center px-4">
                     {/* Logo */}
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
                         whileHover={{ y: -2 }}
-                        className="text-theme-secondary"
+                        className="text-theme-secondary flex items-center justify-between w-full md:w-auto"
                     >
                         <h2 className="text-2xl font-bold m-0">StoreTec BPL</h2>
+
+                        {/* Botón hamburguesa en móvil */}
+                        <button
+                            className="md:hidden text-theme-secondary text-2xl ml-4"
+                            onClick={() => setMenuOpen(!menuOpen)}
+                        >
+                            {menuOpen ? <FaTimes /> : <FaBars />}
+                        </button>
                     </motion.div>
 
-                    {/* Links */}
-                    <ul className="flex list-none m-0 p-0 gap-8">
+                    {/* Menú Desktop */}
+                    <ul className="hidden md:flex list-none m-0 p-0 gap-8">
                         {[
-                            { icon: FaHome, name: "Inicio", href: "/" },
-                            { icon: FaBox, name: "Productos", href: "/products" },
-                            { icon: FaEnvelope, name: "Contacto", href: "/contact" },
-
+                            { icon: FaHome, name: 'Inicio', href: '/' },
+                            { icon: FaBox, name: 'Productos', href: '/products' },
+                            { icon: FaEnvelope, name: 'Contacto', href: '/contact' },
                         ].map((item, index) => (
-
                             <motion.li
                                 key={item.name}
                                 initial={{ opacity: 0, y: -20 }}
@@ -60,37 +68,32 @@ export default function Navbar() {
                                 </a>
                             </motion.li>
                         ))}
-                        {
-                            user && (
-                                <motion.li
-                                    key="compras"
-                                    initial={{ opacity: 0, y: -20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5, delay: 0.5 }}
-                                    whileHover={{ y: -2 }}
+                        {user && (
+                            <motion.li
+                                key="compras"
+                                initial={{ opacity: 0, y: -20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: 0.5 }}
+                                whileHover={{ y: -2 }}
+                            >
+                                <a
+                                    href="/compras"
+                                    className="text-theme-secondary no-underline font-medium hover:text-theme-accent transition-colors duration-300 flex items-center gap-2"
                                 >
-                                    <a
-                                        href="/compras"
-                                        className="text-theme-secondary no-underline font-medium hover:text-theme-accent transition-colors duration-300 flex items-center gap-2"
-                                    >
-                                        <FaShoppingCart className="text-lg" />
-                                        Mis compras
-                                    </a>
-                                </motion.li>
-                            )
-                        }
+                                    <FaShoppingCart className="text-lg" />
+                                    Mis compras
+                                </a>
+                            </motion.li>
+                        )}
                     </ul>
 
-                    {/* Botones lado derecho */}
-                    <div className="flex gap-4 items-center">
+                    {/* Botones lado derecho (Desktop) */}
+                    <div className="hidden md:flex gap-4 items-center">
                         {/* Carrito */}
                         <motion.button
                             onClick={toggleCart}
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: user ? 0.5 : 0.6 }}
                             whileTap={{ scale: 0.95 }}
-                            className="w-10 h-10 p-0 rounded-full border-2 border-theme-secondary text-theme-secondary bg-transparent hover:bg-theme-secondary hover:text-theme-primary transition-all duration-300 text-xl flex items-center justify-center relative cursor-pointer"
+                            className="w-10 h-10 rounded-full border-2 border-theme-secondary text-theme-secondary bg-transparent hover:bg-theme-secondary hover:text-theme-primary transition-all duration-300 text-xl flex items-center justify-center relative cursor-pointer"
                         >
                             <FaShoppingCart />
                             {getTotalItems() > 0 && (
@@ -107,50 +110,128 @@ export default function Navbar() {
                         {/* Toggle theme */}
                         <motion.button
                             onClick={toggleTheme}
-                            initial={{ opacity: 0, y: -20, scale: 0.8 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            transition={{ duration: 0.5, delay: user ? 0.6 : 0.7 }}
-                            className="w-10 h-10 p-0 rounded-full border-2 border-theme-secondary text-theme-secondary bg-transparent hover:bg-theme-secondary hover:text-theme-primary transition-all duration-300 text-xl flex items-center justify-center cursor-pointer hover:scale-110"
+                            whileTap={{ scale: 0.95 }}
+                            className="w-10 h-10 rounded-full border-2 border-theme-secondary text-theme-secondary bg-transparent hover:bg-theme-secondary hover:text-theme-primary transition-all duration-300 text-xl flex items-center justify-center cursor-pointer hover:scale-110"
                         >
                             {theme === 'light' ? <FaMoon /> : <FaSun />}
                         </motion.button>
 
                         {/* Auth */}
-                        <motion.div className="flex items-center "
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: user ? 0.7 : 0.8 }}
-                            whileHover={{ y: -2 }}
-                            whileTap={{ scale: 0.95 }}
-                        >
-                            <SignedOut>
-                                <SignInButton mode="modal">
-                                    <button className="border-2 border-theme-secondary text-theme-secondary py-2 px-4 rounded-full cursor-pointer transition-all duration-300 font-medium hover:bg-theme-secondary hover:text-theme-primary flex items-center gap-2 curpo">
-                                        Iniciar Sesión
-                                    </button>
-                                </SignInButton>
-                            </SignedOut>
-                            {
-                                user && (
-                                    <div className="size-10 flex items-center justify-center rounded-full border-2 border-white">
-                                        <SignedIn>
-                                            <UserButton
-                                                appearance={{
-                                                    elements: {
-                                                        userButtonAvatarBox: 'w-8 h-8 rounded-full',
-                                                        userButtonBox: 'rounded-full transition-all duration-300 hover:bg-theme-secondary hover:text-theme-primary cursor-pointer',
-                                                    },
-                                                }}
-                                            />
-                                        </SignedIn>
-                                    </div>
-
-                                )
-                            }
-                        </motion.div>
+                        <SignedOut>
+                            <SignInButton mode="modal">
+                                <button className="border-2 border-theme-secondary text-theme-secondary py-2 px-4 rounded-full cursor-pointer transition-all duration-300 font-medium hover:bg-theme-secondary hover:text-theme-primary flex items-center gap-2">
+                                    Iniciar Sesión
+                                </button>
+                            </SignInButton>
+                        </SignedOut>
+                        {user && (
+                            <div className="size-10 flex items-center justify-center rounded-full border-2 border-white">
+                                <SignedIn>
+                                    <UserButton
+                                        appearance={{
+                                            elements: {
+                                                userButtonAvatarBox: 'w-8 h-8 rounded-full',
+                                                userButtonBox:
+                                                    'rounded-full transition-all duration-300 hover:bg-theme-secondary hover:text-theme-primary cursor-pointer',
+                                            },
+                                        }}
+                                    />
+                                </SignedIn>
+                            </div>
+                        )}
                         <AuthCheck />
                     </div>
                 </div>
+
+                {/* Menú Mobile con animaciones */}
+                <AnimatePresence>
+                    {menuOpen && (
+                        <motion.div
+                            initial={{ y: '-100%', opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: '-100%', opacity: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="md:hidden flex flex-col gap-6 px-6 py-4 fixed bg-[#05395f] shadow-lg w-full z-0 items-center
+                            justify-center"
+                        >
+
+                            {/* Segunda sección: links principales */}
+                            <motion.ul
+                                initial={{ y: -30, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{ duration: 0.4, delay: 0.3 }}
+                                className="flex flex-col gap-4 justify-center items-center mb-4"
+                            >
+                                {[
+                                    { icon: FaHome, name: 'Inicio', href: '/' },
+                                    { icon: FaBox, name: 'Productos', href: '/products' },
+                                    { icon: FaEnvelope, name: 'Contacto', href: '/contact' },
+                                ].map((item) => (
+                                    <li key={item.name}>
+                                        <a
+                                            href={item.href}
+                                            className="text-theme-secondary font-medium flex items-center gap-2 hover:text-theme-accent"
+                                        >
+                                            <item.icon />
+                                            {item.name}
+                                        </a>
+                                    </li>
+                                ))}
+                                {user && (
+                                    <li>
+                                        <a
+                                            href="/compras"
+                                            className="text-theme-secondary font-medium flex items-center gap-2 hover:text-theme-accent"
+                                        >
+                                            <FaShoppingCart />
+                                            Mis compras
+                                        </a>
+                                    </li>
+                                )}
+                            </motion.ul>
+                            {/* Primera sección: carrito, theme y login */}
+                            <motion.div
+                                initial={{ y: -20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{ duration: 0.4, delay: 0.1 }}
+                                className="flex justify-between items-center  gap-5 w-full "
+                            >
+                                <button
+                                    onClick={toggleCart}
+                                    className="relative text-theme-secondary text-xl size-12 flex items-center justify-center rounded-full border-theme-secondary border"
+                                >
+                                    <FaShoppingCart />
+                                    {getTotalItems() > 0 && (
+                                        <span className="absolute -top-2 -right-2 bg-theme-accent text-theme-secondary text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                                            {getTotalItems() > 99 ? '99+' : getTotalItems()}
+                                        </span>
+                                    )}
+                                </button>
+
+                                <SignedOut>
+                                    <SignInButton mode="modal">
+                                        <button className="border border-theme-secondary text-theme-secondary px-3 py-3 rounded-full text-sm ">
+                                            Iniciar Sesión
+                                        </button>
+                                    </SignInButton>
+                                </SignedOut>
+                                {user && (
+                                    <SignedIn>
+                                        <UserButton />
+                                    </SignedIn>
+                                )}
+
+                                <button
+                                    onClick={toggleTheme}
+                                    className="text-theme-secondary text-xl size-12 flex items-center justify-center rounded-full border border-theme-secondary"
+                                >
+                                    {theme === 'light' ? <FaMoon /> : <FaSun />}
+                                </button>
+
+                            </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </nav>
         </motion.div>
     );
