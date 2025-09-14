@@ -31,11 +31,11 @@ export default function ProductosRecomendados() {
                         whileInView={{ y: 0, opacity: 1 }}
                         transition={{ duration: 0.6 }}
                         viewport={{ once: true }}
-                        className="text-center text-4xl text-theme-primary mb-12 font-bold"
+                        className="text-center text-2xl md:text-4xl text-theme-primary mb-12 font-bold"
                     >
                         Productos Recomendados
                     </motion.h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-3 md:px-0">
                         {filtrados.map((product) => (
                             <motion.div
                                 key={product.sku}
@@ -51,18 +51,16 @@ export default function ProductosRecomendados() {
                                 className="bg-theme-secondary border border-theme rounded-2xl p-8 text-center shadow-theme hover:shadow-theme-dark cursor-pointer flex flex-col justify-between min-h-50"
                                 onClick={() => navigate(`/products/${product.id}`)}
                             >
-                                <div className='flex size-36 items-center justify-center p-3 rounded-full mx-auto mb-4 bg-white'>
-
+                                <div className="flex w-36 h-36 items-center justify-center p-3 rounded-full mx-auto mb-4 bg-white">
                                     <motion.img
                                         whileHover={{
                                             scale: 1.1,
                                             rotate: 5,
-                                            transition: { duration: 0.2 }
+                                            transition: { duration: 0.2 },
                                         }}
                                         src={product.imagen_url}
-                                        className="size-25 object-contain"
-                                    >
-                                    </motion.img>
+                                        className="w-24 h-24 object-contain"
+                                    />
                                 </div>
                                 <h3 className="text-theme-primary mb-2 text-xl font-semibold">{product.producto}</h3>
                                 <p className="text-theme-primary mb-2">{product.descripcion}</p>

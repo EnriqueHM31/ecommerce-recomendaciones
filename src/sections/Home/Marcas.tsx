@@ -14,7 +14,7 @@ export default function Marcas() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true }}
-                className="py-16 bg-theme-secondary-light"
+                className="py-16 bg-theme-secondary-light px-3 md:px-0"
                 id="brands"
             >
                 <div className="max-w-7xl mx-auto">
@@ -23,7 +23,7 @@ export default function Marcas() {
                         whileInView={{ y: 0, opacity: 1 }}
                         transition={{ duration: 0.6 }}
                         viewport={{ once: true }}
-                        className="text-center text-4xl text-theme-primary mb-12 font-bold"
+                        className="text-center text-2xl md:text-4xl text-theme-primary mb-12 font-bold"
                     >
                         Nuestras Marcas
                     </motion.h2>
@@ -46,7 +46,7 @@ export default function Marcas() {
                                     scale: 1.05,
                                     transition: { duration: 0.2 }
                                 }}
-                                className="text-center p-8 bg-theme-secondary border border-theme rounded-2xl shadow-theme hover:shadow-theme-dark cursor-pointer"
+                                className={`text-center p-8 bg-theme-secondary border border-theme rounded-2xl shadow-theme hover:shadow-theme-dark cursor-pointer ${index === 4 ? "col-span-2 md:col-span-1" : ""}`}
                             >
                                 <motion.img
                                     whileHover={{

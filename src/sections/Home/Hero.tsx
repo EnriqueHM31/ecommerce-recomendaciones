@@ -22,6 +22,7 @@ export default function Hero() {
                         initial={{ x: -100, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
+                        className='flex flex-col items-center justify-center md:items-start md:justify-start px-3 md:px-0'
                     >
                         {
                             user && (
@@ -29,7 +30,7 @@ export default function Hero() {
                                     initial={{ x: -50, opacity: 0 }}
                                     animate={{ x: 0, opacity: 1 }}
                                     transition={{ duration: 0.8, delay: 0.2 }}
-                                    className="text-sm text-theme-secondary bg-theme-primary w-fit px-4 py-2 rounded-2xl mb-4 leading-tight "
+                                    className="text-sm text-theme-secondary bg-theme-primary w-fit px-4 py-2 rounded-2xl mb-4 leading-tight text-center"
 
                                 >
                                     {`Bienvenido ${user?.firstName} ${user?.lastName}`}
@@ -41,7 +42,7 @@ export default function Hero() {
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ duration: 0.8, delay: 0.4 }}
-                            className="text-5xl lg:text-5xl text-theme-primary mb-4 leading-tight font-bold"
+                            className="text-3xl md:text-5xl lg:text-5xl text-theme-primary mb-4 leading-tight font-bold text-center md:text-start"
                         >
                             La Mejor Tecnología al Alcance de tus Manos
                         </motion.h1>
@@ -49,7 +50,7 @@ export default function Hero() {
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ duration: 0.8, delay: 0.6 }}
-                            className="text-md text-theme-primary  mb-8 leading-relaxed "
+                            className="text-md text-theme-primary  mb-8 leading-relaxed text-center md:text-start"
                         >
                             Bienvenido a tu tienda de tecnología de confianza, donde la innovación se encuentra con la comodidad. Aquí encontrarás una amplia gama de productos que van desde smartphones, laptops y accesorios, hasta los últimos gadgets diseñados para simplificar tu vida.
                         </motion.p>
