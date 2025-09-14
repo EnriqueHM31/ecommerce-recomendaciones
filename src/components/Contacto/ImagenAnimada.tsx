@@ -7,9 +7,9 @@ export default function ImagenAnimada() {
                 initial={{ opacity: 0, x: 50, scale: 0.8 }}
                 animate={{ opacity: 1, x: 0, scale: 1 }}
                 transition={{ duration: 1, delay: 0.4 }}
-                className="flex justify-center items-center"
+                className="flex justify-center items-center "
             >
-                <div className="relative">
+                <div className="relative ">
                     {/* Main Technology Circle */}
                     <motion.div
                         animate={{
@@ -21,7 +21,7 @@ export default function ImagenAnimada() {
                             repeat: Infinity,
                             ease: "easeInOut"
                         }}
-                        className="w-80 h-80 bg-gradient-to-br from-blue-950 via-blue-800 to-blue-650 rounded-full flex items-center justify-center shadow-2xl relative overflow-hidden"
+                        className=" size-55 md:w-80 md:h-80 bg-gradient-to-br from-blue-950 via-blue-800 to-blue-650 rounded-full flex items-center justify-center shadow-2xl relative overflow-hidden"
                     >
                         {/* Floating Tech Elements */}
                         <motion.div

@@ -94,7 +94,7 @@ export default function FormContacto({ handleSubmit, datos, camposBloqueados, ha
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.6 }}
-                    className="w-full bg-theme-accent text-theme-secondary py-4 px-8 rounded-xl font-semibold text-lg flex items-center justify-center gap-3 hover:bg-theme-accent-light transition-colors duration-300 shadow-theme hover:shadow-theme-dark"
+                    className="w-full bg-theme-accent text-theme-secondary py-3 md:py-4 px-8 rounded-xl font-semibold text-base md:text-lg flex items-center justify-center gap-3 hover:bg-theme-accent-light transition-colors duration-300 shadow-theme hover:shadow-theme-dark"
                 >
                     <FaPaperPlane />
                     Enviar Mensaje
