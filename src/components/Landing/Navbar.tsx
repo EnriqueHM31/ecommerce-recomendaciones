@@ -124,21 +124,15 @@ export default function Navbar() {
                                 </button>
                             </SignInButton>
                         </SignedOut>
-                        {user && (
-                            <div className="size-10 flex items-center justify-center rounded-full border-2 border-white">
-                                <SignedIn>
-                                    <UserButton
-                                        appearance={{
-                                            elements: {
-                                                userButtonAvatarBox: 'w-8 h-8 rounded-full',
-                                                userButtonBox:
-                                                    'rounded-full transition-all duration-300 hover:bg-theme-secondary hover:text-theme-primary cursor-pointer',
-                                            },
-                                        }}
-                                    />
-                                </SignedIn>
-                            </div>
-                        )}
+                        {user &&
+                            (
+                                <div className="size-10 flex items-center justify-center rounded-full border-2 border-white">
+                                    <SignedIn>
+                                        <UserButton appearance={{ elements: { userButtonAvatarBox: 'size-10 rounded-full', userButtonBox: 'rounded-full transition-all duration-300 hover:bg-theme-secondary hover:text-theme-primary cursor-pointer', }, }} />
+                                    </SignedIn>
+                                </div>
+                            )
+                        }
                         <AuthCheck />
                     </div>
                 </div>
@@ -194,7 +188,7 @@ export default function Navbar() {
                                 initial={{ y: -20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ duration: 0.4, delay: 0.1 }}
-                                className="flex justify-between items-center  gap-5 w-full "
+                                className="flex justify-center items-center  gap-8 w-full "
                             >
                                 <button
                                     onClick={toggleCart}
@@ -215,11 +209,15 @@ export default function Navbar() {
                                         </button>
                                     </SignInButton>
                                 </SignedOut>
-                                {user && (
-                                    <SignedIn>
-                                        <UserButton />
-                                    </SignedIn>
-                                )}
+                                {user &&
+                                    (
+                                        <div className="size-12 flex items-center justify-center rounded-full border-2 border-white">
+                                            <SignedIn>
+                                                <UserButton appearance={{ elements: { userButtonAvatarBox: 'size-12 rounded-full', userButtonBox: 'rounded-full transition-all duration-300 hover:bg-theme-secondary hover:text-theme-primary cursor-pointer', }, }} />
+                                            </SignedIn>
+                                        </div>
+                                    )
+                                }
 
                                 <button
                                     onClick={toggleTheme}
