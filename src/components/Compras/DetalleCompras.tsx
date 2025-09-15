@@ -5,10 +5,10 @@ import type { PaymentSession } from "../../types/pago";
 
 interface DetalleCompraProps {
     pedidoSeleccionado: PaymentSession | null;
-    setPedidoSeleccionado: (pedido: PaymentSession | null) => void;
+    onCloseDetalles: () => void;
 }
 
-export default function DetalleCompra({ pedidoSeleccionado, setPedidoSeleccionado }: DetalleCompraProps) {
+export default function DetalleCompra({ pedidoSeleccionado, onCloseDetalles }: DetalleCompraProps) {
     return (
         <AnimatePresence>
             {pedidoSeleccionado && (
@@ -27,7 +27,7 @@ export default function DetalleCompra({ pedidoSeleccionado, setPedidoSeleccionad
                     >
                         {/* Botón cerrar */}
                         <button
-                            onClick={() => setPedidoSeleccionado(null)}
+                            onClick={onCloseDetalles}
                             className="absolute top-3 right-3 text-gray-500 hover:text-gray-500 cursor-pointer"
                         >
                             <IoClose className=" text-3xl md:text-5xl" />

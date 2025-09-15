@@ -1,16 +1,18 @@
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FaBox, FaSyncAlt } from "react-icons/fa";
 import ComprasVacias from "../components/Compras/ComprasVacias";
 import DetalleCompra from "../components/Compras/DetalleCompras";
 import ErrorCompras from "../components/Compras/ErrorCompras";
 import FooterCompras from "../components/Compras/FooterCompras";
 import Loading from "../components/Compras/Loading";
+import PaginacionDesktop from "../components/Compras/PaginacionDesktop";
+import PaginacionMovil from "../components/Compras/PaginacionMovil";
 import Pedido from "../components/Compras/Pedido";
 import Layout from "../components/Landing/Layout";
+import { useMisCompras } from "../hooks/Compras/misCompras";
 import { useUsuario } from "../hooks/Usuarios/Usuario";
 import { useComprasStore } from "../store/comprasStore";
-import type { PaymentSession } from "../types/pago";
 
 const Compras: React.FC = () => {
     const { user } = useUsuario();
@@ -19,30 +21,9 @@ const Compras: React.FC = () => {
         loading,
         error,
         pedidos,
-        page,
-        totalPages,
-        pages,
-        nextPage,
-        prevPage,
-        setPage,
     } = useComprasStore();
 
-    const [pedidosCargados, setPedidosCargados] = useState(false);
-
-    useEffect(() => {
-        if (!user) return;
-
-        const email = user?.emailAddresses?.[0]?.emailAddress ?? "";
-        if (!email) return;
-
-        fetchPedidos(email).then(() => setPedidosCargados(true));
-    }, [user]);
-    const [pedidoSeleccionado, setPedidoSeleccionado] = useState<PaymentSession | null>(null);
-
-    const onOpenDetalles = (pedido: PaymentSession) => {
-        setPedidoSeleccionado(pedido)
-    }
-
+    const { pedidosCargados, onOpenDetalles, pedidoSeleccionado, onCloseDetalles } = useMisCompras({ user });
     if (loading || !pedidosCargados) return <Loading />;
 
     if (error) return <ErrorCompras />
@@ -95,29 +76,7 @@ const Compras: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* 🔹 Paginación */}
-                        <section className="flex md:hidden items-center justify-center w-full mt-8 mb-2">
-                            <span className="text-center bg-theme-accent text-theme-secondary px-4 py-2 rounded-2xl font-bold text-sm">Pagina {page} de {totalPages}  </span>
-                        </section>
-                        <div className="flex justify-center items-center gap-5 mt-2 mb-6 md:hidden">
-                            <button
-                                onClick={prevPage}
-                                disabled={page === 1}
-                                className={`px-3 py-1 rounded-lg border bg-white text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed ${page !== 1 ? `hover:bg-blue-700 hover:text-white` : ""} cursor-pointer`}
-                            >
-                                Anterior
-                            </button>
-
-
-
-                            <button
-                                onClick={nextPage}
-                                disabled={page === totalPages}
-                                className={`px-3 py-1 rounded-lg border bg-white text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed ${page !== totalPages ? `hover:bg-blue-700 hover:text-white` : ""} cursor-pointer`}
-                            >
-                                Siguiente
-                            </button>
-                        </div>
+                        <PaginacionMovil />
 
                         {/* Lista de pedidos */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 grid-rows-2">
@@ -137,46 +96,13 @@ const Compras: React.FC = () => {
                             }
                         </div>
 
-                        <div className="hidden justify-center items-center gap-2 mt-8 md:flex">
-                            <button
-                                onClick={prevPage}
-                                disabled={page === 1}
-                                className={`px-3 py-1 rounded-lg border bg-white text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed ${page !== 1 ? `hover:bg-blue-700 hover:text-white` : ""} cursor-pointer`}
-                            >
-                                Anterior
-                            </button>
-
-
-                            <section className="hidden md:flex gap-2 items-center">
-                                {pages.map((p) => (
-                                    <button
-                                        key={p}
-                                        onClick={() => setPage(p)}
-                                        className={`px-3 py-1 rounded-lg border cursor-pointer ${p === page
-                                            ? "bg-blue-600 text-white font-bold"
-                                            : "bg-white text-gray-700 hover:bg-gray-100"
-                                            }`}
-                                    >
-                                        {p}
-                                    </button>
-                                ))}
-                            </section>
-
-                            <button
-                                onClick={nextPage}
-                                disabled={page === totalPages}
-                                className={`px-3 py-1 rounded-lg border bg-white text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed ${page !== totalPages ? `hover:bg-blue-700 hover:text-white` : ""} cursor-pointer`}
-                            >
-                                Siguiente
-                            </button>
-                        </div>
-
+                        <PaginacionDesktop />
                         <FooterCompras />
                     </div>
                 </div>
             </AnimatePresence>
             {/* MODAL de detalles */}
-            <DetalleCompra pedidoSeleccionado={pedidoSeleccionado} setPedidoSeleccionado={setPedidoSeleccionado} />
+            <DetalleCompra pedidoSeleccionado={pedidoSeleccionado} onCloseDetalles={onCloseDetalles} />
         </Layout >
     );
 };
