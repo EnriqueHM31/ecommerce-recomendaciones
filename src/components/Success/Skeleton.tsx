@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 export default function FacturaSkeleton() {
     return (
         <motion.div
-            className="animate-pulse flex flex-col gap-4 text-left h-[100dvh] w-1/2 border border-theme-secondary p-8"
+            className="animate-pulse flex flex-col gap-4 text-left h-[100dvh] w-full md:w-1/2 border border-theme-secondary p-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
         >
