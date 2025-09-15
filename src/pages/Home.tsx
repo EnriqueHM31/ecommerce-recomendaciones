@@ -1,7 +1,7 @@
 import Layout from '../components/Landing/Layout';
-import SectionHero from '../sections/Home/Hero';
-import SectionMarcas from '../sections/Home/Marcas';
-import SectionProductosRecomendados from '../sections/Home/ProductosRecomendados';
+import SectionHero from '../components/Home/Hero';
+import SectionMarcas from '../components/Home/Marcas';
+import SectionProductosRecomendados from '../components/Home/ProductosRecomendados';
 
 export default function Home() {
 

@@ -5,7 +5,7 @@ import Filtros from '../components/Productos/Filtros';
 import Producto from '../components/Productos/Producto';
 import ProductosVacios from '../components/Productos/ProductosVacios';
 import { useToggle } from '../hooks/Open/open';
-import FiltrosBusqueda from '../sections/Productos/FiltrosBusqueda';
+import FiltrosBusqueda from '../components/Productos/FiltrosBusqueda';
 import { useCartStore } from '../store/cartStore';
 import SkeletonCard from '../components/Productos/Skeleton';
 import { useEffect, useState } from 'react';

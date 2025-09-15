@@ -3,7 +3,7 @@ import FormContacto from '../components/Contacto/FormContacto';
 import ImagenAnimada from '../components/Contacto/ImagenAnimada';
 import Layout from '../components/Landing/Layout';
 import { useMensaje } from '../hooks/Contacto/mensaje';
-import DatosEmpresa from '../sections/Contacto/DatosEmpresa';
+import DatosEmpresa from '../components/Contacto/DatosEmpresa';
 
 
 export default function Contact() {
