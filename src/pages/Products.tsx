@@ -47,7 +47,7 @@ export default function Products() {
                 </motion.div>
 
                 {/* Products Grid */}
-                <div className="max-w-7xl mx-auto px-3 py-12">
+                <div className="max-w-7xl mx-auto px-3 py-12 md:px-0">
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}

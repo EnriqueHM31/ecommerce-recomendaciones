@@ -83,7 +83,7 @@ export default function PaymentSuccess() {
 
 
     return (
-        <div className="min-h-[110dvh] bg-bliue-950 flex items-center justify-center p-4">
+        <div className="min-h-[110dvh] bg-blue-950 flex items-center justify-center p-4">
             {
                 sessionDetails ? (
 
