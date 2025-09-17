@@ -1,18 +1,16 @@
 import { motion } from 'framer-motion';
+import { usePrediccionesStore } from '../../store/prediccionesStore';
+import { useNavegacion } from '../../hooks/Navigate/navegacion';
 import { useCartStore } from '../../store/cartStore';
-import { useNavigate } from 'react-router-dom';
+import SkeletonCard from '../Productos/Skeleton';
 
 export default function ProductosRecomendados() {
 
-    const { getRecommendedProducts, addToCart } = useCartStore();
+    const { predicciones } = usePrediccionesStore();
+    const { handleRedirigirPagina } = useNavegacion();
+    const { addToCart } = useCartStore();
 
-    const recommendedProducts = getRecommendedProducts();
-    const navigate = useNavigate();
-
-    const filtrados = recommendedProducts.filter((obj, index, self) =>
-        index === self.findIndex(o => o.producto_id === obj.producto_id)
-    );
-
+    console.log(predicciones);
 
     return (
         <>
@@ -35,8 +33,12 @@ export default function ProductosRecomendados() {
                     >
                         Productos Recomendados
                     </motion.h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-3 md:px-0">
-                        {filtrados.map((product) => (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-3 lg:px-0">
+                        {
+                            predicciones.length === 0 &&
+                            Array(4).fill(0).map((_, i) => <SkeletonCard key={i} />)
+                        }
+                        {predicciones.map((product) => (
                             <motion.div
                                 key={product.sku}
                                 initial={{ opacity: 0, y: 50, scale: 0.9 }}
@@ -49,7 +51,7 @@ export default function ProductosRecomendados() {
                                     transition: { duration: 0.1 }
                                 }}
                                 className="bg-theme-secondary border border-theme rounded-2xl p-8 text-center shadow-theme hover:shadow-theme-dark cursor-pointer flex flex-col justify-between min-h-50"
-                                onClick={() => navigate(`/products/${product.id}`)}
+                                onClick={() => handleRedirigirPagina(`/products/${product.id}`)}
                             >
                                 <div className="flex w-36 h-36 items-center justify-center p-3 rounded-full mx-auto mb-4 bg-white">
                                     <motion.img

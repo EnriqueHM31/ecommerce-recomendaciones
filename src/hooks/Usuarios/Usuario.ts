@@ -12,5 +12,5 @@ export function useUsuario() {
         }
     }, [isLoaded, usuario]);
 
-    return { user };
+    return { user, isLoaded };
 }
