@@ -17,7 +17,7 @@ export function mapProductos(productosRaw: ProductoRaw[]): Producto[] {
         activo: p.activo ? 1 : 0,
         recomendado: p.variantes.recomendado ? 1 : 0,
         procesador: p.variantes.procesador,
-        ram_especificacion: p.variantes.ram_especificacion || p.especificaciones_ram.capacidad,
+        ram_especificacion: p.especificaciones_ram.tipo,
         ram_variante: p.especificaciones_ram.capacidad,
         display: p.variantes.display,
         camara: p.variantes.camara,

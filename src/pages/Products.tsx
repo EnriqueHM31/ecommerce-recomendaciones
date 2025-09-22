@@ -11,7 +11,7 @@ import SkeletonCard from '../components/Productos/Skeleton';
 import { useEffect, useState } from 'react';
 
 export default function Products() {
-    const { productosAgrupados } = useCartStore();
+    const { productosAgrupados, fetchProductos } = useCartStore();
     const AsideFiltros = useToggle();
 
     const handleCerrarFiltros = AsideFiltros.close;
@@ -19,6 +19,15 @@ export default function Products() {
 
     // Estado de loading (simula fetch o espera a que el store se llene)
     const [loading, setLoading] = useState(true);
+
+
+
+
+    useEffect(() => {
+        fetchProductos();
+
+    }, []);
+
 
     useEffect(() => {
         // ⏳ cuando lleguen los productos desactiva el loading

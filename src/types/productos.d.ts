@@ -60,7 +60,7 @@ interface ProductoRaw {
     };
     colores: { nombre: string };
     almacenamientos: { capacidad: string };
-    especificaciones_ram: { capacidad: string };
+    especificaciones_ram: { capacidad: string, tipo: string };
 }
 
 export interface RawProduct {

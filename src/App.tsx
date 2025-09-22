@@ -1,8 +1,6 @@
-import { useEffect } from "react";
 import { BrowserRouter, useRoutes } from "react-router-dom";
 import { Toaster } from "sonner";
 import { routes } from "./routes/routes";
-import { useCartStore } from "./store/cartStore";
 import { useThemeStore } from "./store/themeStore";
 
 
@@ -13,14 +11,6 @@ function Routes() {
 
 export default function App() {
   const { theme } = useThemeStore();
-  const { fetchProductos } = useCartStore();
-
-
-
-  useEffect(() => {
-    fetchProductos();
-
-  }, []);
 
 
   const toastOptions = {

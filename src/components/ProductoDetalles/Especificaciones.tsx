@@ -6,6 +6,8 @@ import type { Producto } from '../../types/productos';
 export default function Especificaciones({ configuracionSeleccionada }: { configuracionSeleccionada: Producto | undefined }) {
 
 
+    console.log({ configuracionSeleccionada });
+
     return (
         <>
             <div>
@@ -54,7 +56,7 @@ export default function Especificaciones({ configuracionSeleccionada }: { config
                             <span className="text-sm text-theme-accent capitalize">
                                 Conectividad
                             </span>
-                            <p className="text-theme-primary font-medium">{configuracionSeleccionada?.conectividad ?? "N/S"}</p>
+                            <p className="text-theme-primary font-medium">{configuracionSeleccionada?.conectividad === "" || configuracionSeleccionada?.conectividad === null ? "N/S" : configuracionSeleccionada?.conectividad}</p>
                         </div>
                     </div>
 
