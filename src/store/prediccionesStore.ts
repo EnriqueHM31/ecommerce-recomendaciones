@@ -20,11 +20,9 @@ const prediccionesStore = create<IPrediccionesStore>((set) => ({
             method: 'GET',
         });
         const { recomendaciones, populares } = await response.json();
-        console.log(populares);
 
         if (recomendaciones) {
             const skus = recomendaciones.map((recomendacion: IPredicciones) => recomendacion.producto.split(' - ')[0]);
-            console.log(skus);
 
             const productosPlanos = useCartStore.getState().productosPlanos;
             const predicciones = productosPlanos.filter(producto => producto.sku !== '' && skus.includes(producto.sku));
@@ -33,7 +31,6 @@ const prediccionesStore = create<IPrediccionesStore>((set) => ({
             return
         }
         const skus = populares.map((recomendacion: IPredicciones) => recomendacion.producto.split(' - ')[0]);
-        console.log(skus);
 
         const productosPlanos = useCartStore.getState().productosPlanos;
         const predicciones = productosPlanos.filter(producto => producto.sku !== '' && skus.includes(producto.sku));

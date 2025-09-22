@@ -768,13 +768,7 @@ export const useCartStore = create<CartStore>()(
                 const productosAdaptados = agruparProductos(productosDB)
 
 
-                console.log({ productosAdaptados })
                 const productosPlanos = productosAdaptados.flatMap(product => product);
-
-                console.log({ productosPlanos })
-                const productosAgrupados = productosPlanos.flat().filter((obj, index, self) => index === self.findIndex(o => o.producto === obj.producto));
-
-                console.log({ productosAgrupados });
 
                 const productosMezclados = shuffleArray(productosDB);
 
@@ -806,9 +800,6 @@ export const useCartStore = create<CartStore>()(
 
                     return filtraCategorias && filtraRecomendados && filtraBusqueda;
                 });
-
-                console.log({ filtrados });
-
 
                 set({ productosAgrupados: filtrados });
             },

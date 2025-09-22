@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     FaCheckCircle,
     FaHome
 } from 'react-icons/fa';
 import { toast } from 'sonner';
+import DownloadFacturaButton from '../components/Pago/BotonDescarga';
 import Factura from '../components/Pago/Factura';
 import FacturaSkeleton from '../components/Success/Skeleton';
 import { useNavegacion } from '../hooks/Navigate/navegacion';
@@ -12,13 +13,13 @@ import { useUsuario } from '../hooks/Usuarios/Usuario';
 import { useCartStore } from '../store/cartStore';
 import type { CheckoutSession } from '../types/session';
 import { containerAnimacion, itemAnimacion } from '../utils/animaciones';
-import DownloadFacturaButton from '../components/Pago/BotonDescarga';
 
 export default function PaymentSuccess() {
     const [sessionDetails, setSessionDetails] = useState<CheckoutSession | null>(null);
     const { handleRedirigirPagina } = useNavegacion();
     const { clearCart } = useCartStore();
     const { user, isLoaded } = useUsuario();
+    const idSession = useRef('');
 
 
     useEffect(() => {
@@ -32,6 +33,7 @@ export default function PaymentSuccess() {
                 if (!res.ok) throw new Error("Error al obtener la sesión");
 
                 const { data } = await res.json();
+                idSession.current = sessionId;
 
                 setSessionDetails(data);
 
@@ -45,6 +47,8 @@ export default function PaymentSuccess() {
     useEffect(() => {
         if (!user || !sessionDetails || !isLoaded) return;
 
+        const ids = sessionDetails.metadata?.carrito ? JSON.parse(sessionDetails.metadata.carrito) : [];
+
         async function crearPedido(sessionDetails: CheckoutSession) {
             const response = await fetch(`${import.meta.env.VITE_API}/api/crear-pedido`, {
                 method: 'POST',
@@ -53,13 +57,14 @@ export default function PaymentSuccess() {
                 },
                 body: JSON.stringify({
                     user_id: user?.id, // ahora seguro que existe
-                    cartItems: sessionDetails.line_items.data.map(item => ({
-                        id: item.id,
-                        quantity: item.quantity,
+                    cart_items: sessionDetails.line_items.data.map((item, index) => ({
+                        id: ids[index].producto_id,
+                        quantity: ids[index].cantidad,
                         price: item.price.unit_amount,
                         amount_total: item.amount_total,
                     })),
                     direccion_envio: sessionDetails.customer_details?.address,
+                    checkout_session_id: idSession.current
                 })
             });
 
@@ -71,8 +76,6 @@ export default function PaymentSuccess() {
         crearPedido(sessionDetails);
     }, [sessionDetails, isLoaded, user]); // <--- agregamos user
 
-
-    console.log({ sessionDetails });
 
     return (
         <div className="min-h-[110dvh] bg-blue-950 flex items-center justify-center p-4">

@@ -8,7 +8,6 @@ import { formatearFecha, formatearPrecio2 } from '../../utils/formateo';
 
 
 export default function Factura({ sessionDetails }: { sessionDetails: CheckoutSession }) {
-    console.log({ hola: sessionDetails });
     return (
         <>
             <div id="invoice" className="bg-gray-50 rounded-lg p-4 mb-6 text-left">
