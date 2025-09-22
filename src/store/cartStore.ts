@@ -784,9 +784,9 @@ export const useCartStore = create<CartStore>()(
             buscarProducto: (query: string) => {
                 set({ query }); // guardamos la búsqueda en el estado
 
-                const { productosPlanos, categoriasSeleccionadas } = get();
+                const { products, categoriasSeleccionadas } = get();
 
-                const filtrados = productosPlanos.filter(p => {
+                const filtrados = products.filter(p => {
                     // --- Categorías ---
                     const categoriasSinRecomendados = categoriasSeleccionadas.filter(c => c !== "Recomendados");
 
@@ -807,11 +807,10 @@ export const useCartStore = create<CartStore>()(
                     return filtraCategorias && filtraRecomendados && filtraBusqueda;
                 });
 
-                const productosAgrupados = filtrados.filter(
-                    (obj, index, self) => index === self.findIndex(o => o.producto === obj.producto)
-                );
+                console.log({ filtrados });
 
-                set({ productosAgrupados });
+
+                set({ productosAgrupados: filtrados });
             },
             filtrarCategoria: ({ categoria, checked }: { categoria: string; checked: boolean }) => {
                 const state = get();
@@ -827,9 +826,9 @@ export const useCartStore = create<CartStore>()(
 
                 set({ categoriasSeleccionadas: nuevasCategorias });
 
-                const { productosPlanos, query } = get();
+                const { products, query } = get();
 
-                const filtrados = productosPlanos.filter(p => {
+                const filtrados = products.filter(p => {
                     // --- Categorías ---
                     const categoriasSinRecomendados = nuevasCategorias.filter(c => c !== "Recomendados");
 
@@ -838,23 +837,17 @@ export const useCartStore = create<CartStore>()(
                             ? true
                             : categoriasSinRecomendados.includes(p.categoria);
 
-                    const filtraRecomendados = nuevasCategorias.includes("Recomendados")
-                        ? Boolean(p.recomendado)
-                        : true;
 
                     // --- Búsqueda ---
                     const filtraBusqueda = query.trim().length === 0
                         ? true
                         : p.producto.toLowerCase().includes(query.toLowerCase());
 
-                    return filtraCategorias && filtraRecomendados && filtraBusqueda;
+                    return filtraCategorias && filtraBusqueda;
                 });
 
-                const productosAgrupados = filtrados.filter(
-                    (obj, index, self) => index === self.findIndex(o => o.producto === obj.producto)
-                );
 
-                set({ productosAgrupados });
+                set({ productosAgrupados: filtrados });
             },
 
 
@@ -864,9 +857,9 @@ export const useCartStore = create<CartStore>()(
 
                 set({ categoriasSeleccionadas: nuevasCategorias });
 
-                const { productosPlanos, query } = get();
+                const { products, query } = get();
 
-                const filtrados = productosPlanos.filter(p => {
+                const filtrados = products.filter(p => {
                     // --- Categorías ---
                     const categoriasSinRecomendados = nuevasCategorias.filter(c => c !== "Recomendados");
 
@@ -875,24 +868,17 @@ export const useCartStore = create<CartStore>()(
                             ? true
                             : categoriasSinRecomendados.includes(p.categoria);
 
-                    const filtraRecomendados = nuevasCategorias.includes("Recomendados")
-                        ? Boolean(p.recomendado)
-                        : true;
-
                     // --- Búsqueda ---
                     const filtraBusqueda = query.trim().length === 0
                         ? true
                         : p.producto.toLowerCase().includes(query.toLowerCase());
 
-                    return filtraCategorias && filtraRecomendados && filtraBusqueda;
+                    return filtraCategorias && filtraBusqueda;
                 });
 
-                const productosAgrupados = filtrados.filter(
-                    (obj, index, self) => index === self.findIndex(o => o.producto === obj.producto)
-                );
                 toast.success(`Se eliminio el filtro ${categoria}.`);
 
-                set({ productosAgrupados });
+                set({ productosAgrupados: filtrados });
             }
 
         }),

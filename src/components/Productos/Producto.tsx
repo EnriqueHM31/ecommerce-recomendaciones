@@ -4,6 +4,7 @@ import { COLORES_ECOMMERCE_PRODUCTOS } from '../../constants/colores';
 import type { Producto } from '../../types/productos';
 import { useCartStore } from '../../store/cartStore';
 import { toast } from 'sonner';
+import { formatearPrecio } from '../../utils/formateo';
 
 
 interface ProductosProps {
@@ -69,9 +70,28 @@ export default function Producto({ product, index }: ProductosProps) {
                         {product.descripcion}
                     </p>
 
+                    <div className="flex gap-2 items-center flex-wrap mb-2">
+                        {[
+                            product.ram_variante && `RAM: ${product.ram_variante}`,
+                            product.almacenamiento && `Almacenamiento: ${product.almacenamiento}`,
+                            product.color && `Color: ${product.color}`,
+                            product.conectividad && `Conectividad: ${product.conectividad}`,
+                        ]
+                            .filter(Boolean)
+                            .map((feature, index) => (
+                                <p
+                                    key={index}
+                                    className="ml-2 text-xs bg-theme-accent text-theme-secondary px-2 py-1 rounded-2xl"
+                                >
+                                    {feature}
+                                </p>
+                            ))}
+                    </div>
+
+
                     <div className="flex items-center justify-between mb-3">
                         <span className="text-2xl font-bold text-theme-accent">
-                            ${product.precio_base}
+                            {formatearPrecio(product.precio_base, 'MXN')}
                         </span>
                         <span className="text-sm text-theme-secondary bg-theme-primary px-2 py-1 rounded-full">
                             Stock: {product.stock}

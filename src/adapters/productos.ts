@@ -6,7 +6,7 @@ export function mapProductos(productosRaw: ProductoRaw[]): Producto[] {
     return productosRaw.map((p) => ({
         id: p.id,
         producto_id: p.productos_base.id,
-        producto: p.productos_base.nombre,
+        producto: p.variantes.nombre_variante,
         categoria: p.productos_base.categorias.nombre,
         precio_base: Number(p.precio_base),
         imagen_url: p.imagen_url,
