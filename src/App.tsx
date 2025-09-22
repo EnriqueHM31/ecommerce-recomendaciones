@@ -1,11 +1,9 @@
-import { useRoutes, BrowserRouter } from "react-router-dom";
-import { routes } from "./routes/routes";
-import { Toaster } from "sonner";
-import { useThemeStore } from "./store/themeStore";
 import { useEffect } from "react";
+import { BrowserRouter, useRoutes } from "react-router-dom";
+import { Toaster } from "sonner";
+import { routes } from "./routes/routes";
 import { useCartStore } from "./store/cartStore";
-import { usePrediccionesStore } from "./store/prediccionesStore";
-import { useUsuario } from "./hooks/Usuarios/Usuario";
+import { useThemeStore } from "./store/themeStore";
 
 
 function Routes() {
@@ -16,18 +14,13 @@ function Routes() {
 export default function App() {
   const { theme } = useThemeStore();
   const { fetchProductos } = useCartStore();
-  const { fetchPredicciones } = usePrediccionesStore();
-  const { user, isLoaded } = useUsuario();
 
 
-  console.log(user?.id);
+
   useEffect(() => {
     fetchProductos();
 
-    if (isLoaded) {
-      fetchPredicciones(user?.id);
-    }
-  }, [isLoaded, user?.id]);
+  }, []);
 
 
   const toastOptions = {

@@ -16,6 +16,7 @@ export default function Cart() {
     const { openSignIn } = useClerk();
 
     const handleCheckout = async () => {
+        const toastID = toast.loading("Procesando compra...");
 
         if (!user) {
             openSignIn();
@@ -31,10 +32,14 @@ export default function Cart() {
                 fullName: user?.fullName ?? "",
             }
             const { data } = await comprarProductos({ user: userCompra, cartItems });
-            window.location.href = data;
+            toast.success("Compra exitosa", { id: toastID });
+
+            setTimeout(() => {
+                window.location.href = data;
+            }, 500);
         } catch (error) {
             console.error(error);
-            toast.error("Hubo un problema con el checkout");
+            toast.error("Hubo un problema con el checkout", { id: toastID });
         }
     };
 

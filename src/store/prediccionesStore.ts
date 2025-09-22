@@ -16,14 +16,8 @@ const prediccionesStore = create<IPrediccionesStore>((set) => ({
     predicciones: [],
     fetchPredicciones: async (id_usuario: string | undefined) => {
 
-        const response = await fetch(`${import.meta.env.VITE_API}/api/usuario/recomendar`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id_usuario: id_usuario,
-            }),
+        const response = await fetch(`${import.meta.env.VITE_API}/api/usuario/${id_usuario}`, {
+            method: 'GET',
         });
         const { recomendaciones, populares } = await response.json();
         console.log(populares);

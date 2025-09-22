@@ -3,14 +3,21 @@ import { usePrediccionesStore } from '../../store/prediccionesStore';
 import { useNavegacion } from '../../hooks/Navigate/navegacion';
 import { useCartStore } from '../../store/cartStore';
 import SkeletonCard from '../Productos/Skeleton';
+import { useEffect } from 'react';
+import { useUsuario } from '../../hooks/Usuarios/Usuario';
 
 export default function ProductosRecomendados() {
 
-    const { predicciones } = usePrediccionesStore();
+    const { predicciones, fetchPredicciones } = usePrediccionesStore();
     const { handleRedirigirPagina } = useNavegacion();
     const { addToCart } = useCartStore();
 
-    console.log(predicciones);
+    const { user, isLoaded } = useUsuario();
+
+    useEffect(() => {
+        if (!isLoaded) return;
+        fetchPredicciones(user?.id);
+    }, [isLoaded, user]);
 
     return (
         <>

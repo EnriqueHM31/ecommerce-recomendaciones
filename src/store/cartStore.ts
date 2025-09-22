@@ -4,6 +4,7 @@ import { obtenerProductos } from '../services/productos';
 import type { CartStore, Producto } from '../types/productos';
 import { agruparProductos } from '../utils/productos';
 import { toast } from 'sonner';
+import { mapProductos, shuffleArray } from '../adapters/productos';
 
 /*
 // Mock products data
@@ -747,7 +748,7 @@ export const useCartStore = create<CartStore>()(
 
             getRecommendedProducts: () => {
                 const state = get();
-                return state.products.flatMap(product => product.filter(p => p.recomendado));
+                return state.productFiltrados.filter(p => p.recomendado);
             },
 
             getProductById: (id: number) => {
@@ -762,15 +763,23 @@ export const useCartStore = create<CartStore>()(
                     return;
                 }
 
-                const productosAdaptados = agruparProductos(data)
+                const productosDB = mapProductos(data);
+
+                const productosAdaptados = agruparProductos(productosDB)
+
+
+                console.log({ productosAdaptados })
                 const productosPlanos = productosAdaptados.flatMap(product => product);
 
-                const productosAgrupados = productosPlanos.filter((obj, index, self) => index === self.findIndex(o => o.producto === obj.producto));
+                console.log({ productosPlanos })
+                const productosAgrupados = productosPlanos.flat().filter((obj, index, self) => index === self.findIndex(o => o.producto === obj.producto));
+
+                console.log({ productosAgrupados });
+
+                const productosMezclados = shuffleArray(productosDB);
 
 
-
-
-                set({ products: productosAdaptados, productFiltrados: productosAdaptados.flat(), productosPlanos, productosAgrupados });
+                set({ products: productosMezclados, productFiltrados: productosAdaptados.flat(), productosPlanos, productosAgrupados: productosMezclados.flat() });
             },
             buscarProducto: (query: string) => {
                 set({ query }); // guardamos la búsqueda en el estado

@@ -28,32 +28,76 @@ export interface ProductoB {
     configurations: ProductConfiguration[];
 }
 
-interface ProductosBD {
-    producto_id: number;
-    producto: string;
-    categoria: string;
-    precio_base: string;
-    imagen_url: string;
-    descripcion: string;
-    variante_id: number;
-    color: string;
-    almacenamiento: string;
-    ram_variante: string;
-    sistema_operativo: string;
+interface ProductoRaw {
+    id: number;
     sku: string;
+    precio_base: string;
     stock: number;
-    estado_stock: string;
-    recomendado: number;
-    procesador: string;
-    ram_especificacion: string;
-    display: string;
-    camara: string;
-    sistema: string;
-    conectividad: string | null;
-    bateria: string;
-    fecha_creacion: string; // ISO 8601
-    fecha_actualizacion: string; // ISO 8601
+    imagen_url: string;
+    activo: boolean;
+    created_at: string;
+    updated_at: string;
+    productos_base: {
+        id: number;
+        nombre: string;
+        descripcion: string;
+        marca: string;
+        activo: boolean;
+        categorias: { nombre: string };
+    };
+    variantes: {
+        id: number;
+        nombre_variante: string;
+        procesador: string;
+        display: string;
+        camara: string;
+        bateria: string;
+        conectividad: string | null;
+        sistema_operativo: string;
+        recomendado: number;
+        activa: boolean;
+        ram_especificacion?: string; // si existe en la tabla variantes
+    };
+    colores: { nombre: string };
+    almacenamientos: { capacidad: string };
+    especificaciones_ram: { capacidad: string };
 }
+
+export interface RawProduct {
+    id: number;
+    sku: string;
+    precio_base: string;
+    stock: number;
+    imagen_url: string;
+    activo: boolean;
+    created_at: string;
+    updated_at: string;
+    productos_base: {
+        id: number;
+        nombre: string;
+        descripcion: string;
+        marca: string;
+        activo: boolean;
+        categorias: { nombre: string };
+    };
+    variantes: {
+        id: number;
+        nombre_variante: string;
+        procesador: string;
+        display: string;
+        camara: string;
+        bateria: string;
+        conectividad: string | null;
+        sistema_operativo: string;
+        recomendado: number;
+        activa: boolean;
+        ram_especificacion?: string; // si existe en la tabla variantes
+    };
+    colores: { nombre: string };
+    almacenamientos: { capacidad: string };
+    especificaciones_ram: { capacidad: string };
+}
+
 
 export interface Producto {
     activo: number;
@@ -81,6 +125,8 @@ export interface Producto {
     stock: number;
     updated_at: string;
 }
+
+
 
 export interface ProductConfiguration {
     id: string;
@@ -110,7 +156,7 @@ export interface CartItem {
 
 export interface CartStore {
     // Products
-    products: Producto[][];
+    products: Producto[]; // Now holds MasterProduct[]
     productFiltrados: Producto[];
     categoriasSeleccionadas: string[];
     productosPlanos: Producto[];
