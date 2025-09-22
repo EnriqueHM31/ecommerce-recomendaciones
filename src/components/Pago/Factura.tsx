@@ -1,12 +1,14 @@
 import { motion } from 'framer-motion';
 import { FaCheckCircle, FaCreditCard, FaDirections, FaShoppingCart } from 'react-icons/fa';
-import type { SessionDetails, LineItem } from '../../types/pago.d';
+import type { StripeLineItem } from '../../types/pago';
+import type { CheckoutSession } from '../../types/session';
 import { containerAnimacion, itemAnimacion } from '../../utils/animaciones';
-import { formatearPrecio } from '../../utils/formateo';
+import { formatearFecha, formatearPrecio2 } from '../../utils/formateo';
 
 
 
-export default function Factura({ sessionDetails }: { sessionDetails: SessionDetails | null }) {
+export default function Factura({ sessionDetails }: { sessionDetails: CheckoutSession }) {
+    console.log({ hola: sessionDetails });
     return (
         <>
             <div id="invoice" className="bg-gray-50 rounded-lg p-4 mb-6 text-left">
@@ -42,19 +44,19 @@ export default function Factura({ sessionDetails }: { sessionDetails: SessionDet
                     <section className="text-sm flex lg:flex-col lg:gap-2">
                         <div className="flex items-center gap-4">
                             <span className="text-gray-600 flex-1">Nombre:</span>
-                            <span className="font-medium text-black flex-4 text-start">{sessionDetails?.name}</span>
+                            <span className="font-medium text-black flex-4 text-start">{sessionDetails?.customer_details?.name}</span>
                         </div>
                         <div className="flex items-center gap-4">
                             <span className="text-gray-600 flex-1">Email:</span>
-                            <span className="font-medium text-black flex-4 text-start">{sessionDetails?.email}</span>
+                            <span className="font-medium text-black flex-4 text-start">{sessionDetails?.customer_details?.email}</span>
                         </div>
                         <div className="flex gap-4">
                             <span className="text-gray-600 flex-1">Monto:</span>
-                            <span className="font-medium text-black flex-4 text-start">{formatearPrecio(Number(sessionDetails?.amount), sessionDetails?.currency)}</span>
+                            <span className="font-medium text-black flex-4 text-start">{formatearPrecio2(Number(sessionDetails?.amount_total), sessionDetails?.currency)}</span>
                         </div>
                         <div className="flex items-center gap-4">
                             <span className="text-gray-600 flex-1">Fecha:</span>
-                            <span className="font-medium text-black flex-4 text-start">{sessionDetails?.date}</span>
+                            <span className="font-medium text-black flex-4 text-start">{formatearFecha(sessionDetails?.created)}</span>
                         </div>
                     </section>
                 </motion.div>
@@ -83,12 +85,12 @@ export default function Factura({ sessionDetails }: { sessionDetails: SessionDet
                                 </thead>
                                 <tbody>
                                     <tr className="bg-white">
-                                        <td className="px-4 py-2 text-black">{sessionDetails?.address.line1}</td>
-                                        <td className="px-4 py-2 text-black">{sessionDetails?.address.line2}</td>
-                                        <td className="px-4 py-2 text-black">{sessionDetails?.address.city}</td>
-                                        <td className="px-4 py-2 text-black">{sessionDetails?.address.state}</td>
-                                        <td className="px-4 py-2 text-black">{sessionDetails?.address.postal_code}</td>
-                                        <td className="px-4 py-2 text-black">{sessionDetails?.address.country}</td>
+                                        <td className="px-4 py-2 text-black">{sessionDetails.customer_details?.address?.line1}</td>
+                                        <td className="px-4 py-2 text-black">{sessionDetails.customer_details?.address?.line2}</td>
+                                        <td className="px-4 py-2 text-black">{sessionDetails.customer_details?.address?.city}</td>
+                                        <td className="px-4 py-2 text-black">{sessionDetails.customer_details?.address?.state}</td>
+                                        <td className="px-4 py-2 text-black">{sessionDetails.customer_details?.address?.postal_code}</td>
+                                        <td className="px-4 py-2 text-black">{sessionDetails.customer_details?.address?.country}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -97,7 +99,7 @@ export default function Factura({ sessionDetails }: { sessionDetails: SessionDet
 
 
                     {/* Tabla de productos */}
-                    {sessionDetails?.lineItems !== undefined && sessionDetails?.lineItems.length > 0 && (
+                    {sessionDetails?.line_items !== undefined && (
                         <motion.div
                             className="mt-4 overflow-x-auto"
                             variants={containerAnimacion(0.7)} // staggerChildren aquí
@@ -118,26 +120,31 @@ export default function Factura({ sessionDetails }: { sessionDetails: SessionDet
                                         <th className="px-4 py-2 text-right border-b border-gray-200 bg-blue-950 text-white">Total</th>
                                     </tr>
                                 </thead>
+
                                 <tbody>
-                                    {sessionDetails?.lineItems.map((item: LineItem) => (
+
+                                    {sessionDetails?.line_items.data.map((item: StripeLineItem) => (
                                         <tr key={item.id} className="even:bg-gray-50">
                                             <td className="px-4 py-2 text-black flex items-center justify-center">
-                                                <motion.img src={item.price?.product?.images[0]} alt="producto" className="size-10 object-contain" />
+                                                <motion.img src={item.price.product?.images[0] || "https://via.placeholder.com/150"} alt="producto" className="size-10 object-contain rounded-lg" />
                                             </td>
                                             <td className="px-4 py-2 text-black">
-                                                <motion.div >{item.description}</motion.div>
+                                                <motion.div >
+                                                    {item.price.product.name}:
+                                                    {item.price.product.description}
+                                                </motion.div>
                                             </td>
                                             <td className="px-4 py-2 text-center text-black">
                                                 <motion.div >{item.quantity}</motion.div>
                                             </td>
                                             <td className="px-4 py-2 text-right text-black">
                                                 <motion.div >
-                                                    {formatearPrecio(item.amount_total, item.currency)}
+                                                    {formatearPrecio2(item.amount_total, item.currency)}
                                                 </motion.div>
                                             </td>
                                             <td className="px-4 py-2 text-right font-medium text-black">
                                                 <motion.div >
-                                                    {formatearPrecio(item.amount_total, item.currency)}
+                                                    {formatearPrecio2(item.amount_total, item.currency)}
                                                 </motion.div>
                                             </td>
 

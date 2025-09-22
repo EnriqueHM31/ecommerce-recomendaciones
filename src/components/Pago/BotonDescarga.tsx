@@ -1,8 +1,8 @@
 import { BlobProvider } from "@react-pdf/renderer";
+import type { CheckoutSession } from "../../types/session";
 import PdfFactura from "./PDFFactura";
-import type { SessionDetails } from "../../types/pago.d";
 
-export const DownloadFacturaButton: React.FC<{ sessionDetails: SessionDetails | null }> = ({ sessionDetails }) => {
+export const DownloadFacturaButton: React.FC<{ sessionDetails: CheckoutSession | null }> = ({ sessionDetails }) => {
     if (!sessionDetails) return null;
 
     return (

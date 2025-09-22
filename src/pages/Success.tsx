@@ -4,19 +4,21 @@ import {
     FaCheckCircle,
     FaHome
 } from 'react-icons/fa';
-import DownloadFacturaButton from '../components/Pago/BotonDescarga';
-import Factura from '../components/Pago/Factura';
-import { useNavegacion } from '../hooks/Navigate/navegacion';
-import { useCartStore } from '../store/cartStore';
-import type { SessionDetails, StripeCheckoutSession, StripeLineItem } from '../types/pago.d';
-import { containerAnimacion, itemAnimacion } from '../utils/animaciones';
-import FacturaSkeleton from '../components/Success/Skeleton';
 import { toast } from 'sonner';
+import Factura from '../components/Pago/Factura';
+import FacturaSkeleton from '../components/Success/Skeleton';
+import { useNavegacion } from '../hooks/Navigate/navegacion';
+import { useUsuario } from '../hooks/Usuarios/Usuario';
+import { useCartStore } from '../store/cartStore';
+import type { CheckoutSession } from '../types/session';
+import { containerAnimacion, itemAnimacion } from '../utils/animaciones';
+import DownloadFacturaButton from '../components/Pago/BotonDescarga';
 
 export default function PaymentSuccess() {
-    const [sessionDetails, setSessionDetails] = useState<SessionDetails | null>(null);
+    const [sessionDetails, setSessionDetails] = useState<CheckoutSession | null>(null);
     const { handleRedirigirPagina } = useNavegacion();
     const { clearCart } = useCartStore();
+    const { user, isLoaded } = useUsuario();
 
 
     useEffect(() => {
@@ -29,49 +31,9 @@ export default function PaymentSuccess() {
                 const res = await fetch(`${import.meta.env.VITE_API}/api/compra/checkout-session?sessionId=${sessionId}`);
                 if (!res.ok) throw new Error("Error al obtener la sesión");
 
-                const { data }: { data: StripeCheckoutSession } = await res.json();
+                const { data } = await res.json();
 
-                setSessionDetails({
-                    id: data.id,
-                    amount: ((data.amount_total ?? 0) / 100).toFixed(2),
-                    currency: data.currency?.toUpperCase() ?? "USD",
-                    date: new Date((data.created ?? Date.now()) * 1000).toLocaleDateString("es-MX", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                    }),
-                    email: data.customer?.email ?? "No disponible",
-                    name: data.customer?.name ?? "No disponible",
-
-                    // ✅ Map correcto de los productos
-                    lineItems: data.line_items?.data.map((item: StripeLineItem) => ({
-                        id: item.id,
-                        description: item.description,
-                        quantity: Number(item.quantity),
-                        amount_total: Number((item.amount_total / 100).toFixed(2)),
-                        currency: item.currency?.toUpperCase(),
-                        price: {
-                            price: Number((item.price.unit_amount / 100).toFixed(2)),
-                            product: {
-                                images: item.price.product.images ?? ["https://via.placeholder.com/150x150.png?text=Sin+Imagen"], // ✅ imagen por producto
-                                name: item.price.product.name,
-                                description: item.price.product.description,
-                            }
-                        } // precio unitario
-                    })) ?? [],
-
-                    // ✅ Address solo con los datos del cliente
-                    address: data.customer?.address ?? {
-                        city: "No disponible",
-                        country: "No disponible",
-                        line1: "No disponible",
-                        line2: "No disponible",
-                        postal_code: "No disponible",
-                        state: "No disponible",
-                    },
-                });
+                setSessionDetails(data);
 
             } catch (err) {
                 console.error("Error al obtener detalles de sesión:", err);
@@ -80,7 +42,37 @@ export default function PaymentSuccess() {
         fetchSession();
     }, []);
 
+    useEffect(() => {
+        if (!user || !sessionDetails || !isLoaded) return;
 
+        async function crearPedido(sessionDetails: CheckoutSession) {
+            const response = await fetch(`${import.meta.env.VITE_API}/api/crear-pedido`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_id: user?.id, // ahora seguro que existe
+                    cartItems: sessionDetails.line_items.data.map(item => ({
+                        id: item.id,
+                        quantity: item.quantity,
+                        price: item.price.unit_amount,
+                        amount_total: item.amount_total,
+                    })),
+                    direccion_envio: sessionDetails.customer_details?.address,
+                })
+            });
+
+            if (response.ok) {
+                toast.success('Se realizo su compra con éxito.');
+            }
+        }
+
+        crearPedido(sessionDetails);
+    }, [sessionDetails, isLoaded, user]); // <--- agregamos user
+
+
+    console.log({ sessionDetails });
 
     return (
         <div className="min-h-[110dvh] bg-blue-950 flex items-center justify-center p-4">
@@ -108,7 +100,6 @@ export default function PaymentSuccess() {
                             <motion.div className="" variants={itemAnimacion(0.9)}>
                                 <DownloadFacturaButton sessionDetails={sessionDetails} />
                             </motion.div>
-
                             <motion.button
                                 onClick={() => {
                                     handleRedirigirPagina("/");

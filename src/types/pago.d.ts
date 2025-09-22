@@ -117,6 +117,7 @@ export interface StripeLineItem {
     amount_total: number;
     currency: string;
     price: StripePrice;
+    metadata: Record<string, string>;
 }
 
 export interface StripePrice {
