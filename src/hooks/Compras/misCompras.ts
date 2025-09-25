@@ -1,7 +1,7 @@
+import type { UserResource } from "@clerk/types";
 import { useEffect, useState } from "react";
-import type { PaymentSession } from "../../types/pago";
-import type { UserResource } from "@clerk/types"
 import { useComprasStore } from "../../store/comprasStore";
+import type { PaymentSession } from "../../types/pago";
 interface useMisComprasProps {
     user?: UserResource | null;
 }

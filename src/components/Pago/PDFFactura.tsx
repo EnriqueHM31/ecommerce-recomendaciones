@@ -1,8 +1,8 @@
 // utils/pdfGenerator.tsx
 import { Document, Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import React from "react";
-import type { CheckoutSession } from "../../types/session";
-import { formatearPrecio2 } from "../../utils/formateo";
+import type { PaymentSession } from "../../types/pago";
+import { formatearFecha, formatearPrecio2 } from "../../utils/formateo";
 
 const styles = StyleSheet.create({
     page: { padding: 20, fontSize: 12, fontFamily: "Helvetica" },
@@ -76,11 +76,12 @@ const styles = StyleSheet.create({
 
 
 interface PdfFacturaProps {
-    sessionDetails: CheckoutSession;
+    sessionDetails: PaymentSession;
 }
 
 export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => (
-    <Document>
+
+    <Document  >
         <Page style={styles.page}>
             {/* Header */}
             <View style={styles.headerBox}>
@@ -94,21 +95,21 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => (
                 <View style={styles.sectionBody}>
                     <View style={styles.row}>
                         <Text style={styles.label}>Nombre:</Text>
-                        <Text style={styles.value}>{sessionDetails.name}</Text>
+                        <Text style={styles.value}>{sessionDetails.customer?.name}</Text>
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.label}>Email:</Text>
-                        <Text style={styles.value}>{sessionDetails.email}</Text>
+                        <Text style={styles.value}>{sessionDetails.customer?.email}</Text>
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.label}>Monto:</Text>
                         <Text style={styles.value}>
-                            {formatearPrecio2(Number(sessionDetails.amount), sessionDetails.currency)}
+                            {formatearPrecio2(Number(sessionDetails.amount_total), sessionDetails.currency)}
                         </Text>
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.label}>Fecha:</Text>
-                        <Text style={styles.value}>{sessionDetails.date}</Text>
+                        <Text style={styles.value}>{formatearFecha(Number(sessionDetails.created))}</Text>
                     </View>
                 </View>
             </View>
@@ -119,23 +120,27 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => (
                 <View style={styles.sectionBody}>
                     <View style={styles.row}>
                         <Text style={styles.label}>Dirección 1:</Text>
-                        <Text style={styles.value}>{sessionDetails.customer_details?.address?.line1}</Text>
+                        <Text style={styles.value}>{sessionDetails.customer?.address?.line1}</Text>
+                    </View>
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Dirección 2:</Text>
+                        <Text style={styles.value}>{sessionDetails.customer?.address?.line2}</Text>
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.label}>Ciudad:</Text>
-                        <Text style={styles.value}>{sessionDetails.customer_details?.address?.city}</Text>
+                        <Text style={styles.value}>{sessionDetails.customer?.address?.city}</Text>
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.label}>Estado:</Text>
-                        <Text style={styles.value}>{sessionDetails.customer_details?.address?.state}</Text>
+                        <Text style={styles.value}>{sessionDetails.customer?.address?.state}</Text>
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.label}>Código Postal:</Text>
-                        <Text style={styles.value}>{sessionDetails.customer_details?.address?.postal_code}</Text>
+                        <Text style={styles.value}>{sessionDetails.customer?.address?.postal_code}</Text>
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.label}>País:</Text>
-                        <Text style={styles.value}>{sessionDetails.customer_details?.address?.country}</Text>
+                        <Text style={styles.value}>{sessionDetails.customer?.address?.country}</Text>
                     </View>
                 </View>
             </View>
@@ -154,7 +159,7 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => (
                     </View>
 
                     {/* Filas */}
-                    {sessionDetails.line_items.data.map((item) => (
+                    {sessionDetails.line_items.map((item) => (
                         <View style={styles.tableRow} key={item.id}>
                             <View style={styles.tableCol}>
                                 <Image
@@ -189,7 +194,7 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => (
                 </View>
             </View>
         </Page>
-    </Document>
+    </Document >
 );
 
 export default PdfFactura;

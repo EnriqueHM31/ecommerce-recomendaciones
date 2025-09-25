@@ -28,6 +28,8 @@ const Compras: React.FC = () => {
 
     if (error) return <ErrorCompras />
 
+    console.log({ pedidos });
+
     return (
         <Layout>
             <AnimatePresence>

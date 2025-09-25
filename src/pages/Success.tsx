@@ -1,16 +1,19 @@
+import { BlobProvider } from "@react-pdf/renderer";
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import {
     FaCheckCircle,
+    FaDownload,
     FaHome
 } from 'react-icons/fa';
 import { toast } from 'sonner';
-import DownloadFacturaButton from '../components/Pago/BotonDescarga';
 import Factura from '../components/Pago/Factura';
+import PdfFactura from '../components/Pago/PDFFactura';
 import FacturaSkeleton from '../components/Success/Skeleton';
 import { useNavegacion } from '../hooks/Navigate/navegacion';
 import { useUsuario } from '../hooks/Usuarios/Usuario';
 import { useCartStore } from '../store/cartStore';
+import type { PaymentSession } from '../types/pago';
 import type { CheckoutSession } from '../types/session';
 import { containerAnimacion, itemAnimacion } from '../utils/animaciones';
 
@@ -76,6 +79,48 @@ export default function PaymentSuccess() {
         crearPedido(sessionDetails);
     }, [sessionDetails, isLoaded, user]); // <--- agregamos user
 
+    if (!sessionDetails) return null;
+
+    const pedidoCreado: PaymentSession | null = {
+        id: sessionDetails?.id,
+        amount: sessionDetails?.amount_total.toString(),
+        currency: sessionDetails?.currency,
+        created: sessionDetails.created.toString(),
+        email: sessionDetails.customer_details?.email,
+        name: sessionDetails.customer_details?.name,
+        line_items: sessionDetails.line_items.data.map((item) => ({
+            id: item.id,
+            description: item.description,
+            quantity: item.quantity,
+            amount_total: item.amount_total,
+            currency: item.currency,
+            price: {
+                price: item.price.unit_amount,
+                product: {
+                    images: item.price.product.images,
+                    name: item.price.product.name,
+                    description: item.price.product.description,
+                }
+            }
+        })),
+        amount_total: sessionDetails.amount_total,
+        customer: {
+            address: {
+                city: sessionDetails.customer_details?.address?.city ?? "No disponible",
+                country: sessionDetails.customer_details?.address?.country ?? "No disponible",
+                line1: sessionDetails.customer_details?.address?.line1 ?? "No disponible",
+                line2: sessionDetails.customer_details?.address?.line2 ?? "No disponible",
+                postal_code: sessionDetails.customer_details?.address?.postal_code ?? "No disponible",
+                state: sessionDetails.customer_details?.address?.state ?? "No disponible",
+            },
+            email: sessionDetails.customer_details?.email ?? "No disponible",
+            name: sessionDetails.customer_details?.name ?? "No disponible",
+        },
+        status: sessionDetails.status
+
+    }
+
+
 
     return (
         <div className="min-h-[110dvh] bg-blue-950 flex items-center justify-center p-4">
@@ -101,7 +146,18 @@ export default function PaymentSuccess() {
                                 </p>
                             </motion.div>
                             <motion.div className="" variants={itemAnimacion(0.9)}>
-                                <DownloadFacturaButton sessionDetails={sessionDetails} />
+                                <BlobProvider document={<PdfFactura sessionDetails={pedidoCreado} />}>
+                                    {({ url }) => (
+                                        <a
+                                            href={url || "#"}
+                                            download={`Factura_${sessionDetails.id}.pdf`}
+                                            className="flex items-center px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors w-full md:w-1/2 text-center md:text-center justify-center md:justify-center cursor-pointer"
+                                        >
+                                            <FaDownload className="w-4 h-4 mr-1" />
+                                            Recibo
+                                        </a>
+                                    )}
+                                </BlobProvider>
                             </motion.div>
                             <motion.button
                                 onClick={() => {

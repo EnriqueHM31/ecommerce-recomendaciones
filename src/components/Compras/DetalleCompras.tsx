@@ -1,7 +1,7 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { IoClose } from "react-icons/io5";
-import { motion, AnimatePresence } from "framer-motion";
-import DetallesCompra from "./DetallesCompra";
 import type { PaymentSession } from "../../types/pago";
+import DetallesCompra from "./DetallesCompra";
 
 interface DetalleCompraProps {
     pedidoSeleccionado: PaymentSession | null;

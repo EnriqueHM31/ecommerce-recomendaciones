@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
+import { FaCalendarAlt, FaCheckCircle, FaClock, FaShoppingCart, FaUser } from "react-icons/fa";
 import type { PaymentSession } from "../../types/pago";
 import { formatearFecha, formatearPrecio2 } from "../../utils/formateo";
-import { FaShoppingCart, FaUser, FaCalendarAlt, FaCheckCircle, FaClock } from "react-icons/fa";
 
 interface DetallesCompraProps {
     pedido: PaymentSession;
@@ -29,7 +29,7 @@ export default function DetallesCompra({ pedido }: DetallesCompraProps) {
                     <div className="flex items-center gap-3">
                         <FaUser className="text-gray-600" size={18} />
                         <span className="text-sm text-gray-700">
-                            <strong>Cliente:</strong> {pedido.customer.name}
+                            <strong>Cliente:</strong> {pedido.customer?.name}
                         </span>
                     </div>
                     <div className="flex items-center gap-3">

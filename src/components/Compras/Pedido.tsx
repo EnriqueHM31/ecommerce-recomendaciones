@@ -1,13 +1,12 @@
+import { BlobProvider } from "@react-pdf/renderer";
 import { motion } from "framer-motion";
 import { FaCalendarAlt, FaDownload, FaEye } from "react-icons/fa";
-import { BlobProvider } from "@react-pdf/renderer";
 import type { PaymentSession } from "../../types/pago";
 import {
     colorStatus,
     formatearFecha,
     formatearPrecio2,
-    formatoRecibo,
-    tranformarStatus,
+    tranformarStatus
 } from "../../utils/formateo";
 import PdfFactura from "../Pago/PDFFactura";
 
@@ -18,6 +17,7 @@ interface PedidoProps {
 }
 
 export default function Pedido({ pedido, onOpenDetalles, index }: PedidoProps) {
+    console.log({ pedido });
     return (
         <motion.div
             key={pedido.id}
@@ -63,13 +63,12 @@ export default function Pedido({ pedido, onOpenDetalles, index }: PedidoProps) {
                 </button>
 
                 {(() => {
-                    const ObtenerRecibo = formatoRecibo(pedido);
                     return (
-                        <BlobProvider document={<PdfFactura sessionDetails={ObtenerRecibo} />}>
+                        <BlobProvider document={<PdfFactura sessionDetails={pedido} />}>
                             {({ url }) => (
                                 <a
                                     href={url || "#"}
-                                    download={`Factura_${ObtenerRecibo.id}.pdf`}
+                                    download={`Factura_${pedido.id}.pdf`}
                                     className="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors w-full md:w-auto text-center md:text-start justify-center md:justify-start cursor-pointer"
                                 >
                                     <FaDownload className="w-4 h-4 mr-1" />

@@ -1,4 +1,4 @@
-import type { PaymentSession } from "../types/pago";
+import type { CheckoutSession } from "../types/session";
 export const formatearPrecio = (amount: number, currency?: string) =>
     new Intl.NumberFormat("es-MX", {
         style: "currency",
@@ -38,22 +38,22 @@ export const colorStatus = (status: string) => {
                 : "text-blue-700 border-blue-200";
 }
 
-export const formatoRecibo = (pedido: PaymentSession) => {
+export const formatoRecibo = (pedido: CheckoutSession) => {
     return {
         id: pedido.id,
         amount: String(pedido.amount_total),   // convertido a string
         currency: pedido.currency,
         date: String(pedido.created),          // convertido a string
-        email: pedido.customer?.email ?? "No disponible",
-        name: pedido.customer?.name ?? "No disponible",
+        email: pedido.customer_email ?? "No disponible",
+        name: pedido.customer_details?.name ?? "No disponible",
         lineItems: pedido.line_items,
         address: {
-            city: pedido.customer?.address?.city ?? "No disponible",
-            country: pedido.customer?.address?.country ?? "No disponible",
-            line1: pedido.customer?.address?.line1 ?? "No disponible",
-            line2: pedido.customer?.address?.line2 ?? "No disponible",
-            postal_code: pedido.customer?.address?.postal_code ?? "No disponible",
-            state: pedido.customer?.address?.state ?? "No disponible",
+            city: pedido.customer_details?.address?.city ?? "No disponible",
+            country: pedido.customer_details?.address?.country ?? "No disponible",
+            line1: pedido.customer_details?.address?.line1 ?? "No disponible",
+            line2: pedido.customer_details?.address?.line2 ?? "No disponible",
+            postal_code: pedido.customer_details?.address?.postal_code ?? "No disponible",
+            state: pedido.customer_details?.address?.state ?? "No disponible",
         },
     };
 }
