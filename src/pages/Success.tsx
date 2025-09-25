@@ -137,21 +137,21 @@ export default function PaymentSuccess() {
                         <Factura sessionDetails={sessionDetails} />
 
                         {/* Botones */}
-                        <section className='flex flex-col justify-between gap-3'>
+                        <section className='flex flex-col mx-auto justify-center items-center  gap-3 w-full max-w-1/2'>
                             {/* Confirmación */}
-                            <motion.div className="bg-green-50 border border-green-200 rounded-lg p-4 " variants={itemAnimacion(0.8)}>
-                                <p className="text-green-800 text-sm flex items-center gap-2">
+                            <motion.div className="bg-green-50 border border-green-200 rounded-lg p-4 w-full flex items-center justify-center" variants={itemAnimacion(0.8)}>
+                                <p className="text-green-800 text-sm flex items-center gap-2 text-center">
                                     <FaCheckCircle className="text-green-600" />
                                     Se ha enviado tu recibo a tu email
                                 </p>
                             </motion.div>
-                            <motion.div className="" variants={itemAnimacion(0.9)}>
+                            <motion.div className=" flex items-center justify-center w-full" variants={itemAnimacion(0.9)}>
                                 <BlobProvider document={<PdfFactura sessionDetails={pedidoCreado} />}>
                                     {({ url }) => (
                                         <a
                                             href={url || "#"}
                                             download={`Factura_${sessionDetails.id}.pdf`}
-                                            className="flex items-center px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors w-full md:w-1/2 text-center md:text-center justify-center md:justify-center cursor-pointer"
+                                            className="flex items-center px-3 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors w-full md:w-full text-center md:text-center justify-center md:justify-center cursor-pointer"
                                         >
                                             <FaDownload className="w-4 h-4 mr-1" />
                                             Recibo
@@ -165,7 +165,7 @@ export default function PaymentSuccess() {
                                     clearCart();
                                     toast.success('Se realizo su compra con éxito.');
                                 }}
-                                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg flex items-center justify-center gap-2 cursor-pointer"
+                                className="w-full  hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg flex items-center justify-center gap-2 cursor-pointer"
                                 variants={itemAnimacion(1)}
                             >
                                 <FaHome className="w-4 h-4" /> Volver al Inicio

@@ -17,7 +17,6 @@ interface PedidoProps {
 }
 
 export default function Pedido({ pedido, onOpenDetalles, index }: PedidoProps) {
-    console.log({ pedido });
     return (
         <motion.div
             key={pedido.id}
