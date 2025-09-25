@@ -5,9 +5,6 @@ import type { Producto } from '../../types/productos';
 
 export default function Especificaciones({ configuracionSeleccionada }: { configuracionSeleccionada: Producto | undefined }) {
 
-
-    console.log({ configuracionSeleccionada });
-
     return (
         <>
             <div>
