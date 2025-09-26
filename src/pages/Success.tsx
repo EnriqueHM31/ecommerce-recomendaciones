@@ -71,9 +71,10 @@ export default function PaymentSuccess() {
                 })
             });
 
-            if (response.ok) {
-                toast.success('Se realizo su compra con éxito.');
-            }
+            if (!response.ok) throw new Error("Error al crear el pedido");
+
+
+
         }
 
         crearPedido(sessionDetails);
@@ -123,12 +124,12 @@ export default function PaymentSuccess() {
 
 
     return (
-        <div className="min-h-[110dvh] bg-blue-950 flex items-center justify-center p-4">
+        <div className="min-h-[110dvh] bg-blue-950 flex items-center justify-center p-4 w-full">
             {
                 sessionDetails ? (
 
                     <motion.div
-                        className="bg-white rounded-2xl shadow-2xl max-w-1/2 w-full p-8 text-center min-h-[110dvh] flex flex-col justify-between"
+                        className="bg-white rounded-2xl shadow-2xl max-w-full md:max-w-10/12 lg:max-w-1/2 w-full p-8 text-center min-h-[110dvh] flex flex-col justify-between"
                         variants={containerAnimacion(0.15)}
                         initial="hidden"
                         animate="show"
@@ -137,7 +138,7 @@ export default function PaymentSuccess() {
                         <Factura sessionDetails={sessionDetails} />
 
                         {/* Botones */}
-                        <section className='flex flex-col mx-auto justify-center items-center  gap-3 w-full max-w-1/2'>
+                        <section className='flex flex-col md:mx-auto justify-center items-center  gap-3 w-full max-w-full md:max-w-1/2'>
                             {/* Confirmación */}
                             <motion.div className="bg-green-50 border border-green-200 rounded-lg p-4 w-full flex items-center justify-center" variants={itemAnimacion(0.8)}>
                                 <p className="text-green-800 text-sm flex items-center gap-2 text-center">

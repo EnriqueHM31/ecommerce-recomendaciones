@@ -10,11 +10,11 @@ import { formatearFecha, formatearPrecio2 } from '../../utils/formateo';
 export default function Factura({ sessionDetails }: { sessionDetails: CheckoutSession }) {
     return (
         <>
-            <div id="invoice" className="bg-gray-50 rounded-lg p-4 mb-6 text-left">
+            <div id="invoice" className="bg-gray-50 rounded-lg md:p-4 mb-6 text-left w-full">
                 {/* Header */}
 
                 <motion.div
-                    className="mb-6 mx-auto bg-green-100 w-full py-2 rounded-full justify-center flex items-center flex-col gap-5"
+                    className="mb-6 md:mx-auto bg-green-100 w-full py-2 rounded-2xl justify-center flex items-center flex-col gap-5"
                     variants={itemAnimacion(0.2)}
                 >
                     <FaCheckCircle className="w-12 h-12 text-green-600" />
@@ -32,7 +32,7 @@ export default function Factura({ sessionDetails }: { sessionDetails: CheckoutSe
 
                 {/* Detalles de sesión */}
                 <motion.div
-                    className="bg-gray-50 rounded-lg  text-left flex lg:flex-col lg:gap-2 mb-7"
+                    className="bg-gray-50 rounded-lg  text-left flex flex-col gap-2 mb-7"
                     variants={itemAnimacion(0.6)}
                 >
                     <h3 className="font-semibold text-gray-900 flex items-center gap-2">
@@ -40,31 +40,31 @@ export default function Factura({ sessionDetails }: { sessionDetails: CheckoutSe
                         Detalles de la transacción
                     </h3>
 
-                    <section className="text-sm flex lg:flex-col lg:gap-2">
-                        <div className="flex items-center gap-4">
-                            <span className="text-gray-600 flex-1">Nombre:</span>
-                            <span className="font-medium text-black flex-4 text-start">{sessionDetails?.customer_details?.name}</span>
+                    <section className="text-sm flex flex-col lg:gap-2">
+                        <div className="flex md:flex-row flex-col md:items-center gap-1 md:gap-4">
+                            <span className="text-gray-600 md:flex-1">Nombre:</span>
+                            <span className="font-medium text-black md:flex-4 text-start flex-wrap">{sessionDetails?.customer_details?.name}</span>
                         </div>
-                        <div className="flex items-center gap-4">
-                            <span className="text-gray-600 flex-1">Email:</span>
-                            <span className="font-medium text-black flex-4 text-start">{sessionDetails?.customer_details?.email}</span>
+                        <div className="flex md:flex-row flex-col md:items-center gap-1 md:gap-4">
+                            <span className="text-gray-600 md:flex-1">Email:</span>
+                            <span className="font-medium text-black md:flex-4 text-start flex-wrap">{sessionDetails?.customer_details?.email}</span>
                         </div>
-                        <div className="flex gap-4">
-                            <span className="text-gray-600 flex-1">Monto:</span>
-                            <span className="font-medium text-black flex-4 text-start">{formatearPrecio2(Number(sessionDetails?.amount_total), sessionDetails?.currency)}</span>
+                        <div className="flex md:flex-row flex-col md gap-1:md:gap-4">
+                            <span className="text-gray-600 md:flex-1">Monto:</span>
+                            <span className="font-medium text-black md:flex-4 text-start">{formatearPrecio2(Number(sessionDetails?.amount_total), sessionDetails?.currency)}</span>
                         </div>
-                        <div className="flex items-center gap-4">
-                            <span className="text-gray-600 flex-1">Fecha:</span>
-                            <span className="font-medium text-black flex-4 text-start">{formatearFecha(sessionDetails?.created)}</span>
+                        <div className="flex md:flex-row flex-col md:items-center gap-1 md:gap-4">
+                            <span className="text-gray-600 md:flex-1">Fecha:</span>
+                            <span className="font-medium text-black md:flex-4 text-start">{formatearFecha(sessionDetails?.created)}</span>
                         </div>
                     </section>
                 </motion.div>
 
                 <motion.div
-                    className=" rounded-lg text-left flex lg:flex-col lg:gap-2 bg-gray-200"
+                    className=" rounded-lg text-left flex flex-col gap-2 bg-gray-200"
                     variants={itemAnimacion(0.6)}
                 >
-                    <section className='flex lg:flex-col lg:gap-2'>
+                    <section className='flex flex-col gap-2'>
                         <h3 className="font-semibold text-gray-900 flex items-center gap-2 ">
                             <FaDirections className="text-blue-600" />
                             Detalles de la direccion

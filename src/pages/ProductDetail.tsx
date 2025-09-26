@@ -19,12 +19,18 @@ export default function ProductDetail() {
     const { handleRegresarAnteriorExacto } = useNavegacion();
     const { productosPlanos } = useCartStore();
     const [configuracionSeleccionada, setConfiguracionSeleccionada] = useState<Producto | undefined>();
+    const { fetchProductos } = useCartStore();
+    useEffect(() => {
+        fetchProductos();
+    }, []);
+
 
     useEffect(() => {
         if (product) {
             setConfiguracionSeleccionada(product);
         }
     }, [product]);
+
 
     if (!product) {
         return (

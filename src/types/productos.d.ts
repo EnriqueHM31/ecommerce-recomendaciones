@@ -36,7 +36,6 @@ interface ProductoRaw {
     imagen_url: string;
     activo: boolean;
     created_at: string;
-    updated_at: string;
     productos_base: {
         id: number;
         nombre: string;
@@ -54,9 +53,7 @@ interface ProductoRaw {
         bateria: string;
         conectividad: string | null;
         sistema_operativo: string;
-        recomendado: number;
         activa: boolean;
-        ram_especificacion?: string; // si existe en la tabla variantes
     };
     colores: { nombre: string };
     almacenamientos: { capacidad: string };

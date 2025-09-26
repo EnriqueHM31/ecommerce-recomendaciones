@@ -72,10 +72,10 @@ export default function Producto({ product, index }: ProductosProps) {
 
                     <div className="flex gap-2 items-center flex-wrap mb-2">
                         {[
-                            product.ram_variante && `RAM: ${product.ram_variante}`,
-                            product.almacenamiento && `Almacenamiento: ${product.almacenamiento}`,
-                            product.color && `Color: ${product.color}`,
-                            product.conectividad && `Conectividad: ${product.conectividad}`,
+                            product.ram_variante && product.ram_variante !== "N/A" && `RAM: ${product.ram_variante}`,
+                            product.almacenamiento && product.almacenamiento !== "N/A" && `Almacenamiento: ${product.almacenamiento}`,
+                            product.color && product.color !== "N/A" && `Color: ${product.color}`,
+                            product.conectividad && product.conectividad !== "N/A" && `Conectividad: ${product.conectividad}`,
                         ]
                             .filter(Boolean)
                             .map((feature, index) => (

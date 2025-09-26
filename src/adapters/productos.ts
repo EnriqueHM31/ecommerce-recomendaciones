@@ -5,31 +5,35 @@ import type { Producto, ProductoRaw } from '../types/productos';
 export function mapProductos(productosRaw: ProductoRaw[]): Producto[] {
     return productosRaw.map((p) => ({
         id: p.id,
-        producto_id: p.productos_base.id,
-        producto: p.variantes.nombre_variante,
-        categoria: p.productos_base.categorias.nombre,
+        producto_id: p.productos_base?.id ?? 0,
+        producto: p.variantes?.nombre_variante ?? "Sin variante",
+        categoria: p.productos_base?.categorias?.nombre ?? "Sin categoría",
         precio_base: Number(p.precio_base),
-        imagen_url: p.imagen_url,
-        descripcion: p.productos_base.descripcion,
-        marca: p.productos_base.marca,
+        imagen_url: p.imagen_url ?? "",
+        descripcion: p.productos_base?.descripcion ?? "",
+        marca: p.productos_base?.marca ?? "Genérico",
         sku: p.sku,
         stock: p.stock,
         activo: p.activo ? 1 : 0,
-        recomendado: p.variantes.recomendado ? 1 : 0,
-        procesador: p.variantes.procesador,
-        ram_especificacion: p.especificaciones_ram.tipo,
-        ram_variante: p.especificaciones_ram.capacidad,
-        display: p.variantes.display,
-        camara: p.variantes.camara,
-        sistema_operativo: p.variantes.sistema_operativo,
-        conectividad: p.variantes.conectividad || "",
-        bateria: p.variantes.bateria,
-        almacenamiento: p.almacenamientos.capacidad,
-        color: p.colores.nombre,
+        recomendado: 0,
+
+        // --- Especificaciones ---
+        procesador: p.variantes?.procesador ?? "N/A",
+        ram_especificacion: p.especificaciones_ram?.tipo ?? "N/A",
+        ram_variante: p.especificaciones_ram?.capacidad ?? "N/A",
+        display: p.variantes?.display ?? "N/A",
+        camara: p.variantes?.camara ?? "N/A",
+        sistema_operativo: p.variantes?.sistema_operativo ?? "N/A",
+        conectividad: p.variantes?.conectividad ?? "N/A",
+        bateria: p.variantes?.bateria ?? "N/A",
+        almacenamiento: p.almacenamientos?.capacidad ?? "N/A",
+        color: p.colores?.nombre ?? "Sin color",
+
         created_at: p.created_at,
-        updated_at: p.updated_at || p.created_at,
+        updated_at: "",
     }));
 }
+
 
 export function shuffleArray<T>(array: T[]): T[] {
     const a = [...array]; // clonar para no modificar el original
