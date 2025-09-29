@@ -746,11 +746,6 @@ export const useCartStore = create<CartStore>()(
                 return state.cartItems.reduce((total, item) => total + (item.product.precio_base * item.quantity), 0);
             },
 
-            getRecommendedProducts: () => {
-                const state = get();
-                return state.productFiltrados.filter(p => p.recomendado);
-            },
-
             getProductById: (id: number) => {
                 return get().productosPlanos.find(p => p.id === id);
             },
@@ -789,16 +784,13 @@ export const useCartStore = create<CartStore>()(
                             ? true
                             : categoriasSinRecomendados.includes(p.categoria);
 
-                    const filtraRecomendados = categoriasSeleccionadas.includes("Recomendados")
-                        ? Boolean(p.recomendado)
-                        : true;
 
                     // --- Búsqueda ---
                     const filtraBusqueda = query.trim().length === 0
                         ? true
                         : p.producto.toLowerCase().includes(query.toLowerCase());
 
-                    return filtraCategorias && filtraRecomendados && filtraBusqueda;
+                    return filtraCategorias && filtraBusqueda;
                 });
 
                 set({ productosAgrupados: filtrados });

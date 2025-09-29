@@ -8,15 +8,12 @@ export function mapProductos(productosRaw: ProductoRaw[]): Producto[] {
         producto_id: p.productos_base?.id ?? 0,
         producto: p.variantes?.nombre_variante ?? "Sin variante",
         categoria: p.productos_base?.categorias?.nombre ?? "Sin categoría",
-        precio_base: Number(p.precio_base),
+        precio_base: Number(p.precio),
         imagen_url: p.imagen_url ?? "",
         descripcion: p.productos_base?.descripcion ?? "",
         marca: p.productos_base?.marca ?? "Genérico",
         sku: p.sku,
         stock: p.stock,
-        activo: p.activo ? 1 : 0,
-        recomendado: 0,
-
         // --- Especificaciones ---
         procesador: p.variantes?.procesador ?? "N/A",
         ram_especificacion: p.especificaciones_ram?.tipo ?? "N/A",
@@ -28,9 +25,6 @@ export function mapProductos(productosRaw: ProductoRaw[]): Producto[] {
         bateria: p.variantes?.bateria ?? "N/A",
         almacenamiento: p.almacenamientos?.capacidad ?? "N/A",
         color: p.colores?.nombre ?? "Sin color",
-
-        created_at: p.created_at,
-        updated_at: "",
     }));
 }
 

@@ -9,12 +9,14 @@ import {
     FaEnvelope,
     FaBars,
     FaTimes,
+    FaTachometerAlt,
 } from 'react-icons/fa';
 import { useCartStore } from '../../store/cartStore';
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 import { useThemeStore } from '../../store/themeStore';
 import { useUsuario } from '../../hooks/Usuarios/Usuario';
 import { AuthCheck } from '../../hooks/Usuarios/AuthUsuario';
+import ButtonsAccesso from '../Clerk/ButtonsAccesso';
 
 export default function Navbar() {
     const { theme, toggleTheme } = useThemeStore();
@@ -85,6 +87,24 @@ export default function Navbar() {
                                 </a>
                             </motion.li>
                         )}
+                        {user && (user.publicMetadata?.role === 'admin' ||
+                            user.emailAddresses[0]?.emailAddress === 'admin@ecommerce.com') && (
+                                <motion.li
+                                    key="dashboard"
+                                    initial={{ opacity: 0, y: -20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.5, delay: 0.6 }}
+                                    whileHover={{ y: -2 }}
+                                >
+                                    <a
+                                        href="/dashboard"
+                                        className="text-theme-secondary no-underline font-medium hover:text-theme-accent transition-colors duration-300 flex items-center gap-2"
+                                    >
+                                        <FaTachometerAlt className="text-lg" />
+                                        Dashboard
+                                    </a>
+                                </motion.li>
+                            )}
                     </ul>
 
                     {/* Botones lado derecho (Desktop) */}
@@ -116,23 +136,8 @@ export default function Navbar() {
                             {theme === 'light' ? <FaMoon /> : <FaSun />}
                         </motion.button>
 
-                        {/* Auth */}
-                        <SignedOut>
-                            <SignInButton mode="modal">
-                                <button className="border-2 border-theme-secondary text-theme-secondary py-2 px-4 rounded-full cursor-pointer transition-all duration-300 font-medium hover:bg-theme-secondary hover:text-theme-primary flex items-center gap-2">
-                                    Iniciar Sesión
-                                </button>
-                            </SignInButton>
-                        </SignedOut>
-                        {user &&
-                            (
-                                <div className="size-10 flex items-center justify-center rounded-full border-2 border-white">
-                                    <SignedIn>
-                                        <UserButton appearance={{ elements: { userButtonAvatarBox: 'size-10 rounded-full', userButtonBox: 'rounded-full transition-all duration-300 hover:bg-theme-secondary hover:text-theme-primary cursor-pointer', }, }} />
-                                    </SignedIn>
-                                </div>
-                            )
-                        }
+                        <ButtonsAccesso />
+
                         <AuthCheck />
                     </div>
                 </div>

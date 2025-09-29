@@ -6,7 +6,6 @@ import {
     FaDownload,
     FaHome
 } from 'react-icons/fa';
-import { toast } from 'sonner';
 import Factura from '../components/Pago/Factura';
 import PdfFactura from '../components/Pago/PDFFactura';
 import FacturaSkeleton from '../components/Success/Skeleton';
@@ -164,7 +163,6 @@ export default function PaymentSuccess() {
                                 onClick={() => {
                                     handleRedirigirPagina("/");
                                     clearCart();
-                                    toast.success('Se realizo su compra con éxito.');
                                 }}
                                 className="w-full  hover:bg-gray-200 text-gray-700 font-medium py-3 px-4 rounded-lg flex items-center justify-center gap-2 cursor-pointer"
                                 variants={itemAnimacion(1)}

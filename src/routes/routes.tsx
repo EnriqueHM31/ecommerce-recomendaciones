@@ -10,6 +10,7 @@ import PaymentSuccess from "../pages/Success";
 import PaymentCancel from "../pages/Cancel";
 import NotFound from "../pages/404";
 import Compras from "../pages/Compras";
+import Dashboard from "../pages/Dashboard";
 
 export const routes: RouteObject[] = [
     { path: "/", element: <Home /> },
@@ -20,10 +21,10 @@ export const routes: RouteObject[] = [
     { path: "/cancel", element: <PaymentCancel /> },
     { path: "*", element: <NotFound /> },
     { path: "/compras", element: <Compras /> },
+    { path: "/dashboard", element: <Dashboard /> },
     /* { path: "/cart", element: <Cart /> },
      { path: "/checkout", element: <Checkout /> },
      { path: "/login", element: <Login /> },
      { path: "/register", element: <Register /> },
-     { path: "/admin", element: <Dashboard /> },
      { path: "*", element: <NotFound /> },*/
 ];

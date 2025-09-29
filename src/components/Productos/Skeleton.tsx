@@ -1,6 +1,6 @@
 export default function SkeletonCard() {
     return (
-        <div className="w-full lg:w-72 bg-[#0f172a] rounded-2xl p-4 shadow-lg animate-pulse">
+        <div data-testid="skeleton" className="w-full lg:w-72 bg-[#0f172a] rounded-2xl p-4 shadow-lg animate-pulse">
             {/* Imagen */}
             <div className="w-full h-40 bg-gray-700 rounded-xl mb-4"></div>
 

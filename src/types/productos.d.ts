@@ -31,17 +31,14 @@ export interface ProductoB {
 interface ProductoRaw {
     id: number;
     sku: string;
-    precio_base: string;
+    precio: string;
     stock: number;
     imagen_url: string;
-    activo: boolean;
-    created_at: string;
     productos_base: {
         id: number;
         nombre: string;
         descripcion: string;
         marca: string;
-        activo: boolean;
         categorias: { nombre: string };
     };
     variantes: {
@@ -53,7 +50,6 @@ interface ProductoRaw {
         bateria: string;
         conectividad: string | null;
         sistema_operativo: string;
-        activa: boolean;
     };
     colores: { nombre: string };
     almacenamientos: { capacidad: string };
@@ -97,14 +93,12 @@ export interface RawProduct {
 
 
 export interface Producto {
-    activo: number;
     almacenamiento: string;
     bateria: string;
     camara: string;
     categoria: string;
     color: string;
     conectividad: string;
-    created_at: string;
     descripcion: string;
     display: string;
     id: number;
@@ -116,11 +110,9 @@ export interface Producto {
     producto_id: number;
     ram_especificacion: string;
     ram_variante: string;
-    recomendado: number;
     sistema_operativo: string;
     sku: string;
     stock: number;
-    updated_at: string;
 }
 
 
@@ -180,6 +172,5 @@ export interface CartStore {
     // Computed
     getTotalItems: () => number;
     getTotalPrice: () => number;
-    getRecommendedProducts: () => Product[];
     getProductById: (id: number) => Product | undefined;
 }

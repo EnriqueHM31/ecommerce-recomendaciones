@@ -54,11 +54,6 @@ export default function Producto({ product, index }: ProductosProps) {
                     <span className="ml-2 text-xs bg-theme-accent text-theme-secondary px-2 py-1 rounded-full">
                         {product.categoria}
                     </span>
-                    {product.recomendado ? (
-                        <span className="ml-2 text-xs bg-theme-accent text-theme-secondary px-2 py-1 rounded-full">
-                            ⭐ Recomendado
-                        </span>
-                    ) : null}
                 </div>
 
                 {/* Product Info */}

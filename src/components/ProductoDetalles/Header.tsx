@@ -1,4 +1,3 @@
-import { FaStar } from 'react-icons/fa';
 import type { Producto } from '../../types/productos';
 
 export default function Header({ product }: { product: Producto }) {
@@ -10,12 +9,6 @@ export default function Header({ product }: { product: Producto }) {
                     <span className="text-sm bg-theme-accent text-theme-secondary px-3 py-1 rounded-full flex items-center gap-1">
                         Categoria: {product.categoria}
                     </span>
-                    {product.recomendado ? (
-                        <span className="text-sm bg-theme-accent text-theme-secondary px-3 py-1 rounded-full flex items-center gap-1">
-                            <FaStar className="text-xs" />
-                            Recomendado
-                        </span>
-                    ) : null}
                 </div>
 
                 <h1 className="text-4xl font-bold text-theme-primary mb-4">
