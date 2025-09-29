@@ -25,6 +25,7 @@ export function mapProductos(productosRaw: ProductoRaw[]): Producto[] {
         bateria: p.variantes?.bateria ?? "N/A",
         almacenamiento: p.almacenamientos?.capacidad ?? "N/A",
         color: p.colores?.nombre ?? "Sin color",
+        total_vendido: p.total_vendido ?? 0,
     }));
 }
 

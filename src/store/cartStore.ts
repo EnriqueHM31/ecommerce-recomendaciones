@@ -768,7 +768,14 @@ export const useCartStore = create<CartStore>()(
 
                 const productosPlanos = productosAdaptados.flatMap(product => product);
 
-                set({ productosTop: productosPlanos });
+                const productosOrdenados = productosPlanos.sort((a, b) => {
+                    const totalA = a.total_vendido ?? 0; // si es undefined => 0
+                    const totalB = b.total_vendido ?? 0; // si es undefined => 0
+                    return totalB - totalA; // orden descendente
+                });
+
+
+                set({ productosTop: productosOrdenados });
             },
 
             fetchProductos: async () => {

@@ -54,6 +54,7 @@ interface ProductoRaw {
     colores: { nombre: string };
     almacenamientos: { capacidad: string };
     especificaciones_ram: { capacidad: string, tipo: string };
+    total_vendido?: number;
 }
 
 export interface RawProduct {
@@ -113,6 +114,7 @@ export interface Producto {
     sistema_operativo: string;
     sku: string;
     stock: number;
+    total_vendido?: number;
 }
 
 

@@ -1,185 +1,187 @@
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import { FaChartLine, FaDollarSign, FaShoppingCart, FaUsers } from 'react-icons/fa';
-import { useComprasStore } from '../../store/comprasStore';
 import { useCartStore } from '../../store/cartStore';
+import { useComprasStore } from '../../store/comprasStore';
+import type { Producto } from '../../types/productos';
+
 
 const VentasAdmin = () => {
-    const { allPedidos } = useComprasStore();
-    const { products } = useCartStore();
-    const [timeRange, setTimeRange] = useState('30'); // días
-    const [salesData, setSalesData] = useState({
-        totalRevenue: 0,
-        totalOrders: 0,
-        averageOrderValue: 0,
-        conversionRate: 0,
-        topProducts: [] as any[],
-        monthlyRevenue: [] as any[],
-        dailySales: [] as any[]
+    const { todosPedidosUsuarios } = useComprasStore();
+    const { productosTop: productosAllTop } = useCartStore();
+
+    const [rangoDias, setRangoDias] = useState("30");
+    const [datosVentas, setDatosVentas] = useState({
+        ingresosTotales: 0,
+        totalPedidos: 0,
+        valorPromedioPedido: 0,
+        tasaConversion: 0,
+        productosTop: [] as Producto[],
+        ingresosMensuales: [] as { mes: string; ingresos: number }[],
+        ventasDiarias: [] as { dia: string; ingresos: number; pedidos: number }[],
     });
 
     useEffect(() => {
-        calculateSalesData();
-    }, [allPedidos, products, timeRange]);
+        calcularDatosVentas();
+    }, [todosPedidosUsuarios, productosAllTop, rangoDias]);
 
-    const calculateSalesData = () => {
-        const now = new Date();
-        const daysAgo = new Date(now.getTime() - parseInt(timeRange) * 24 * 60 * 60 * 1000);
+    const calcularDatosVentas = () => {
+        const ahora = new Date();
+        const fechaLimite = new Date(
+            ahora.getTime() - parseInt(rangoDias) * 24 * 60 * 60 * 1000
+        );
 
-        // Filtrar pedidos por rango de tiempo
-        const filteredOrders = allPedidos.filter(order => {
-            const orderDate = new Date(Number(order.created) * 1000);
-            return orderDate >= daysAgo;
+        const pedidosConFecha = todosPedidosUsuarios.map((pedido) => ({
+            ...pedido,
+            fechaObjeto: new Date(pedido.fecha_pedido),
+        }));
+
+        const pedidosFiltrados = pedidosConFecha.filter(
+            (pedido) => pedido.fechaObjeto >= fechaLimite && pedido.estado === "pendiente"
+        );
+
+        const ingresosTotales = pedidosFiltrados.reduce(
+            (sum, pedido) => sum + pedido.total,
+            0
+        );
+        const totalPedidos = pedidosFiltrados.length;
+        const valorPromedioPedido =
+            totalPedidos > 0 ? ingresosTotales / totalPedidos : 0;
+
+        // 👉 usamos directamente los productos top que ya trae el backend
+        const productosTop = productosAllTop ?? [];
+
+        // Ingresos mensuales últimos 6 meses
+        const ingresosMensuales = Array.from({ length: 6 }, (_, i) => {
+            const mes = new Date(ahora.getFullYear(), ahora.getMonth() - i, 1);
+            const siguienteMes = new Date(
+                ahora.getFullYear(),
+                ahora.getMonth() - i + 1,
+                1
+            );
+            const pedidosMes = pedidosFiltrados.filter(
+                (pedido) => pedido.fechaObjeto >= mes && pedido.fechaObjeto < siguienteMes
+            );
+            const ingresosMes = pedidosMes.reduce((sum, pedido) => sum + pedido.total, 0);
+            return {
+                mes: mes.toLocaleDateString("es-ES", { month: "short", year: "numeric" }),
+                ingresos: ingresosMes,
+            };
+        }).reverse();
+
+        // Ventas diarias últimos 7 días
+        const ventasDiarias = Array.from({ length: 7 }, (_, i) => {
+            const dia = new Date(ahora.getTime() - (6 - i) * 24 * 60 * 60 * 1000);
+            const siguienteDia = new Date(dia.getTime() + 24 * 60 * 60 * 1000);
+            const pedidosDia = pedidosFiltrados.filter(
+                (pedido) => pedido.fechaObjeto >= dia && pedido.fechaObjeto < siguienteDia
+            );
+            const ingresosDia = pedidosDia.reduce((sum, pedido) => sum + pedido.total, 0);
+            return {
+                dia: dia.toLocaleDateString("es-ES", { weekday: "short" }),
+                ingresos: ingresosDia,
+                pedidos: pedidosDia.length,
+            };
         });
 
-        // Calcular métricas básicas
-        const paidOrders = filteredOrders.filter(order => order.status === 'paid');
-        const totalRevenue = paidOrders.reduce((sum, order) => sum + order.amount_total, 0);
-        const totalOrders = paidOrders.length;
-        const averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-
-        // Calcular productos más vendidos
-        const productSales = new Map();
-        paidOrders.forEach(order => {
-            order.line_items?.forEach((item: any) => {
-                const productName = item.description || 'Producto';
-                const quantity = item.quantity || 1;
-                const current = productSales.get(productName) || { quantity: 0, revenue: 0 };
-                productSales.set(productName, {
-                    quantity: current.quantity + quantity,
-                    revenue: current.revenue + (item.amount_total || 0)
-                });
-            });
-        });
-
-        const topProducts = Array.from(productSales.entries())
-            .map(([name, data]) => ({ name, ...data }))
-            .sort((a, b) => b.revenue - a.revenue)
-            .slice(0, 5);
-
-        // Calcular ingresos mensuales (últimos 6 meses)
-        const monthlyRevenue = [];
-        for (let i = 5; i >= 0; i--) {
-            const month = new Date(now.getFullYear(), now.getMonth() - i, 1);
-            const nextMonth = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
-
-            const monthOrders = allPedidos.filter(order => {
-                const orderDate = new Date(Number(order.created) * 1000);
-                return orderDate >= month && orderDate < nextMonth && order.status === 'paid';
-            });
-
-            const monthRevenue = monthOrders.reduce((sum, order) => sum + order.amount_total, 0);
-            monthlyRevenue.push({
-                month: month.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' }),
-                revenue: monthRevenue
-            });
-        }
-
-        // Calcular ventas diarias (últimos 7 días)
-        const dailySales = [];
-        for (let i = 6; i >= 0; i--) {
-            const day = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-            const nextDay = new Date(day.getTime() + 24 * 60 * 60 * 1000);
-
-            const dayOrders = allPedidos.filter(order => {
-                const orderDate = new Date(Number(order.created) * 1000);
-                return orderDate >= day && orderDate < nextDay && order.status === 'paid';
-            });
-
-            const dayRevenue = dayOrders.reduce((sum, order) => sum + order.amount_total, 0);
-            dailySales.push({
-                day: day.toLocaleDateString('es-ES', { weekday: 'short' }),
-                revenue: dayRevenue,
-                orders: dayOrders.length
-            });
-        }
-
-        setSalesData({
-            totalRevenue,
-            totalOrders,
-            averageOrderValue,
-            conversionRate: 0, // Necesitarías datos de visitantes para calcular esto
-            topProducts,
-            monthlyRevenue,
-            dailySales
+        setDatosVentas({
+            ingresosTotales,
+            totalPedidos,
+            valorPromedioPedido,
+            tasaConversion: 0,
+            productosTop,
+            ingresosMensuales,
+            ventasDiarias,
         });
     };
 
-    const timeRanges = [
-        { value: '7', label: 'Últimos 7 días' },
-        { value: '30', label: 'Últimos 30 días' },
-        { value: '90', label: 'Últimos 90 días' },
-        { value: '365', label: 'Último año' }
+    console.log({ datosVentas });
+
+
+    const rangosTiempo = [
+        { valor: '7', etiqueta: 'Últimos 7 días' },
+        { valor: '30', etiqueta: 'Últimos 30 días' },
+        { valor: '90', etiqueta: 'Últimos 90 días' },
+        { valor: '365', etiqueta: 'Último año' }
     ];
 
-    const statsCards = [
+    const tarjetasEstadisticas = [
         {
-            title: 'Ingresos Totales',
-            value: `$${salesData.totalRevenue.toLocaleString()}`,
-            icon: FaDollarSign,
+            titulo: 'Ingresos Totales',
+            valor: `$${datosVentas.ingresosTotales.toLocaleString()}`,
+            icono: FaDollarSign,
             color: 'bg-green-500',
-            change: '+12.5%'
+            cambio: '+12.5%'
         },
         {
-            title: 'Pedidos Totales',
-            value: salesData.totalOrders.toString(),
-            icon: FaShoppingCart,
+            titulo: 'Pedidos Totales',
+            valor: datosVentas.totalPedidos.toString(),
+            icono: FaShoppingCart,
             color: 'bg-blue-500',
-            change: '+8.3%'
+            cambio: '+8.3%'
         },
         {
-            title: 'Valor Promedio',
-            value: `$${salesData.averageOrderValue.toLocaleString()}`,
-            icon: FaChartLine,
+            titulo: 'Valor Promedio',
+            valor: `$${datosVentas.valorPromedioPedido.toLocaleString()}`,
+            icono: FaChartLine,
             color: 'bg-purple-500',
-            change: '+5.2%'
+            cambio: '+5.2%'
         },
         {
-            title: 'Tasa de Conversión',
-            value: `${salesData.conversionRate.toFixed(1)}%`,
-            icon: FaUsers,
+            titulo: 'Tasa de Conversión',
+            valor: `${datosVentas.tasaConversion.toFixed(1)}%`,
+            icono: FaUsers,
             color: 'bg-orange-500',
-            change: '+2.1%'
+            cambio: '+2.1%'
         }
     ];
+
+    // Componente para las barras de los charts
+    const FilaBarra = ({ etiqueta, valor, max, mostrarPedidos }: { etiqueta: string; valor: number; max: number; mostrarPedidos?: number }) => (
+        <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-600">{etiqueta}</span>
+            <div className="flex items-center space-x-3">
+                <div className="w-32 bg-gray-200 rounded-full h-2">
+                    <div className="bg-theme-primary h-2 rounded-full" style={{ width: `${Math.min(100, (valor / max) * 100)}%` }}></div>
+                </div>
+                <div className="text-right">
+                    <div className="text-sm font-medium text-gray-900">${valor.toLocaleString()}</div>
+                    {mostrarPedidos !== undefined && <div className="text-xs text-gray-500">{mostrarPedidos} pedidos</div>}
+                </div>
+            </div>
+        </div>
+    );
 
     return (
         <div className="space-y-6">
             {/* Header */}
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-theme-primary mb-2">
-                        Análisis de Ventas
-                    </h1>
-                    <p className="text-gray-600">
-                        Métricas y análisis detallado de las ventas de tu tienda
-                    </p>
+                    <h1 className="text-3xl font-bold text-theme-primary mb-2">Análisis de Ventas</h1>
+                    <p className="text-gray-600">Métricas y análisis detallado de las ventas de tu tienda</p>
                 </div>
 
-                {/* Time Range Selector */}
+                {/* Selector de rango de tiempo */}
                 <div className="flex space-x-2">
-                    {timeRanges.map(range => (
+                    {rangosTiempo.map(rango => (
                         <button
-                            key={range.value}
-                            onClick={() => setTimeRange(range.value)}
-                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${timeRange === range.value
-                                ? 'bg-theme-primary text-white'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                }`}
+                            key={rango.valor}
+                            onClick={() => setRangoDias(rango.valor)}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${rangoDias === rango.valor ? 'bg-theme-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
                         >
-                            {range.label}
+                            {rango.etiqueta}
                         </button>
                     ))}
                 </div>
             </div>
 
-            {/* Stats Cards */}
+            {/* Tarjetas de estadísticas */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {statsCards.map((stat, index) => {
-                    const Icon = stat.icon;
+                {tarjetasEstadisticas.map((tarjeta, index) => {
+                    const Icono = tarjeta.icono;
                     return (
                         <motion.div
-                            key={stat.title}
+                            key={tarjeta.titulo}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.3, delay: index * 0.1 }}
@@ -187,18 +189,12 @@ const VentasAdmin = () => {
                         >
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600 mb-1">
-                                        {stat.title}
-                                    </p>
-                                    <p className="text-2xl font-bold text-gray-900">
-                                        {stat.value}
-                                    </p>
-                                    <p className="text-sm text-green-600 mt-1">
-                                        {stat.change} vs período anterior
-                                    </p>
+                                    <p className="text-sm font-medium text-gray-600 mb-1">{tarjeta.titulo}</p>
+                                    <p className="text-2xl font-bold text-gray-900">{tarjeta.valor}</p>
+                                    <p className="text-sm text-green-600 mt-1">{tarjeta.cambio} vs período anterior</p>
                                 </div>
-                                <div className={`w-12 h-12 ${stat.color} rounded-lg flex items-center justify-center`}>
-                                    <Icon className="w-6 h-6 text-white" />
+                                <div className={`w-12 h-12 ${tarjeta.color} rounded-lg flex items-center justify-center`}>
+                                    <Icono className="w-6 h-6 text-white" />
                                 </div>
                             </div>
                         </motion.div>
@@ -206,104 +202,66 @@ const VentasAdmin = () => {
                 })}
             </div>
 
-            {/* Charts Row */}
+            {/* Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Monthly Revenue Chart */}
+                {/* Ingresos Mensuales */}
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: 0.2 }}
                     className="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
                 >
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Ingresos Mensuales
-                    </h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Ingresos Mensuales</h3>
                     <div className="space-y-3">
-                        {salesData.monthlyRevenue.map((month) => (
-                            <div key={month.month} className="flex items-center justify-between">
-                                <span className="text-sm text-gray-600">{month.month}</span>
-                                <div className="flex items-center space-x-3">
-                                    <div className="w-32 bg-gray-200 rounded-full h-2">
-                                        <div
-                                            className="bg-theme-primary h-2 rounded-full"
-                                            style={{
-                                                width: `${Math.min(100, (month.revenue / Math.max(...salesData.monthlyRevenue.map(m => m.revenue))) * 100)}%`
-                                            }}
-                                        ></div>
-                                    </div>
-                                    <span className="text-sm font-medium text-gray-900 w-20 text-right">
-                                        ${month.revenue.toLocaleString()}
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
+                        {datosVentas.ingresosMensuales.map(mes =>
+                            <FilaBarra key={mes.mes} etiqueta={mes.mes} valor={mes.ingresos} max={Math.max(...datosVentas.ingresosMensuales.map(m => m.ingresos))} />
+                        )}
                     </div>
                 </motion.div>
 
-                {/* Daily Sales Chart */}
+                {/* Ventas Diarias */}
                 <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: 0.3 }}
                     className="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
                 >
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Ventas Diarias (Últimos 7 días)
-                    </h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Ventas Diarias (Últimos 7 días)</h3>
                     <div className="space-y-3">
-                        {salesData.dailySales.map((day) => (
-                            <div key={day.day} className="flex items-center justify-between">
-                                <span className="text-sm text-gray-600">{day.day}</span>
-                                <div className="flex items-center space-x-3">
-                                    <div className="w-32 bg-gray-200 rounded-full h-2">
-                                        <div
-                                            className="bg-green-500 h-2 rounded-full"
-                                            style={{
-                                                width: `${Math.min(100, (day.revenue / Math.max(...salesData.dailySales.map(d => d.revenue))) * 100)}%`
-                                            }}
-                                        ></div>
-                                    </div>
-                                    <div className="text-right">
-                                        <div className="text-sm font-medium text-gray-900">
-                                            ${day.revenue.toLocaleString()}
-                                        </div>
-                                        <div className="text-xs text-gray-500">
-                                            {day.orders} pedidos
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                        {datosVentas.ventasDiarias.map(dia =>
+                            <FilaBarra key={dia.dia} etiqueta={dia.dia} valor={dia.ingresos} max={Math.max(...datosVentas.ventasDiarias.map(d => d.ingresos))} mostrarPedidos={dia.pedidos} />
+                        )}
                     </div>
                 </motion.div>
             </div>
 
-            {/* Top Products */}
+            {/* Productos Más Vendidos */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.4 }}
                 className="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
             >
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Productos Más Vendidos
-                </h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Productos Más Vendidos</h3>
                 <div className="space-y-3">
-                    {salesData.topProducts.map((product, index) => (
-                        <div key={product.name} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
+                    {datosVentas.productosTop.map((item: Producto, index: number) => (
+                        <div key={item.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
                             <div className="flex items-center">
                                 <div className="w-8 h-8 bg-theme-primary text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">
                                     {index + 1}
                                 </div>
                                 <div>
-                                    <p className="font-medium text-gray-900">{product.name}</p>
-                                    <p className="text-sm text-gray-500">{product.quantity} unidades vendidas</p>
+                                    <p className="font-medium text-gray-900">{item.producto}</p>
+                                    <p className="text-sm text-gray-500">{item.total_vendido} unidades vendidas</p>
                                 </div>
                             </div>
                             <div className="text-right">
                                 <p className="font-semibold text-gray-900">
-                                    ${product.revenue.toLocaleString()}
+                                    ${((item.precio_base ?? 0) * (item.total_vendido ?? 0)).toLocaleString()}
                                 </p>
+
+
+
                                 <p className="text-sm text-gray-500">en ingresos</p>
                             </div>
                         </div>

@@ -10,21 +10,33 @@ import ProductosAdmin from '../components/Dashboard/ProductosAdmin';
 import VentasAdmin from '../components/Dashboard/VentasAdmin';
 import { useCartStore } from '../store/cartStore';
 import { useComprasStore } from '../store/comprasStore';
+import { useCategoriasStore } from '../store/categoriasStore';
 
 type DashboardSection = 'overview' | 'productos' | 'categorias' | 'pedidos' | 'ventas';
 
 const Dashboard = () => {
     const { user, isLoaded } = useUser();
-    const [activeSection, setActiveSection] = useState<DashboardSection>('overview');
+
+    // ✅ leemos desde localStorage al inicio
+    const [activeSection, setActiveSection] = useState<DashboardSection>(
+        () => (localStorage.getItem("activeSection") as DashboardSection) || 'overview'
+    );
+
     const { fetchTodosPedidos } = useComprasStore();
     const { fetchProductos, fetchProductosTop } = useCartStore();
-
+    const { fetchCategorias } = useCategoriasStore();
 
     useEffect(() => {
         fetchTodosPedidos();
         fetchProductos();
         fetchProductosTop();
+        fetchCategorias();
     }, [user]);
+
+    // ✅ guardamos cada vez que cambie activeSection
+    useEffect(() => {
+        localStorage.setItem("activeSection", activeSection);
+    }, [activeSection]);
 
     // Mostrar loading mientras se carga Clerk
     if (!isLoaded) {
@@ -38,15 +50,13 @@ const Dashboard = () => {
         );
     }
 
-
-
     // Redirigir si no está autenticado
     if (!user) {
         return <Navigate to="/" replace />;
     }
 
     // Verificar si es administrador (puedes ajustar esta lógica según tus necesidades)
-    const isAdmin = user.publicMetadata?.role === 'admin'
+    const isAdmin = user.publicMetadata?.role === 'admin';
 
     if (!isAdmin) {
         return (
