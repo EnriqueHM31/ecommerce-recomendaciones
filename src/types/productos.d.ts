@@ -150,6 +150,8 @@ export interface CartStore {
     categoriasSeleccionadas: string[];
     productosPlanos: Producto[];
     productosAgrupados: Producto[];
+    productosTop: Producto[];
+
     query: string;
 
     // Cart
@@ -165,6 +167,7 @@ export interface CartStore {
     toggleCart: () => void;
     closeCart: () => void;
     buscarProducto: (query: string) => void;
+    fetchProductosTop: () => Promise<void>;
     fetchProductos: () => Promise<void>;
     filtrarCategoria: ({ categoria, checked }: { categoria: string; checked: boolean }) => void;
     eliminarCategoriaFiltro: (categoria: string) => void;

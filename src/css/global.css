@@ -96,6 +96,10 @@
     color: var(--color-text-secondary);
 }
 
+.text-theme-secondary2 {
+    color: var(--color-secondary-light);
+}
+
 .text-theme-accent {
     color: var(--color-accent);
 }

@@ -12,8 +12,8 @@ import { useComprasStore } from '../../store/comprasStore';
 import { useEffect, useState } from 'react';
 
 const Overview = () => {
-    const { products } = useCartStore();
-    const { allPedidos } = useComprasStore();
+    const { products, productosTop } = useCartStore();
+    const { todosPedidosUsuarios } = useComprasStore();
     const [stats, setStats] = useState({
         totalProducts: 0,
         totalOrders: 0,
@@ -24,11 +24,12 @@ const Overview = () => {
     });
 
     useEffect(() => {
+
         // Calcular estadísticas
         const totalProducts = products.length;
-        const totalOrders = allPedidos.length;
-        const totalRevenue = allPedidos.reduce((sum, order) => sum + order.amount_total, 0);
-        const uniqueCustomers = new Set(allPedidos.map(order => order.customer?.email || order.email)).size;
+        const totalOrders = todosPedidosUsuarios.length;
+        const totalRevenue = todosPedidosUsuarios.reduce((sum, order) => sum + order.total, 0);
+        const uniqueCustomers = new Set(todosPedidosUsuarios.map(order => order.usuarios.correo)).size;
 
         // Calcular crecimiento (simulado)
         const revenueGrowth = 12.5; // % de crecimiento
@@ -42,7 +43,7 @@ const Overview = () => {
             revenueGrowth,
             ordersGrowth
         });
-    }, [products, allPedidos]);
+    }, [todosPedidosUsuarios]);
 
     const statCards = [
         {
@@ -83,10 +84,10 @@ const Overview = () => {
         <div className="space-y-6">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-bold text-theme-primary mb-2">
+                <h1 className="text-3xl font-bold text-theme-primary  py-3 mb-2">
                     Resumen General
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-gray-400">
                     Vista general de tu tienda en línea
                 </p>
             </div>
@@ -146,28 +147,36 @@ const Overview = () => {
                         Pedidos Recientes
                     </h3>
                     <div className="space-y-3">
-                        {allPedidos.slice(0, 5).map((order) => (
+                        {todosPedidosUsuarios.slice(0, 5).map((order) => (
                             <div key={order.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
                                 <div>
                                     <p className="font-medium text-gray-900">
-                                        {order.customer?.email || order.email || 'Cliente'}
+                                        {order.usuarios.correo || 'Cliente'}
                                     </p>
                                     <p className="text-sm text-gray-500">
-                                        {new Date(Number(order.created) * 1000).toLocaleDateString()}
+                                        {new Date(order.fecha_pedido).toLocaleString("es-MX", {
+                                            timeZone: "America/Mexico_City",
+                                            day: "2-digit",
+                                            month: "2-digit",
+                                            year: "numeric",
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                            second: "2-digit"
+                                        })}
                                     </p>
                                 </div>
                                 <div className="text-right">
                                     <p className="font-semibold text-gray-900">
-                                        ${order.amount_total.toLocaleString()}
+                                        ${order.total.toLocaleString()}
                                     </p>
-                                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${order.status === 'paid'
+                                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${order.estado === 'confirmado'
                                         ? 'bg-green-100 text-green-800'
-                                        : order.status === 'pending'
+                                        : order.estado === 'pendiente'
                                             ? 'bg-yellow-100 text-yellow-800'
                                             : 'bg-red-100 text-red-800'
                                         }`}>
-                                        {order.status === 'paid' ? 'Pagado' :
-                                            order.status === 'pending' ? 'Pendiente' : 'Cancelado'}
+                                        {order.estado === 'confirmado' ? 'Pagado' :
+                                            order.estado === 'pendiente' ? 'Pendiente' : 'Cancelado'}
                                     </span>
                                 </div>
                             </div>
@@ -186,7 +195,7 @@ const Overview = () => {
                         Productos Más Vendidos
                     </h3>
                     <div className="space-y-3">
-                        {products.slice(0, 5).map((product) => (
+                        {productosTop.slice(0, 5).map((product) => (
                             <div key={product.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
                                 <div className="flex items-center">
                                     <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mr-3">

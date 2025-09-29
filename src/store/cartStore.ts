@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { obtenerProductos } from '../services/productos';
+import { obtenerProductos, obtenerProductosTop } from '../services/productos';
 import type { CartStore, Producto } from '../types/productos';
 import { agruparProductos } from '../utils/productos';
 import { toast } from 'sonner';
@@ -664,6 +664,9 @@ export const useCartStore = create<CartStore>()(
             products: [],
             productFiltrados: [],
             productosPlanos: [],
+            productosTop: [],
+
+
             cartItems: [],
             isCartOpen: false,
             categoriasSeleccionadas: [],
@@ -748,6 +751,24 @@ export const useCartStore = create<CartStore>()(
 
             getProductById: (id: number) => {
                 return get().productosPlanos.find(p => p.id === id);
+            },
+
+            fetchProductosTop: async () => {
+                const { success, message, data } = await obtenerProductosTop();
+
+                if (!success) {
+                    console.error("Error al cargar productos:", message);
+                    return;
+                }
+
+                const productosDB = mapProductos(data);
+
+                const productosAdaptados = agruparProductos(productosDB)
+
+
+                const productosPlanos = productosAdaptados.flatMap(product => product);
+
+                set({ productosTop: productosPlanos });
             },
 
             fetchProductos: async () => {

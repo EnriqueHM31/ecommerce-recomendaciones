@@ -131,3 +131,41 @@ export interface StripePrice {
         description: string;
     }
 }
+
+
+export interface PedidoItem {
+    id: number;
+    producto_id: number;
+    cantidad: number;
+    precio_unitario: number;
+    subtotal: number;
+}
+
+// Dirección de envío
+export interface Direccion {
+    direccion_1: string;
+    direccion_2?: string | null;
+    ciudad: string;
+    estado: string;
+    codigo_postal: string;
+    pais: string;
+}
+
+// Usuario
+export interface Usuario {
+    id_usuario: string;
+    nombre: string;
+    correo: string;
+}
+
+// Pedido completo
+export interface Pedido {
+    id: string;
+    usuarios: Usuario; // <-- ahora incluimos nombre y correo
+    fecha_pedido: string; // ISO string
+    estado: "pendiente" | "confirmado" | "enviado" | "entregado" | "cancelado";
+    total: number;
+    direcciones: Direccion;
+    pedido_items: PedidoItem[];
+}
+

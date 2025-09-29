@@ -117,16 +117,22 @@ const CategoriasAdmin = () => {
             </div>
 
             {/* Search */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <div className="relative">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex items-center justify-between gap-10">
+                <div className="relative flex-2">
                     <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <input
                         type="text"
                         placeholder="Buscar categorías..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-theme-primary focus:border-transparent"
+                        className="w-full pl-10 pr-4 py-2 border border-blue-950  rounded-lg focus:ring-2 focus:ring-theme-primary focus:border-transparent text-theme-secondary2"
                     />
+                </div>
+
+                <div className="flex items-center space-x-2 flex-1 justify-center">
+                    <span className='text-theme-secondary2 text-sm'>
+                        Mostrando {filteredCategories.length} de {categories.length} categorías
+                    </span>
                 </div>
             </div>
 

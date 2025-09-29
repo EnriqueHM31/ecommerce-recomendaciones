@@ -59,11 +59,11 @@ const Sidebar = ({ activeSection, onSectionChange }: SidebarProps) => {
             initial={{ x: -300 }}
             animate={{ x: 0 }}
             transition={{ duration: 0.3 }}
-            className="w-64 bg-white shadow-lg border-r border-gray-200 flex flex-col"
+            className="w-64 h-screen bg-theme-secondary shadow-lg flex flex-col"
         >
             {/* Logo */}
-            <div className="p-6 border-b border-gray-200">
-                <h1 className="text-2xl font-bold text-theme-primary">
+            <div className="p-6 ">
+                <h1 className="text-2xl font-bold text-theme-secondary">
                     Admin Panel
                 </h1>
                 <p className="text-sm text-gray-500">Ecommerce Dashboard</p>
@@ -83,8 +83,8 @@ const Sidebar = ({ activeSection, onSectionChange }: SidebarProps) => {
                                     whileTap={{ scale: 0.98 }}
                                     onClick={() => onSectionChange(item.id)}
                                     className={`w-full flex items-center px-4 py-3 rounded-lg transition-all duration-200 ${isActive
-                                        ? 'bg-theme-primary text-white shadow-md'
-                                        : 'text-gray-700 hover:bg-gray-100'
+                                        ? 'bg-blue-700 text-white shadow-md'
+                                        : 'text-white hover:bg-gray-600'
                                         }`}
                                 >
                                     <Icon
@@ -100,12 +100,12 @@ const Sidebar = ({ activeSection, onSectionChange }: SidebarProps) => {
             </nav>
 
             {/* Sign Out */}
-            <div className="p-4 border-t border-gray-200">
+            <div className="p-4">
                 <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleSignOut}
-                    className="w-full flex items-center px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-all duration-200"
+                    className="w-full flex items-center px-4 py-3 rounded-lg bg-red-500 hover:bg-red-50 transition-all duration-200"
                 >
                     <FaSignOutAlt className="w-5 h-5 mr-3" />
                     <span className="font-medium">Cerrar Sesión</span>

@@ -38,6 +38,24 @@ export const colorStatus = (status: string) => {
                 : "text-blue-700 border-blue-200";
 }
 
+export const transformarEstado = (status: string) => {
+    return status === "pendiente" ? "Pendiente"
+        : status === "confirmado" ? "Confirmado"
+            : status === "enviado" ? "Enviado"
+                : status === "entregado" ? "Entregado"
+                    : status === "cancelado" ? "Cancelado"
+                        : "Fallido";
+}
+
+export const colorEstado = (status: string) => {
+    return status === "pendiente" ? "text-blue-700 border-blue-200"
+        : status === "confirmado" ? "text-green-700 border-green-200"
+            : status === "enviado" ? "text-green-700 border-green-200"
+                : status === "entregado" ? "text-green-700 border-green-200"
+                    : status === "cancelado" ? "text-red-700 border-red-200"
+                        : "text-yellow-700 border-yellow-200";
+}
+
 export const formatoRecibo = (pedido: CheckoutSession) => {
     return {
         id: pedido.id,

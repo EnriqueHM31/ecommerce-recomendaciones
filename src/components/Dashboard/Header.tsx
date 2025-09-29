@@ -6,7 +6,7 @@ type User = {
     emailAddresses: Array<{ emailAddress: string }>;
     publicMetadata?: { role?: string };
 };
-import { FaBell, FaUser } from 'react-icons/fa';
+import { FaUser } from 'react-icons/fa';
 
 interface HeaderProps {
     user: User;
@@ -18,12 +18,12 @@ const Header = ({ user }: HeaderProps) => {
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.3 }}
-            className="bg-white shadow-sm border-b border-gray-200 px-6 py-4"
+            className="bg-theme-secondary shadow-sm border-b border-gray-700  px-6 py-4"
         >
             <div className="flex items-center justify-between">
                 {/* Title */}
                 <div>
-                    <h2 className="text-2xl font-bold text-theme-primary">
+                    <h2 className="text-2xl font-bold text-theme-secondary">
                         Panel de Administración
                     </h2>
                     <p className="text-sm text-gray-500">
@@ -33,17 +33,7 @@ const Header = ({ user }: HeaderProps) => {
 
                 {/* Actions */}
                 <div className="flex items-center space-x-4">
-                    {/* Notifications */}
-                    <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="relative p-2 text-gray-600 hover:text-theme-primary transition-colors"
-                    >
-                        <FaBell className="w-5 h-5" />
-                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                            3
-                        </span>
-                    </motion.button>
+
 
                     {/* User Profile */}
                     <motion.div

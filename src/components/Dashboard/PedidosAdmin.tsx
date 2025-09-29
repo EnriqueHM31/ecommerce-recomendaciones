@@ -1,44 +1,44 @@
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaEye, FaCheck, FaTimes, FaSearch, FaFilter } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
+import { FaCheck, FaEye, FaFilter, FaSearch, FaTimes } from 'react-icons/fa';
 import { useComprasStore } from '../../store/comprasStore';
-import { formatearFecha, tranformarStatus, colorStatus } from '../../utils/formateo';
-import type { PaymentSession } from '../../types/pago';
+import type { Pedido } from '../../types/pago';
+
+import { colorEstado, transformarEstado } from '../../utils/formateo';
 
 const PedidosAdmin = () => {
-    const { allPedidos, fetchPedidos } = useComprasStore();
+    const { todosPedidosUsuarios, fetchTodosPedidos } = useComprasStore();
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [selectedOrder, setSelectedOrder] = useState<PaymentSession | null>(null);
+    const [selectedOrder, setSelectedOrder] = useState<Pedido | null>(null);
 
     useEffect(() => {
         const loadOrders = async () => {
             setIsLoading(true);
-            // Cargar todos los pedidos (necesitarías implementar un endpoint para esto)
-            // Por ahora usamos los pedidos existentes
+            fetchTodosPedidos();
             setIsLoading(false);
         };
         loadOrders();
-    }, [fetchPedidos]);
+    }, [fetchTodosPedidos]);
 
     // Filtrar pedidos
-    const filteredOrders = allPedidos.filter(order => {
-        const matchesSearch = (order.customer?.email || order.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const filteredOrders = todosPedidosUsuarios.filter(order => {
+        const matchesSearch = (order.usuarios.correo).toLowerCase().includes(searchTerm.toLowerCase()) ||
             order.id.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesStatus = statusFilter === '' || order.status === statusFilter;
+        const matchesStatus = statusFilter === '' || order.estado === statusFilter;
         return matchesSearch && matchesStatus;
     });
 
     const statusOptions = [
         { value: '', label: 'Todos los estados' },
-        { value: 'paid', label: 'Pagado' },
-        { value: 'pending', label: 'Pendiente' },
-        { value: 'canceled', label: 'Cancelado' },
-        { value: 'failed', label: 'Fallido' }
+        { value: 'pagado', label: 'Pagado' },
+        { value: 'pendiente', label: 'Pendiente' },
+        { value: 'cancelado', label: 'Cancelado' },
+        { value: 'fallido', label: 'Fallido' }
     ];
 
-    const handleViewOrder = (order: PaymentSession) => {
+    const handleViewOrder = (order: Pedido) => {
         setSelectedOrder(order);
     };
 
@@ -48,13 +48,13 @@ const PedidosAdmin = () => {
     };
 
     const getTotalRevenue = () => {
-        return allPedidos
-            .filter(order => order.status === 'paid')
-            .reduce((sum, order) => sum + order.amount_total, 0);
+        return todosPedidosUsuarios
+            .filter(order => order.estado === 'pendiente')
+            .reduce((sum, order) => sum + order.total, 0);
     };
 
     const getOrdersByStatus = (status: string) => {
-        return allPedidos.filter(order => order.status === status).length;
+        return todosPedidosUsuarios.filter(order => order.estado === status).length;
     };
 
     return (
@@ -64,7 +64,7 @@ const PedidosAdmin = () => {
                 <h1 className="text-3xl font-bold text-theme-primary mb-2">
                     Gestión de Pedidos
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-gray-400">
                     Administra y monitorea todos los pedidos de tu tienda
                 </p>
             </div>
@@ -80,7 +80,7 @@ const PedidosAdmin = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm font-medium text-gray-600">Total Pedidos</p>
-                            <p className="text-2xl font-bold text-gray-900">{allPedidos.length}</p>
+                            <p className="text-2xl font-bold text-gray-900">{todosPedidosUsuarios.length}</p>
                         </div>
                         <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
                             <FaEye className="w-6 h-6 text-white" />
@@ -96,8 +96,8 @@ const PedidosAdmin = () => {
                 >
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm font-medium text-gray-600">Pagados</p>
-                            <p className="text-2xl font-bold text-green-600">{getOrdersByStatus('paid')}</p>
+                            <p className="text-sm font-medium text-gray-600">Enviados</p>
+                            <p className="text-2xl font-bold text-green-600">{getOrdersByStatus('enviado')}</p>
                         </div>
                         <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
                             <FaCheck className="w-6 h-6 text-white" />
@@ -114,7 +114,7 @@ const PedidosAdmin = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm font-medium text-gray-600">Pendientes</p>
-                            <p className="text-2xl font-bold text-yellow-600">{getOrdersByStatus('pending')}</p>
+                            <p className="text-2xl font-bold text-yellow-600">{getOrdersByStatus('pendiente')}</p>
                         </div>
                         <div className="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center">
                             <FaTimes className="w-6 h-6 text-white" />
@@ -151,7 +151,7 @@ const PedidosAdmin = () => {
                             placeholder="Buscar por email o ID..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-theme-primary focus:border-transparent"
+                            className="w-full pl-10 pr-4 py-2 border border-blue-950 text-theme-secondary2 rounded-lg focus:ring-2 focus:ring-theme-primary focus:border-transparent"
                         />
                     </div>
 
@@ -161,10 +161,10 @@ const PedidosAdmin = () => {
                         <select
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-theme-primary focus:border-transparent appearance-none"
+                            className="w-full pl-10 pr-4 py-2 border border-blue-950 text-theme-secondary2 rounded-lg focus:ring-2 focus:ring-theme-primary focus:border-transparent appearance-none cursor-pointer"
                         >
                             {statusOptions.map(option => (
-                                <option key={option.value} value={option.value}>{option.label}</option>
+                                <option className='cursor-pointer' key={option.value} value={option.value}>{option.label}</option>
                             ))}
                         </select>
                     </div>
@@ -172,7 +172,7 @@ const PedidosAdmin = () => {
                     {/* Stats */}
                     <div className="flex items-center justify-center">
                         <span className="text-sm text-gray-600">
-                            Mostrando {filteredOrders.length} de {allPedidos.length} pedidos
+                            Mostrando {filteredOrders.length} de {todosPedidosUsuarios.length} pedidos
                         </span>
                     </div>
                 </div>
@@ -219,22 +219,31 @@ const PedidosAdmin = () => {
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div>
                                                 <div className="text-sm font-medium text-gray-900">
-                                                    {order.customer?.name || order.customer?.email || order.email || 'Cliente'}
+                                                    {order.usuarios.nombre || order.usuarios.correo || 'Cliente'}
                                                 </div>
                                                 <div className="text-sm text-gray-500">
-                                                    {order.customer?.email || order.email || 'Sin email'}
+                                                    {order.usuarios.correo || 'Sin email'}
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {formatearFecha(Number(order.created))}
+                                            {new Date(order.fecha_pedido).toLocaleString("es-MX", {
+                                                timeZone: "America/Mexico_City",
+                                                day: "2-digit",
+                                                month: "2-digit",
+                                                year: "numeric",
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                                second: "2-digit"
+                                            })}
                                         </td>
+
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            ${order.amount_total.toLocaleString()}
+                                            ${order.total.toLocaleString()}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${colorStatus(order.status)}`}>
-                                                {tranformarStatus(order.status)}
+                                            <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${colorEstado(order.estado)}`}>
+                                                {transformarEstado(order.estado)}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -247,7 +256,7 @@ const PedidosAdmin = () => {
                                                 >
                                                     <FaEye className="w-4 h-4" />
                                                 </motion.button>
-                                                {order.status === 'pending' && (
+                                                {order.estado === 'confirmado' && (
                                                     <motion.button
                                                         whileHover={{ scale: 1.1 }}
                                                         whileTap={{ scale: 0.9 }}
@@ -257,7 +266,7 @@ const PedidosAdmin = () => {
                                                         <FaCheck className="w-4 h-4" />
                                                     </motion.button>
                                                 )}
-                                                {order.status === 'pending' && (
+                                                {order.estado === 'cancelado' && (
                                                     <motion.button
                                                         whileHover={{ scale: 1.1 }}
                                                         whileTap={{ scale: 0.9 }}
@@ -279,7 +288,7 @@ const PedidosAdmin = () => {
 
             {/* Order Details Modal */}
             {selectedOrder && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -289,39 +298,40 @@ const PedidosAdmin = () => {
                             <h3 className="text-xl font-bold text-gray-900">Detalles del Pedido</h3>
                             <button
                                 onClick={() => setSelectedOrder(null)}
-                                className="text-gray-400 hover:text-gray-600"
+                                className="text-gray-400 hover:text-gray-600 cursor-pointer"
                             >
                                 <FaTimes className="w-5 h-5" />
                             </button>
                         </div>
 
                         <div className="space-y-4">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 gap-4">
                                 <div>
                                     <label className="text-sm font-medium text-gray-500">ID del Pedido</label>
                                     <p className="text-sm text-gray-900">{selectedOrder.id}</p>
                                 </div>
                                 <div>
                                     <label className="text-sm font-medium text-gray-500">Estado</label>
-                                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${colorStatus(selectedOrder.status)}`}>
-                                        {tranformarStatus(selectedOrder.status)}
+                                    <span className={` px-2 py-1 text-xs font-medium rounded-full ${colorEstado(selectedOrder.estado)}`}>
+                                        <br />
+                                        {transformarEstado(selectedOrder.estado)}
                                     </span>
                                 </div>
                                 <div>
                                     <label className="text-sm font-medium text-gray-500">Cliente</label>
-                                    <p className="text-sm text-gray-900">{selectedOrder.customer?.name || selectedOrder.customer?.email || selectedOrder.email}</p>
+                                    <p className="text-sm text-gray-900">{selectedOrder.usuarios.nombre || selectedOrder.usuarios.correo || 'Cliente'}</p>
                                 </div>
                                 <div>
                                     <label className="text-sm font-medium text-gray-500">Total</label>
-                                    <p className="text-sm text-gray-900">${selectedOrder.amount_total.toLocaleString()}</p>
+                                    <p className="text-sm text-gray-900">${selectedOrder.total.toLocaleString()}</p>
                                 </div>
                             </div>
 
-                            {selectedOrder.customer?.address && (
+                            {selectedOrder?.direcciones && (
                                 <div>
                                     <label className="text-sm font-medium text-gray-500">Dirección</label>
                                     <p className="text-sm text-gray-900">
-                                        {selectedOrder.customer.address.line1}, {selectedOrder.customer.address.city}, {selectedOrder.customer.address.country}
+                                        {selectedOrder.direcciones.direccion_1}, {selectedOrder.direcciones.ciudad}, {selectedOrder.direcciones.pais}
                                     </p>
                                 </div>
                             )}

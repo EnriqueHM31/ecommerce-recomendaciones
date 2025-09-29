@@ -1,10 +1,15 @@
 import { create } from "zustand";
-import type { PaymentSession } from "../types/pago";
+import type { PaymentSession, Pedido } from "../types/pago";
+// Item de un pedido
+
+
 
 interface ComprasStore {
     // 🔹 Estado de pedidos
     allPedidos: PaymentSession[]; // todos
     pedidos: PaymentSession[];    // visibles
+    todosPedidosUsuarios: Pedido[];
+
     loading: boolean;
     error: string | null;
     detalles: boolean;
@@ -19,6 +24,8 @@ interface ComprasStore {
 
     // Actions
     fetchPedidos: (email: string) => Promise<void>;
+    fetchTodosPedidos: () => Promise<void>;
+
     setPage: (page: number) => void;
     nextPage: () => void;
     prevPage: () => void;
@@ -28,6 +35,8 @@ interface ComprasStore {
 export const useComprasStore = create<ComprasStore>()((set, get) => ({
     allPedidos: [],
     pedidos: [],
+    todosPedidosUsuarios: [],
+
     loading: false,
     error: null,
     detalles: false,
@@ -90,6 +99,31 @@ export const useComprasStore = create<ComprasStore>()((set, get) => ({
         }
     },
 
+    fetchTodosPedidos: async () => {
+        set({ loading: true, error: null });
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_API}/api/pedidos/todos`,
+                { method: "GET" }
+            );
+
+            if (!response.ok) {
+                throw new Error("Error al obtener los pedidos");
+            }
+
+            const { data } = await response.json();
+
+            set({
+                todosPedidosUsuarios: data,
+                loading: false,
+            });
+        } catch (err) {
+            set({
+                error: err instanceof Error ? err.message : "Error desconocido",
+                loading: false,
+            });
+        }
+    },
     // 🔹 Cambiar de página (calcula los visibles a partir de allPedidos)
     setPage: (page: number) => {
         const { allPedidos, pageSize, totalPages } = get();

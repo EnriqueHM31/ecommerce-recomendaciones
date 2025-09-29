@@ -22,7 +22,7 @@ const DashboardLayout = ({
     user
 }: DashboardLayoutProps) => {
     return (
-        <div className="min-h-screen bg-theme-secondary">
+        <div className="h-screen w-full bg-theme-secondary">
             <div className="flex">
                 {/* Sidebar */}
                 <Sidebar
@@ -31,7 +31,7 @@ const DashboardLayout = ({
                 />
 
                 {/* Main Content */}
-                <div className="flex-1 flex flex-col">
+                <div className="flex-1 flex flex-col h-screen overflow-y-auto">
                     {/* Header */}
                     <Header user={user} />
 

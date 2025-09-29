@@ -1,19 +1,30 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { useUser } from '@clerk/clerk-react';
+import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
+import CategoriasAdmin from '../components/Dashboard/CategoriasAdmin';
 import DashboardLayout from '../components/Dashboard/Layout';
 import DashboardOverview from '../components/Dashboard/Overview';
-import ProductosAdmin from '../components/Dashboard/ProductosAdmin';
-import CategoriasAdmin from '../components/Dashboard/CategoriasAdmin';
 import PedidosAdmin from '../components/Dashboard/PedidosAdmin';
+import ProductosAdmin from '../components/Dashboard/ProductosAdmin';
 import VentasAdmin from '../components/Dashboard/VentasAdmin';
+import { useCartStore } from '../store/cartStore';
+import { useComprasStore } from '../store/comprasStore';
 
 type DashboardSection = 'overview' | 'productos' | 'categorias' | 'pedidos' | 'ventas';
 
 const Dashboard = () => {
     const { user, isLoaded } = useUser();
     const [activeSection, setActiveSection] = useState<DashboardSection>('overview');
+    const { fetchTodosPedidos } = useComprasStore();
+    const { fetchProductos, fetchProductosTop } = useCartStore();
+
+
+    useEffect(() => {
+        fetchTodosPedidos();
+        fetchProductos();
+        fetchProductosTop();
+    }, [user]);
 
     // Mostrar loading mientras se carga Clerk
     if (!isLoaded) {
@@ -27,14 +38,15 @@ const Dashboard = () => {
         );
     }
 
+
+
     // Redirigir si no está autenticado
     if (!user) {
         return <Navigate to="/" replace />;
     }
 
     // Verificar si es administrador (puedes ajustar esta lógica según tus necesidades)
-    const isAdmin = user.publicMetadata?.role === 'admin' ||
-        user.emailAddresses[0]?.emailAddress === 'admin@ecommerce.com';
+    const isAdmin = user.publicMetadata?.role === 'admin'
 
     if (!isAdmin) {
         return (

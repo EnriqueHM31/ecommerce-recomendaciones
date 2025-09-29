@@ -53,7 +53,7 @@ const ProductosAdmin = () => {
                     <h1 className="text-3xl font-bold text-theme-primary mb-2">
                         Gestión de Productos
                     </h1>
-                    <p className="text-gray-600">
+                    <p className="text-gray-400">
                         Administra el catálogo de productos de tu tienda
                     </p>
                 </div>
@@ -79,7 +79,7 @@ const ProductosAdmin = () => {
                             placeholder="Buscar productos..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-theme-primary focus:border-transparent"
+                            className="w-full pl-10 pr-4 py-2 border border-blue-950 rounded-lg focus:ring-2 focus:ring-theme-primary focus:border-transparent text-theme-secondary2  "
                         />
                     </div>
 
@@ -89,11 +89,11 @@ const ProductosAdmin = () => {
                         <select
                             value={selectedCategory}
                             onChange={(e) => setSelectedCategory(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-theme-primary focus:border-transparent appearance-none"
+                            className="w-full pl-10 pr-4 py-2 border border-blue-950 rounded-lg focus:ring-2 focus:ring-theme-primary focus:border-transparent appearance-none text-theme-secondary2 cursor-pointer"
                         >
-                            <option value="">Todas las categorías</option>
+                            <option className='cursor-pointer' value="">Todas las categorías</option>
                             {categories.map(category => (
-                                <option key={category} value={category}>{category}</option>
+                                <option className='cursor-pointer' key={category} value={category}>{category}</option>
                             ))}
                         </select>
                     </div>
