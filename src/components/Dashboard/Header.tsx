@@ -1,3 +1,4 @@
+import { UserButton, SignedIn } from '@clerk/clerk-react';
 import { motion } from 'framer-motion';
 // Usar el tipo de usuario de Clerk
 type User = {
@@ -6,7 +7,6 @@ type User = {
     emailAddresses: Array<{ emailAddress: string }>;
     publicMetadata?: { role?: string };
 };
-import { FaUser } from 'react-icons/fa';
 
 interface HeaderProps {
     user: User;
@@ -40,9 +40,16 @@ const Header = ({ user }: HeaderProps) => {
                         whileHover={{ scale: 1.05 }}
                         className="flex items-center space-x-3 bg-gray-50 rounded-lg px-4 py-2"
                     >
-                        <div className="w-8 h-8 bg-theme-primary rounded-full flex items-center justify-center">
-                            <FaUser className="w-4 h-4 text-white" />
-                        </div>
+                        {user &&
+                            (
+                                <div className="size-12 flex items-center justify-center rounded-full border-2 border-white">
+                                    <SignedIn>
+                                        <UserButton appearance={{ elements: { userButtonAvatarBox: 'size-12 rounded-full', userButtonBox: 'rounded-full transition-all duration-300 hover:bg-theme-secondary hover:text-theme-primary cursor-pointer', }, }} />
+                                    </SignedIn>
+                                </div>
+                            )
+                        }
+
                         <div className="text-sm">
                             <p className="font-medium text-gray-900">
                                 {user.firstName || 'Admin'}
