@@ -3,6 +3,9 @@ import { motion } from 'framer-motion';
 import { FaPlus, FaEdit, FaTrash, FaSearch, FaFilter } from 'react-icons/fa';
 import { useCartStore } from '../../store/cartStore';
 import type { Producto } from '../../types/productos';
+import { useToggle } from '../../hooks/Open/open';
+import CrearProductoModal from './FormularioProducto';
+import { useTecnicosStore } from '../../store/tecnicosStore';
 
 const ProductosAdmin = () => {
     const { products, fetchProductos } = useCartStore();
@@ -10,10 +13,18 @@ const ProductosAdmin = () => {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
+    const { fetchTecnicos } = useTecnicosStore();
+
+    const modalAgregar = useToggle();
+    const isOpenAgregar = modalAgregar.isOpen;
+    const openAgregar = modalAgregar.open;
+    const closeAgregar = modalAgregar.close;
+
     useEffect(() => {
         const loadProducts = async () => {
             setIsLoading(true);
             await fetchProductos();
+            await fetchTecnicos();
             setIsLoading(false);
         };
         loadProducts();
@@ -42,11 +53,17 @@ const ProductosAdmin = () => {
 
     const handleAddProduct = () => {
         // TODO: Implementar agregar producto
+        openAgregar();
         console.log('Agregar nuevo producto');
     };
 
+
     return (
         <div className="space-y-6">
+            {
+                isOpenAgregar &&
+                <CrearProductoModal isOpen={isOpenAgregar} onClose={closeAgregar} />
+            }
             {/* Header */}
             <div className="flex justify-between items-center">
                 <div>

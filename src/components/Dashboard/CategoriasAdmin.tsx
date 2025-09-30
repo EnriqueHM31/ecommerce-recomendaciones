@@ -1,13 +1,13 @@
 import { motion } from 'framer-motion';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FaEdit, FaPlus, FaSearch, FaTrash } from 'react-icons/fa';
-import { useCategoriasStore } from '../../store/categoriasStore';
 import { useCartStore } from '../../store/cartStore';
-import type { Producto } from '../../types/productos';
+import { useCategoriasStore } from '../../store/categoriasStore';
 import { toast } from 'sonner';
+import type { Producto } from '../../types/productos';
 
 interface Category {
-    id?: number;
+    id_categoria?: number;
     nombre: string;
     color: string;
     conteo: number;
@@ -21,98 +21,134 @@ const CategoriasAdmin = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [isAddingCategory, setIsAddingCategory] = useState(false);
     const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-    const [newCategory, setNewCategory] = useState({
-        nombre: '',
-        color: '#3B82F6',
-    });
-    console.log({ categorias });
+    const [newCategory, setNewCategory] = useState({ id_categoria: 0, nombre: '' });
 
     const categoryColors = [
         '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6',
         '#06B6D4', '#84CC16', '#F97316', '#EC4899', '#6B7280'
     ];
 
-    // Inicializar categorías con colores persistidos
+    const getRandomColor = () => categoryColors[Math.floor(Math.random() * categoryColors.length)];
+
+    // Inicializar categorías con colores aleatorios y conteo dinámico
     useEffect(() => {
-        const storedCategories = localStorage.getItem('categorias_colores');
-        if (storedCategories) {
-            setCategories(JSON.parse(storedCategories));
-        } else {
-            const withColors = categorias.map((cat, index) => ({
-                id: cat.id_categoria,
+        const combined: Category[] = categorias.map(cat => {
+            const color = getRandomColor();
+            const conteo = products.filter(p => p.categoria === cat.nombre).length;
+
+            return {
+                id_categoria: cat.id_categoria,
                 nombre: cat.nombre,
-                color: categoryColors[index % categoryColors.length],
-                conteo: products.filter(p => p.categoria === cat.nombre).length
-            }));
-            setCategories(withColors);
-            localStorage.setItem('categorias_colores', JSON.stringify(withColors));
-        }
+                color,
+                conteo
+            };
+        });
+
+        setCategories(combined);
     }, [categorias, products]);
 
-    // Contar productos por categoría
     const productosPorCategoria = useMemo(() => {
         const conteo: Record<string, number> = {};
         products.forEach((prod: Producto) => {
-            if (prod.categoria) {
-                conteo[prod.categoria] = (conteo[prod.categoria] || 0) + 1;
-            }
+            if (prod.categoria) conteo[prod.categoria] = (conteo[prod.categoria] || 0) + 1;
         });
         return conteo;
-    }, [products]);
+    }, [products, categorias]);
 
-    // Filtrar categorías
-    const filteredCategories = categories.filter(category =>
-        category.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const handleAddCategory = async () => {
+        if (!newCategory.nombre.trim()) return;
 
-    // Actualizar localStorage
-    const updateLocalStorage = (updated: Category[]) => {
-        setCategories(updated);
-        localStorage.setItem('categorias_colores', JSON.stringify(updated));
-    };
+        const toastId = toast.loading("Creando categoría...");
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API}/api/categorias`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nombre: newCategory.nombre }),
+            });
 
-    const handleAddCategory = () => {
-        if (newCategory.nombre.trim()) {
-            const category: Category = {
+            if (!response.ok) throw new Error('Error al agregar la categoría');
+
+            const { data } = await response.json();
+
+            const newCat: Category = {
+                id_categoria: data[0].id_categoria,
                 nombre: newCategory.nombre,
-                color: newCategory.color,
+                color: getRandomColor(),
                 conteo: 0
             };
-            const updated = [...categories, category];
-            updateLocalStorage(updated);
-            setNewCategory({ nombre: '', color: '#3B82F6' });
+            console.log({ newCat });
+
+            setCategories([...categories, newCat]);
+            setNewCategory({ id_categoria: 0, nombre: '' });
             setIsAddingCategory(false);
+            toast.success('Categoría creada', { id: toastId });
+        } catch (error) {
+            toast.error('Error al crear categoría', { id: toastId });
+            console.error(error);
         }
     };
 
     const handleEditCategory = (category: Category) => {
         setEditingCategory(category);
-        setNewCategory({
-            nombre: category.nombre,
-            color: category.color
-        });
+        setNewCategory({ id_categoria: category.id_categoria ?? 0, nombre: category.nombre });
     };
 
-    const handleUpdateCategory = () => {
-        if (editingCategory && newCategory.nombre.trim()) {
-            console.log(editingCategory);
-            const updated = categories.map(cat =>
-                cat.id === editingCategory.id
-                    ? { ...cat, nombre: newCategory.nombre, color: newCategory.color }
+    const handleUpdateCategory = async () => {
+        if (!editingCategory) return;
+        if (newCategory.nombre === editingCategory.nombre) return;
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API}/api/categorias`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: editingCategory.id_categoria, nombre: newCategory.nombre }),
+            });
+
+            if (!response.ok) throw new Error('Error al actualizar la categoría');
+
+            const { data } = await response.json();
+
+            const updatedCategories = categories.map(cat =>
+                cat.id_categoria === editingCategory.id_categoria
+                    ? { ...cat, nombre: data.nombre }
                     : cat
             );
-            updateLocalStorage(updated);
+
+            setCategories(updatedCategories);
             setEditingCategory(null);
-            setNewCategory({ nombre: '', color: '#3B82F6' });
-            toast.success('Categoria actualizada');
+            setNewCategory({ id_categoria: 0, nombre: '' });
+            toast.success('Categoría actualizada');
+        } catch (error) {
+            toast.error('Error al actualizar categoría');
+            console.error(error);
         }
     };
 
-    const handleDeleteCategory = (categoryId?: number) => {
-        const updated = categories.filter(cat => cat.id !== categoryId);
-        updateLocalStorage(updated);
+    const handleDeleteCategory = async (categoryId?: number) => {
+        console.log({ categoryId });
+        if (!categoryId) return;
+
+        const toastId = toast.loading("Eliminando categoría...");
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API}/api/categorias/`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: categoryId })
+            });
+
+            if (!response.ok) throw new Error('Error al eliminar la categoría');
+
+            setCategories(categories.filter(cat => cat.id_categoria !== categoryId));
+            toast.success('Categoría eliminada', { id: toastId });
+        } catch (error) {
+            toast.error('Error al eliminar categoría', { id: toastId });
+            console.error(error);
+        }
     };
 
+    const filteredCategories = categories.filter(cat =>
+        cat.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className="space-y-6">
@@ -157,7 +193,7 @@ const CategoriasAdmin = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredCategories.map((category, index) => (
                     <motion.div
-                        key={category.id ?? index}
+                        key={index}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3, delay: index * 0.1 }}
@@ -183,7 +219,7 @@ const CategoriasAdmin = () => {
                                 <motion.button
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.9 }}
-                                    onClick={() => handleDeleteCategory(category.id)}
+                                    onClick={() => handleDeleteCategory(category.id_categoria)}
                                     className="text-red-600 hover:text-red-900 p-1"
                                 >
                                     <FaTrash className="w-4 h-4" />
@@ -229,20 +265,6 @@ const CategoriasAdmin = () => {
                                     placeholder="Ej: Smartphones"
                                 />
                             </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Color</label>
-                                <div className="flex space-x-2">
-                                    {categoryColors.map(color => (
-                                        <button
-                                            key={color}
-                                            onClick={() => setNewCategory(prev => ({ ...prev, color }))}
-                                            className={`w-8 h-8 rounded-full border-2 ${newCategory.color === color ? 'border-gray-900' : 'border-gray-300'}`}
-                                            style={{ backgroundColor: color }}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
                         </div>
 
                         <div className="flex justify-end space-x-3 mt-6">
@@ -250,7 +272,7 @@ const CategoriasAdmin = () => {
                                 onClick={() => {
                                     setIsAddingCategory(false);
                                     setEditingCategory(null);
-                                    setNewCategory({ nombre: '', color: '#3B82F6' });
+                                    setNewCategory({ id_categoria: 0, nombre: '' });
                                 }}
                                 className="px-4 py-2 text-gray-600 hover:text-gray-800"
                             >

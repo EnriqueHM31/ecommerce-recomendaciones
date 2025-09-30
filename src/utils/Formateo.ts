@@ -1,4 +1,31 @@
 import type { CheckoutSession } from "../types/session";
+
+
+export const isValidUrl = (url: string) => {
+    try {
+        new URL(url);
+        return true;
+    } catch {
+        return false;
+    }
+};
+
+// Función para normalizar el precio
+export const formatPrecio = (input: string | number) => {
+    // Convertir a string y eliminar comas y espacios
+    const valor = String(input).replace(/,/g, "").trim();
+
+    // Convertir a número
+    let numero = parseFloat(valor);
+
+    // Si no es número válido, poner 0
+    if (isNaN(numero) || numero < 0) numero = 0;
+
+    // Redondear a dos decimales y convertir a string
+    return numero.toFixed(2);
+};
+
+
 export const formatearPrecio = (amount: number, currency?: string) =>
     new Intl.NumberFormat("es-MX", {
         style: "currency",

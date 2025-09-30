@@ -890,7 +890,12 @@ export const useCartStore = create<CartStore>()(
                 toast.success(`Se eliminio el filtro ${categoria}.`);
 
                 set({ productosAgrupados: filtrados });
-            }
+            },
+            addProductDashboard: (product: Producto) =>
+                set((state) => ({
+                    products: [...state.products, product],
+                })),
+
 
         }),
 
