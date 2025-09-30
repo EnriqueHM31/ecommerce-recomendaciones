@@ -178,4 +178,6 @@ export interface CartStore {
     getTotalItems: () => number;
     getTotalPrice: () => number;
     getProductById: (id: number) => Product | undefined;
+
+    addProductDashboard: (product: Producto) => void;
 }

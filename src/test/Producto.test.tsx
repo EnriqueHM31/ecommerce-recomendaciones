@@ -56,7 +56,7 @@ describe('Producto Component', () => {
         (useCartStore as unknown as MockedFunction<typeof useCartStore>).mockReturnValue(mockCartStore);
     });
 
-    it('should render product information correctly', () => {
+    it('debería renderizar la información del producto correctamente', () => {
         render(
             <BrowserRouter>
                 <Producto product={mockProduct} index={0} />
@@ -71,7 +71,7 @@ describe('Producto Component', () => {
         expect(screen.getByText('Stock: 10')).toBeInTheDocument();
     });
 
-    it('should display product specifications', () => {
+    it('debería mostrar las especificaciones del producto', () => {
         render(
             <BrowserRouter>
                 <Producto product={mockProduct} index={0} />

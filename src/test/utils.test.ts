@@ -172,7 +172,7 @@ describe('Product Adapters', () => {
             especificaciones_ram: { tipo: 'DDR5', capacidad: '8GB' }
         };
 
-        it('should map raw product to Producto correctly', () => {
+        it('debería mapear el producto en bruto a Producto correctamente', () => {
             const result = mapProductos([mockRawProduct]);
 
             expect(result).toHaveLength(1);
@@ -188,7 +188,7 @@ describe('Product Adapters', () => {
                 sku: 'TEST-001',
                 stock: 10,
                 procesador: 'Test Processor',
-                ram_especificacion: 'N/A',
+                ram_especificacion: 'DDR5',
                 ram_variante: '8GB',
                 display: 'Test Display',
                 camara: 'Test Camera',
@@ -197,6 +197,7 @@ describe('Product Adapters', () => {
                 bateria: 'Test Battery',
                 almacenamiento: '128GB',
                 color: 'Test Color',
+                total_vendido: 0,
             });
         });
 

@@ -81,18 +81,36 @@ export default function CrearProductoModal({ isOpen, onClose }: ModalProps) {
 
 
     useEffect(() => {
-        // Encontrar los objetos seleccionados
         const variante = variantes.find(v => v.id === formData.varianteId);
         const almacenamiento = almacenamientos.find(a => a.id === formData.almacenamientoId);
         const color = colores.find(c => c.id === formData.colorId);
         const ram = ramOptions.find(r => r.id === formData.ramId);
 
-        if (variante && almacenamiento && color && ram) {
-            // Formar SKU según el patrón: NOMBRE_VARIANTE-CAPACIDAD_COLOR-RAM
-            const sku = `${variante.nombre_variante}-${almacenamiento.capacidad}-${color.nombre}-${ram.capacidad}`.replace(/\s/g, '');
+        let sku = "";
+
+        if (formData.productoBaseId === 10) {
+            // 🔹 Si el producto base es 10 → SKU = Variante + Color
+            if (variante && color) {
+                sku = `${variante.nombre_variante}-${color.nombre}`.replace(/\s/g, '');
+            }
+        } else {
+            // 🔹 Caso general → Variante + Almacenamiento + Color + RAM
+            if (variante && almacenamiento && color && ram) {
+                sku = `${variante.nombre_variante}-${almacenamiento.capacidad}-${color.nombre}-${ram.capacidad}`.replace(/\s/g, '');
+            }
+        }
+
+        if (sku) {
             setFormData(prev => ({ ...prev, sku }));
         }
-    }, [formData.varianteId, formData.almacenamientoId, formData.colorId, formData.ramId]);
+    }, [
+        formData.varianteId,
+        formData.almacenamientoId,
+        formData.colorId,
+        formData.ramId,
+        formData.productoBaseId
+    ]);
+
 
 
     const handleChange = (field: keyof FormData, value: string | number) => {

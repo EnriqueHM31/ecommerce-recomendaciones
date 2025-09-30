@@ -1,13 +1,13 @@
 import { describe, it, expect, vi } from 'vitest';
 
 // Test simple para verificar que las dependencias están funcionando
-describe('ProductosRecomendados Dependencies', () => {
-    it('should have all required mocks available', () => {
+describe('Dependencias de ProductosRecomendados', () => {
+    it('debería tener todos los mocks requeridos disponibles', () => {
         // Verificar que los mocks están configurados correctamente
         expect(vi.isMockFunction(vi.fn())).toBe(true);
     });
 
-    it('should be able to create mock functions', () => {
+    it('debería poder crear funciones mock', () => {
         const mockFn = vi.fn();
         mockFn('test');
 
@@ -15,7 +15,7 @@ describe('ProductosRecomendados Dependencies', () => {
         expect(mockFn).toHaveBeenCalledTimes(1);
     });
 
-    it('should handle async operations', async () => {
+    it('debería manejar operaciones asíncronas', async () => {
         const mockAsyncFn = vi.fn().mockResolvedValue('success');
 
         const result = await mockAsyncFn();

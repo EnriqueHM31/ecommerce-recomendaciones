@@ -112,15 +112,15 @@ describe('Cart Store', () => {
         mockCartStore.query = '';
     });
 
-    describe('addToCart', () => {
-        it('should call addToCart with correct product', () => {
+    describe('Añadir al carrito', () => {
+        it('debería llamar a addToCart con el producto correcto', () => {
             mockCartStore.addToCart(mockProduct);
 
             expect(mockCartStore.addToCart).toHaveBeenCalledWith(mockProduct);
             expect(mockCartStore.addToCart).toHaveBeenCalledTimes(1);
         });
 
-        it('should call addToCart multiple times for same product', () => {
+        it('debería llamar a addToCart múltiples veces para el mismo producto', () => {
             mockCartStore.addToCart(mockProduct);
             mockCartStore.addToCart(mockProduct);
 
@@ -128,7 +128,7 @@ describe('Cart Store', () => {
             expect(mockCartStore.addToCart).toHaveBeenCalledTimes(2);
         });
 
-        it('should call addToCart for different products', () => {
+        it('debería llamar a addToCart para diferentes productos', () => {
             mockCartStore.addToCart(mockProduct);
             mockCartStore.addToCart(mockProduct2);
 
