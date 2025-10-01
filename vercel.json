@@ -14,9 +14,5 @@
             "src": "/(.*)",
             "dest": "/index.html"
         }
-    ],
-    "env": {
-        "VITE_API": "@vite_api",
-        "VITE_OTHER_ENV": "@vite_other_env"
-    }
+    ]
 }
