@@ -13,37 +13,13 @@
             "use": "@vercel/static-build",
             "config": {
                 "distDir": "dist",
-                "command": "npm run build",
-                "env": {
-                    "NODE_ENV": "production"
-                },
-                "output": {
-                    "clean": true
-                },
-                "postbuild": {
-                    "command": "npm run postbuild",
-                    "env": {
-                        "BUILD_DIR": "$VERCEL_BUILD_OUTPUT_DIR"
-                    }
-                },
-                "files": [
-                    "dist/**/*",
-                    "public/**/*",
-                    "src/**/*.{js,jsx,ts,tsx}",
-                    "!**/node_modules/**"
-                ]
+                "command": "npm run build"
             }
         }
     ],
     "routes": [
         {
-            "src": [
-                {
-                    "src": "/[^.]+",
-                    "dest": "/",
-                    "status": 200
-                }
-            ],
+            "src": "/[^.]+",
             "dest": "/index.html"
         }
     ]
