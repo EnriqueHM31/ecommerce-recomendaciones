@@ -141,7 +141,6 @@ const VentasAdmin = () => {
         }
     ];
 
-    console.log({ productosAllTop });
 
     // Componente para las barras de los charts
     const FilaBarra = ({ etiqueta, valor, max, mostrarPedidos }: { etiqueta: string; valor: number; max: number; mostrarPedidos?: number }) => (

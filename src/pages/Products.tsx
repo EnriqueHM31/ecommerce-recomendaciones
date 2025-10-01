@@ -29,7 +29,6 @@ export default function Products() {
     }, []);
 
 
-    console.log({ productosAgrupados });
 
     useEffect(() => {
         // ⏳ cuando lleguen los productos desactiva el loading

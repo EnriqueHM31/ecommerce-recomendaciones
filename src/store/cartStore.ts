@@ -823,7 +823,6 @@ export const useCartStore = create<CartStore>()(
                 const { products, categoriasSeleccionadas } = get();
 
                 const productsActivos = products.filter(p => Boolean(p.active));
-                console.log({ productsActivos });
 
                 const filtrados = productsActivos.filter(p => {
                     // --- Categorías ---

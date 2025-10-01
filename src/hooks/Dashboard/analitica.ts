@@ -1,7 +1,6 @@
 import ReactGA from "react-ga4";
 
 export const initGA = () => {
-    console.log('iniciando analitica', import.meta.env.VITE_ANALITICA);
     ReactGA.initialize(import.meta.env.VITE_ANALITICA); // 👈 tu Measurement ID de GA4
 };
 

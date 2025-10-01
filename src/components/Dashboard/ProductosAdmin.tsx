@@ -50,7 +50,7 @@ const ProductosAdmin = () => {
 
     const handleEditProduct = (product: Producto) => {
         // TODO: Implementar edición de producto
-        console.log('Editar producto:', product);
+        console.log(product);
     };
 
     const handleToggleProduct = async (product: Producto) => {
@@ -76,7 +76,6 @@ const ProductosAdmin = () => {
             const { data } = await response.json();
             const { id } = data[0];
 
-            console.log('Producto toggle:', data);
 
             // 2️⃣ Actualizar el estado en el dashboard
             deleteProductDashboard(id); // tu función de Zustand toggleActive
@@ -86,7 +85,6 @@ const ProductosAdmin = () => {
                 id: toastId,
             });
 
-            console.log('Producto toggle:', product);
         } catch (error) {
             console.error('Error al toggle product:', error, {
                 id: toastId,
@@ -98,7 +96,6 @@ const ProductosAdmin = () => {
 
     const handleAddProduct = () => {
         openAgregar();
-        console.log('Agregar nuevo producto');
     };
     const filteredAndSortedProducts = useMemo(() => {
         return [...products]
@@ -119,7 +116,6 @@ const ProductosAdmin = () => {
             });
     }, [products, searchTerm, selectedCategory]);
 
-    console.log({ filteredAndSortedProducts });
     return (
         <div className="space-y-6">
             {

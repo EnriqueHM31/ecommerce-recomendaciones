@@ -44,7 +44,7 @@ const PedidosAdmin = () => {
 
     const handleUpdateStatus = (orderId: string, newStatus: string) => {
         // TODO: Implementar actualización de estado
-        console.log('Actualizar estado:', orderId, newStatus);
+        console.log('handleUpdateStatus', orderId, newStatus);
     };
 
     const getTotalRevenue = () => {
