@@ -23,7 +23,7 @@ interface ComprasStore {
     pages: number[];
 
     // Actions
-    fetchPedidos: (email: string) => Promise<void>;
+    fetchPedidos: (email: string, id: string) => Promise<void>;
     fetchTodosPedidos: () => Promise<void>;
 
     setPage: (page: number) => void;
@@ -50,7 +50,7 @@ export const useComprasStore = create<ComprasStore>()((set, get) => ({
     pages: [],
 
     // 🔹 Traer todos los pedidos y luego dividir en páginas en frontend
-    fetchPedidos: async (email: string) => {
+    fetchPedidos: async (email: string, id: string) => {
         if (!email) {
             set({ error: "No se encontró el email del usuario", loading: false });
             return;
@@ -60,7 +60,7 @@ export const useComprasStore = create<ComprasStore>()((set, get) => ({
             set({ loading: true, error: null });
 
             const response = await fetch(
-                `${import.meta.env.VITE_API}/api/compra/pedidos/${email}`,
+                `${import.meta.env.VITE_API}/api/compra/pedidos/${email}/${id}`,
                 { method: "GET" }
             );
 

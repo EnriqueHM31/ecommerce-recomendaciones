@@ -14,9 +14,10 @@ export function useMisCompras({ user }: useMisComprasProps) {
         if (!user) return;
 
         const email = user?.emailAddresses?.[0]?.emailAddress ?? "";
-        if (!email) return;
+        const id = user?.id ?? "";
+        if (!email || !id) return;
 
-        fetchPedidos(email).then(() => setPedidosCargados(true));
+        fetchPedidos(email, id).then(() => setPedidosCargados(true));
     }, [user]);
     const [pedidoSeleccionado, setPedidoSeleccionado] = useState<PaymentSession | null>(null);
 

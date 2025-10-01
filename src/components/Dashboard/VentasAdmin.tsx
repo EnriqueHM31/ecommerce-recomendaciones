@@ -1,16 +1,11 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { FaChartLine, FaDollarSign, FaShoppingCart, FaUsers } from 'react-icons/fa';
+import { FaChartLine, FaDollarSign, FaShoppingCart } from 'react-icons/fa';
+import { useConversion } from '../../hooks/Dashboard/Conversion';
 import { useCartStore } from '../../store/cartStore';
 import { useComprasStore } from '../../store/comprasStore';
 import type { Producto } from '../../types/productos';
-import ReactGA from "react-ga4";
-import { useConversion } from '../../hooks/Dashboard/Conversion';
 
-ReactGA.initialize("G-XXXXXXXXXX"); // tu ID de medición
-
-// Registrar vistas de página
-ReactGA.send({ hitType: "pageview", page: window.location.pathname });
 
 
 
@@ -19,6 +14,7 @@ const VentasAdmin = () => {
     const { productosTop: productosAllTop } = useCartStore();
     const { visitas } = useConversion();
 
+    console.log({ todosPedidosUsuarios });
     const [rangoDias, setRangoDias] = useState("30");
     const [datosVentas, setDatosVentas] = useState({
         ingresosTotales: 0,
@@ -34,19 +30,40 @@ const VentasAdmin = () => {
         calcularDatosVentas();
     }, [todosPedidosUsuarios, productosAllTop, rangoDias]);
 
+    const parseFechaPedido = (fechaStr: string) => {
+        // "30/9/2025, 12:05:45 p.m."
+        const [fechaParte, horaParte] = fechaStr.split(", ");
+        const [dia, mes, anio] = fechaParte.split("/").map(Number);
+
+        const fecha_horas = horaParte.split(/[: ]/).map(Number);
+        let hora = fecha_horas[0];
+        const minuto = fecha_horas[1];
+        const segundo = fecha_horas[2];
+        const ampm = horaParte.includes("p.m.") ? "p.m." : "a.m.";
+
+        if (ampm === "p.m." && hora < 12) hora += 12;
+        if (ampm === "a.m." && hora === 12) hora = 0;
+
+        return new Date(anio, mes - 1, dia, hora, minuto, segundo);
+    };
+
     const calcularDatosVentas = () => {
         const ahora = new Date();
         const fechaLimite = new Date(
             ahora.getTime() - parseInt(rangoDias) * 24 * 60 * 60 * 1000
         );
 
+        // Convertimos la fecha de cada pedido a objeto Date
         const pedidosConFecha = todosPedidosUsuarios.map((pedido) => ({
             ...pedido,
-            fechaObjeto: new Date(pedido.fecha_pedido),
+            fechaObjeto: parseFechaPedido(pedido.fecha_pedido),
         }));
 
+        // Filtramos pedidos dentro del rango y completados
         const pedidosFiltrados = pedidosConFecha.filter(
-            (pedido) => pedido.fechaObjeto >= fechaLimite && pedido.estado === "pendiente"
+            (pedido) =>
+                pedido.fechaObjeto >= fechaLimite &&
+                pedido.estado === "pendiente" // Solo ventas completadas
         );
 
         const ingresosTotales = pedidosFiltrados.reduce(
@@ -54,20 +71,19 @@ const VentasAdmin = () => {
             0
         );
         const totalPedidos = pedidosFiltrados.length;
-        const valorPromedioPedido =
-            totalPedidos > 0 ? ingresosTotales / totalPedidos : 0;
+        const valorPromedioPedido = totalPedidos > 0 ? ingresosTotales / totalPedidos : 0;
 
-        // 👉 usamos directamente los productos top que ya trae el backend
-        const productosTop = productosAllTop ?? [];
+        // Productos top (aseguramos números)
+        const productosTop = (productosAllTop ?? []).map((item) => ({
+            ...item,
+            total_vendido: Number(item.total_vendido ?? 0),
+            precio_base: Number(item.precio_base ?? 0),
+        }));
 
         // Ingresos mensuales últimos 6 meses
         const ingresosMensuales = Array.from({ length: 6 }, (_, i) => {
             const mes = new Date(ahora.getFullYear(), ahora.getMonth() - i, 1);
-            const siguienteMes = new Date(
-                ahora.getFullYear(),
-                ahora.getMonth() - i + 1,
-                1
-            );
+            const siguienteMes = new Date(ahora.getFullYear(), ahora.getMonth() - i + 1, 1);
             const pedidosMes = pedidosFiltrados.filter(
                 (pedido) => pedido.fechaObjeto >= mes && pedido.fechaObjeto < siguienteMes
             );
@@ -93,7 +109,8 @@ const VentasAdmin = () => {
             };
         });
 
-        const tasaConversion = todosPedidosUsuarios.length / visitas * 100;
+        // Tasa de conversión segura
+        const tasaConversion = visitas > 0 ? (todosPedidosUsuarios.length / visitas) * 100 : 0;
 
         setDatosVentas({
             ingresosTotales,
@@ -105,6 +122,7 @@ const VentasAdmin = () => {
             ventasDiarias,
         });
     };
+
 
 
     const rangosTiempo = [
@@ -133,12 +151,6 @@ const VentasAdmin = () => {
             icono: FaChartLine,
             color: 'bg-purple-500',
         },
-        {
-            titulo: 'Tasa de Conversión',
-            valor: `${datosVentas.tasaConversion.toFixed(1)}%`,
-            icono: FaUsers,
-            color: 'bg-orange-500',
-        }
     ];
 
 

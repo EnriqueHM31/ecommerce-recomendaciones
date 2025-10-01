@@ -227,15 +227,7 @@ const PedidosAdmin = () => {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {new Date(order.fecha_pedido).toLocaleString("es-MX", {
-                                                timeZone: "America/Mexico_City",
-                                                day: "2-digit",
-                                                month: "2-digit",
-                                                year: "numeric",
-                                                hour: "2-digit",
-                                                minute: "2-digit",
-                                                second: "2-digit"
-                                            })}
+                                            {order.fecha_pedido}
                                         </td>
 
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">

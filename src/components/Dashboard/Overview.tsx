@@ -80,6 +80,8 @@ const Overview = () => {
         }
     ];
 
+    console.log({ todosPedidosUsuarios });
+
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -154,15 +156,8 @@ const Overview = () => {
                                         {order.usuarios.correo || 'Cliente'}
                                     </p>
                                     <p className="text-sm text-gray-500">
-                                        {new Date(order.fecha_pedido).toLocaleString("es-MX", {
-                                            timeZone: "America/Mexico_City",
-                                            day: "2-digit",
-                                            month: "2-digit",
-                                            year: "numeric",
-                                            hour: "2-digit",
-                                            minute: "2-digit",
-                                            second: "2-digit"
-                                        })}
+
+                                        {order.fecha_pedido}
                                     </p>
                                 </div>
                                 <div className="text-right">
