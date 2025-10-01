@@ -4,11 +4,20 @@ import { FaChartLine, FaDollarSign, FaShoppingCart, FaUsers } from 'react-icons/
 import { useCartStore } from '../../store/cartStore';
 import { useComprasStore } from '../../store/comprasStore';
 import type { Producto } from '../../types/productos';
+import ReactGA from "react-ga4";
+import { useConversion } from '../../hooks/Dashboard/Conversion';
+
+ReactGA.initialize("G-XXXXXXXXXX"); // tu ID de medición
+
+// Registrar vistas de página
+ReactGA.send({ hitType: "pageview", page: window.location.pathname });
+
 
 
 const VentasAdmin = () => {
     const { todosPedidosUsuarios } = useComprasStore();
     const { productosTop: productosAllTop } = useCartStore();
+    const { visitas } = useConversion();
 
     const [rangoDias, setRangoDias] = useState("30");
     const [datosVentas, setDatosVentas] = useState({
@@ -84,11 +93,13 @@ const VentasAdmin = () => {
             };
         });
 
+        const tasaConversion = todosPedidosUsuarios.length / visitas * 100;
+
         setDatosVentas({
             ingresosTotales,
             totalPedidos,
             valorPromedioPedido,
-            tasaConversion: 0,
+            tasaConversion,
             productosTop,
             ingresosMensuales,
             ventasDiarias,
@@ -129,6 +140,8 @@ const VentasAdmin = () => {
             color: 'bg-orange-500',
         }
     ];
+
+    console.log({ productosAllTop });
 
     // Componente para las barras de los charts
     const FilaBarra = ({ etiqueta, valor, max, mostrarPedidos }: { etiqueta: string; valor: number; max: number; mostrarPedidos?: number }) => (

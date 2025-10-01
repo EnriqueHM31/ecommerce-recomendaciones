@@ -12,6 +12,7 @@ import { experimental__simple } from '@clerk/themes';
 import { useThemeStore } from './store/themeStore.ts';
 import { Buffer } from "buffer";
 window.Buffer = Buffer;
+import { BrowserRouter } from 'react-router-dom';
 
 
 // Import your Publishable Key
@@ -25,9 +26,12 @@ export function Root() {
   const { theme } = useThemeStore();
 
   return (
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY} localization={esES} appearance={{ baseTheme: theme === 'dark' ? dark : experimental__simple }}>
-      <App />
-    </ClerkProvider>
+    <BrowserRouter>
+
+      <ClerkProvider publishableKey={PUBLISHABLE_KEY} localization={esES} appearance={{ baseTheme: theme === 'dark' ? dark : experimental__simple }}>
+        <App />
+      </ClerkProvider>
+    </BrowserRouter>
   )
 
 }

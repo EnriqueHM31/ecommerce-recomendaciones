@@ -1,7 +1,9 @@
-import { BrowserRouter, useRoutes } from "react-router-dom";
+import { useLocation, useRoutes } from "react-router-dom";
 import { Toaster } from "sonner";
 import { routes } from "./routes/routes";
 import { useThemeStore } from "./store/themeStore";
+import { useEffect } from "react";
+import { initGA, logPageView } from "./hooks/Dashboard/analitica";
 
 
 function Routes() {
@@ -11,6 +13,15 @@ function Routes() {
 
 export default function App() {
   const { theme } = useThemeStore();
+  const location = useLocation();
+
+  useEffect(() => {
+    initGA(); // Se inicializa GA4 una sola vez
+  }, []);
+
+  useEffect(() => {
+    logPageView(location.pathname); // 👈 registra cada cambio de ruta
+  }, [location]);
 
 
   const toastOptions = {
@@ -29,7 +40,7 @@ export default function App() {
   };
 
   return (
-    <BrowserRouter>
+    <>
       <Routes />
       <Toaster
         position="bottom-right"
@@ -38,6 +49,6 @@ export default function App() {
         visibleToasts={3}
         swipeDirections={["right", "left"]}
       />
-    </BrowserRouter>
+    </>
   );
 }
