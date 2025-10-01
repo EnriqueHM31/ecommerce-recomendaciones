@@ -2,7 +2,7 @@
 import { Document, Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import React from "react";
 import type { PaymentSession } from "../../types/pago";
-import { formatearFecha, formatearPrecio2 } from "../../utils/formateo";
+import { formatearFecha, formatearPrecio2 } from "../..@/utils/formateo";
 
 const styles = StyleSheet.create({
     page: { padding: 20, fontSize: 12, fontFamily: "Helvetica" },

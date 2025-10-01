@@ -6,7 +6,7 @@ import {
     tranformarStatus,
     colorStatus,
     shuffleArray
-} from '../utils/formateo';
+} from '..@/utils/formateo';
 import { mapProductos } from '../adapters/productos';
 import type { ProductoRaw } from '../types/productos';
 
