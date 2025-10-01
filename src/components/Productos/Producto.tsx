@@ -4,7 +4,7 @@ import { COLORES_ECOMMERCE_PRODUCTOS } from '../../constants/colores';
 import type { Producto } from '../../types/productos';
 import { useCartStore } from '../../store/cartStore';
 import { toast } from 'sonner';
-import { formatearPrecio } from '../../utils/formateo';
+import { formatearPrecio } from '@/utils/formateo';
 
 
 interface ProductosProps {

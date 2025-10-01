@@ -8,6 +8,10 @@
     "react-hooks/exhaustive-deps": "off"
   },
   "compilerOptions": {
-    "types": ["node"]
+    "types": ["node"],
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["./*"]
+    }
   }
 }
