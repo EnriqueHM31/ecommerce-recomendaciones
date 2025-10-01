@@ -151,7 +151,6 @@ export default function CrearProductoModal({ isOpen, onClose }: ModalProps) {
             imagen_url: formData.imagenUrl,
         };
 
-        console.log({ body });
 
         try {
             const res = await fetch(`${import.meta.env.VITE_API}/api/create/productos-sku`, {
@@ -168,7 +167,6 @@ export default function CrearProductoModal({ isOpen, onClose }: ModalProps) {
             toast.success("Producto creado exitosamente");
             onClose();
             // Si quieres, puedes hacer algo con la respuesta
-            console.log(data);
         } catch (error) {
             console.error(error);
             toast.error(error as string || "Error al crear el producto");

@@ -76,7 +76,6 @@ const CategoriasAdmin = () => {
                 color: getRandomColor(),
                 conteo: 0
             };
-            console.log({ newCat });
 
             setCategories([...categories, newCat]);
             setNewCategory({ id_categoria: 0, nombre: '' });
@@ -125,7 +124,6 @@ const CategoriasAdmin = () => {
     };
 
     const handleDeleteCategory = async (categoryId?: number) => {
-        console.log({ categoryId });
         if (!categoryId) return;
 
         const toastId = toast.loading("Eliminando categoría...");
