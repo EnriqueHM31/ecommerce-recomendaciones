@@ -19,8 +19,6 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',           // Carpeta de salida
-    assetsDir: 'assets',      // Carpeta de assets dentro de dist
-    sourcemap: false,
   },
   base: './',                 // Muy importante para Vercel SPA
 })
