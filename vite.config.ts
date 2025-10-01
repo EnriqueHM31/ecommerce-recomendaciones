@@ -16,5 +16,11 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "src")
     }
-  }
+  },
+  build: {
+    outDir: 'dist',           // Carpeta de salida
+    assetsDir: 'assets',      // Carpeta de assets dentro de dist
+    sourcemap: false,
+  },
+  base: './',                 // Muy importante para Vercel SPA
 })
