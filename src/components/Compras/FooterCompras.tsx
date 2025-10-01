@@ -1,5 +1,5 @@
 import { useComprasStore } from "../../store/comprasStore";
-import { formatearPrecio2 } from "@/utils/formateo";
+import { formatearPrecio2 } from "@/utils/Formateo";
 import { motion } from "framer-motion";
 
 

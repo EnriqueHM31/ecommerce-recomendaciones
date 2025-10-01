@@ -7,7 +7,7 @@ import {
     formatearFecha,
     formatearPrecio2,
     tranformarStatus
-} from "@/utils/formateo";
+} from "@/utils/Formateo";
 import PdfFactura from "../Pago/PDFFactura";
 
 interface PedidoProps {

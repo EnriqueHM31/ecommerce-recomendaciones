@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { FaCalendarAlt, FaCheckCircle, FaClock, FaShoppingCart, FaUser } from "react-icons/fa";
 import type { PaymentSession } from "../../types/pago";
-import { formatearFecha, formatearPrecio2 } from "@/utils/formateo";
+import { formatearFecha, formatearPrecio2 } from "@/utils/Formateo";
 
 interface DetallesCompraProps {
     pedido: PaymentSession;
