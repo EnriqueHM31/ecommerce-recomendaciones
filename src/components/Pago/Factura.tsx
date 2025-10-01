@@ -3,7 +3,7 @@ import { FaCheckCircle, FaCreditCard, FaDirections, FaShoppingCart } from 'react
 import type { StripeLineItem } from '../../types/pago';
 import type { CheckoutSession } from '../../types/session';
 import { containerAnimacion, itemAnimacion } from '../../utils/animaciones';
-import { formatearFecha, formatearPrecio2 } from '../..@/utils/formateo';
+import { formatearFecha, formatearPrecio2 } from '@/utils/formateo';
 
 
 

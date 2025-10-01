@@ -4,7 +4,7 @@ import { FaTimes } from "react-icons/fa";
 import { toast } from "sonner";
 import { useCategoriasStore } from "../../store/categoriasStore";
 import { useTecnicosStore } from "../../store/tecnicosStore";
-import { formatPrecio, isValidUrl } from "../..@/utils/formateo";
+import { formatPrecio, isValidUrl } from "@/utils/formateo";
 import { useCartStore } from "../../store/cartStore";
 import { mapProductos } from "../../adapters/productos";
 
@@ -75,7 +75,6 @@ export default function CrearProductoModal({ isOpen, onClose }: ModalProps) {
         setAlmacenamientos(almacenamientos);
         setRamOptions(ramOptions);
 
-        console.log({ productosBase, variantes, colores, almacenamientos, ramOptions });
     }, [tecnicos, categoriasStore]);
 
 

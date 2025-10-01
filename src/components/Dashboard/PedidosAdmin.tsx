@@ -4,7 +4,7 @@ import { FaCheck, FaEye, FaFilter, FaSearch, FaTimes } from 'react-icons/fa';
 import { useComprasStore } from '../../store/comprasStore';
 import type { Pedido } from '../../types/pago';
 
-import { colorEstado, transformarEstado } from '../..@/utils/formateo';
+import { colorEstado, transformarEstado } from '@/utils/formateo';
 
 const PedidosAdmin = () => {
     const { todosPedidosUsuarios, fetchTodosPedidos } = useComprasStore();
