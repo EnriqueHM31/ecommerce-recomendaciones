@@ -5,9 +5,10 @@ import { useComprasStore } from '../../store/comprasStore';
 import type { Pedido } from '../../types/pago';
 
 import { colorEstado, transformarEstado } from '@/utils/Formateo';
+import { toast } from 'sonner';
 
 const PedidosAdmin = () => {
-    const { todosPedidosUsuarios, fetchTodosPedidos } = useComprasStore();
+    const { todosPedidosUsuarios, fetchTodosPedidos, updateStatusPedido } = useComprasStore();
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -32,20 +33,15 @@ const PedidosAdmin = () => {
 
     const statusOptions = [
         { value: '', label: 'Todos los estados' },
-        { value: 'pagado', label: 'Pagado' },
         { value: 'pendiente', label: 'Pendiente' },
+        { value: 'enviado', label: 'Enviado' },
         { value: 'cancelado', label: 'Cancelado' },
-        { value: 'fallido', label: 'Fallido' }
     ];
 
     const handleViewOrder = (order: Pedido) => {
         setSelectedOrder(order);
     };
 
-    const handleUpdateStatus = (orderId: string, newStatus: string) => {
-        // TODO: Implementar actualización de estado
-        console.log('handleUpdateStatus', orderId, newStatus);
-    };
 
     const getTotalRevenue = () => {
         return todosPedidosUsuarios
@@ -57,8 +53,41 @@ const PedidosAdmin = () => {
         return todosPedidosUsuarios.filter(order => order.estado === status).length;
     };
 
+    const handleUpdateEnviado = async (orderId: string) => {
+
+        const toastId = toast.loading('Enviando pedido...');
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API}/api/pedidos/status/${orderId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    nuevo_estado: 'enviado'
+                })
+            })
+
+            if (!response.ok) {
+                toast.error('Error al enviar pedido', { id: toastId });
+                throw new Error("Error al enviar pedido");
+            }
+
+            const { data } = await response.json();
+
+            const { estado_nuevo, pedido_id } = data;
+
+            updateStatusPedido(pedido_id, estado_nuevo);
+            toast.success('Pedido ha sido actualizado', { id: toastId });
+            setSelectedOrder(null);
+        } catch (err) {
+            console.error('Error al enviar pedido', err);
+            toast.error('Error al enviar pedido', { id: toastId });
+        }
+
+    };
+
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 scrollbar-none">
             {/* Header */}
             <div>
                 <h1 className="text-3xl font-bold text-theme-primary mb-2">
@@ -75,7 +104,7 @@ const PedidosAdmin = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
+                    className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 scrollbar-none"
                 >
                     <div className="flex items-center justify-between">
                         <div>
@@ -179,15 +208,15 @@ const PedidosAdmin = () => {
             </div>
 
             {/* Orders Table */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200">
                 {isLoading ? (
                     <div className="p-8 text-center">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-theme-primary mx-auto mb-4"></div>
                         <p className="text-gray-600">Cargando pedidos...</p>
                     </div>
                 ) : (
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
+                    <div className="overflow-x-auto scrollbar-none  rounded-xl p-2 overflow-visible">
+                        <table className="w-full ">
                             <thead className="bg-gray-50 border-b border-gray-200">
                                 <tr>
                                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -207,7 +236,7 @@ const PedidosAdmin = () => {
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
+                            <tbody className="bg-white divide-y divide-gray-200 ">
                                 {filteredOrders.map((order, index) => (
                                     <motion.tr
                                         key={order.id}
@@ -234,41 +263,15 @@ const PedidosAdmin = () => {
                                             ${order.total.toLocaleString()}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${colorEstado(order.estado)}`}>
+                                            <span className={`inline-flex px-3 py-2 text-sm font-medium rounded-full ${colorEstado(order.estado)}`}>
                                                 {transformarEstado(order.estado)}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <div className="flex space-x-2">
-                                                <motion.button
-                                                    whileHover={{ scale: 1.1 }}
-                                                    whileTap={{ scale: 0.9 }}
-                                                    onClick={() => handleViewOrder(order)}
-                                                    className="text-blue-600 hover:text-blue-900 p-1"
-                                                >
-                                                    <FaEye className="w-4 h-4" />
-                                                </motion.button>
-                                                {order.estado === 'confirmado' && (
-                                                    <motion.button
-                                                        whileHover={{ scale: 1.1 }}
-                                                        whileTap={{ scale: 0.9 }}
-                                                        onClick={() => handleUpdateStatus(order.id, 'paid')}
-                                                        className="text-green-600 hover:text-green-900 p-1"
-                                                    >
-                                                        <FaCheck className="w-4 h-4" />
-                                                    </motion.button>
-                                                )}
-                                                {order.estado === 'cancelado' && (
-                                                    <motion.button
-                                                        whileHover={{ scale: 1.1 }}
-                                                        whileTap={{ scale: 0.9 }}
-                                                        onClick={() => handleUpdateStatus(order.id, 'canceled')}
-                                                        className="text-red-600 hover:text-red-900 p-1"
-                                                    >
-                                                        <FaTimes className="w-4 h-4" />
-                                                    </motion.button>
-                                                )}
-                                            </div>
+                                        <td>
+                                            <button onClick={() => handleViewOrder(order)} className="flex items-center  px-4 py-2 text-sm text-gray-100 hover:bg-gray-100 bg-theme-accent text-theme-primary rounded-2xl">
+                                                <FaEye className="w-4 h-4 mr-2" />
+                                                Ver pedido
+                                            </button>
                                         </td>
                                     </motion.tr>
                                 ))}
@@ -302,12 +305,11 @@ const PedidosAdmin = () => {
                                     <label className="text-sm font-medium text-gray-500">ID del Pedido</label>
                                     <p className="text-sm text-gray-900">{selectedOrder.id}</p>
                                 </div>
-                                <div>
+                                <div className='flex flex-col'>
                                     <label className="text-sm font-medium text-gray-500">Estado</label>
-                                    <span className={` px-2 py-1 text-xs font-medium rounded-full ${colorEstado(selectedOrder.estado)}`}>
-                                        <br />
+                                    <p className="text-sm text-gray-900">
                                         {transformarEstado(selectedOrder.estado)}
-                                    </span>
+                                    </p>
                                 </div>
                                 <div>
                                     <label className="text-sm font-medium text-gray-500">Cliente</label>
@@ -328,6 +330,17 @@ const PedidosAdmin = () => {
                                 </div>
                             )}
                         </div>
+
+                        {
+                            selectedOrder.estado !== "enviado" && (
+
+                                <div className='mt-4 flex items-center justify-end'>
+                                    <button className=' bg-green-600 text-theme-primary rounded-2xl py-3 cursor-pointer px-4 text-sm hover:bg-theme-accent-dark font-bold hover:scale-105 duration-300 transition-transform' onClick={() => handleUpdateEnviado(selectedOrder.id)}>
+                                        Marcar como enviado
+                                    </button>
+                                </div>
+                            )
+                        }
                     </motion.div>
                 </div>
             )}

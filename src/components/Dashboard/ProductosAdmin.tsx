@@ -276,23 +276,23 @@ const ProductosAdmin = () => {
                                         </td>
 
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <div className="flex space-x-2">
+                                            <div className=" space-x-2 flex items-center justify-center gap-3">
                                                 <motion.button
                                                     whileHover={{ scale: 1.1 }}
                                                     whileTap={{ scale: 0.9 }}
                                                     onClick={() => handleEditProduct(product)}
-                                                    className="text-blue-600 hover:text-blue-900 p-1"
+                                                    className="text-blue-600 hover:text-blue-900 p-1 cursor-pointer"
                                                 >
-                                                    <FaEdit className="w-4 h-4" />
+                                                    <FaEdit className="size-6" />
                                                 </motion.button>
                                                 <motion.button
                                                     whileHover={{ scale: 1.1 }}
                                                     whileTap={{ scale: 0.9 }}
                                                     onClick={() => handleToggleProduct(product)}
-                                                    className=" p-1"
+                                                    className=" p-1 cursor-pointer"
                                                 >
                                                     {
-                                                        product.active ? <FaTrash className="w-4 h-4 text-red-600 hover:text-red-900" /> : <FaCheckCircle className="w-4 h-4 text-green-600 hover:text-green-900" />
+                                                        product.active ? <FaTrash className="size-6 text-red-600 hover:text-red-900" /> : <FaCheckCircle className="size-6 text-green-600 hover:text-green-900" />
                                                     }
 
                                                 </motion.button>

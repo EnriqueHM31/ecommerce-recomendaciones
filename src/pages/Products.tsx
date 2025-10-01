@@ -9,9 +9,11 @@ import FiltrosBusqueda from '../components/Productos/FiltrosBusqueda';
 import { useCartStore } from '../store/cartStore';
 import SkeletonCard from '../components/Productos/Skeleton';
 import { useEffect, useState } from 'react';
+import { useCategoriasStore } from '@/store/categoriasStore';
 
 export default function Products() {
     const { productosAgrupados, fetchProductosActivos, fetchProductos } = useCartStore();
+    const { fetchCategorias } = useCategoriasStore();
     const AsideFiltros = useToggle();
 
     const handleCerrarFiltros = AsideFiltros.close;
@@ -26,6 +28,7 @@ export default function Products() {
     useEffect(() => {
         fetchProductos();
         fetchProductosActivos();
+        fetchCategorias();
     }, []);
 
 

@@ -1,16 +1,13 @@
 import { motion } from "framer-motion";
 import { IoClose } from "react-icons/io5";
 import { useCartStore } from "../../store/cartStore";
-const CATEGORIAS = [
-    'Smartphones',
-    'Laptops',
-    'Tablets',
-    'Accesorios',
-];
+import { useCategoriasStore } from "@/store/categoriasStore";
+
 
 export default function Filtros({ handleCerrarFiltros }: { handleCerrarFiltros: () => void }) {
 
     const { categoriasSeleccionadas, filtrarCategoria } = useCartStore();
+    const { categorias } = useCategoriasStore();
     return (
         <>
 
@@ -34,16 +31,16 @@ export default function Filtros({ handleCerrarFiltros }: { handleCerrarFiltros: 
             >
                 <h2 className="text-2xl font-semibold mt-8">Filtros por categoría</h2>
                 <ul className="flex flex-col gap-6 my-8">
-                    {CATEGORIAS.map((cat, index) => (
+                    {categorias.map((cat, index) => (
                         <li key={index}>
                             <label className="flex items-center gap-2 cursor-pointer">
                                 <label className="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" className="sr-only peer" value="" onChange={(e) => filtrarCategoria({ categoria: cat, checked: e.target.checked })} checked={categoriasSeleccionadas.find(c => c === cat) ? true : false} />
+                                    <input type="checkbox" className="sr-only peer" value="" onChange={(e) => filtrarCategoria({ categoria: cat.nombre, checked: e.target.checked })} checked={categoriasSeleccionadas.find(c => c === cat.nombre) ? true : false} />
                                     <div
                                         className="group peer bg-white rounded-full duration-300 w-10 h-5 ring-2 ring-gray-500 after:duration-300 after:bg-gray-500 peer-checked:after:bg-green-500 peer-checked:ring-green-500 after:rounded-full after:absolute after:h-4 after:w-4 after:top-[2px] after:left-1 after:flex after:justify-center after:items-center peer-checked:after:translate-x-4 peer-hover:after:scale-95"
                                     ></div>
                                 </label>
-                                <span>{cat}</span>
+                                <span>{cat.nombre}</span>
                             </label>
                         </li>
                     ))}

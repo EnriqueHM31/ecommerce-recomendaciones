@@ -30,6 +30,8 @@ interface ComprasStore {
     nextPage: () => void;
     prevPage: () => void;
     resetPedidos: () => void;
+
+    updateStatusPedido: (id: string, estado: "enviado" | "cancelado" | "entregado" | "fallido" | "confirmado") => void;
 }
 
 export const useComprasStore = create<ComprasStore>()((set, get) => ({
@@ -162,4 +164,18 @@ export const useComprasStore = create<ComprasStore>()((set, get) => ({
             loading: false,
             error: null,
         }),
+    updateStatusPedido: (id: string, estado: "enviado" | "cancelado" | "entregado" | "fallido" | "confirmado") => {
+
+        const { todosPedidosUsuarios } = get();
+
+        const pedidos = todosPedidosUsuarios.map((pedido) =>
+            pedido.id === id ? { ...pedido, estado } : pedido
+        );
+
+        set({ todosPedidosUsuarios: pedidos as Pedido[] });
+
+    },
+
+
+
 }));

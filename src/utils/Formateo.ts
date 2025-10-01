@@ -75,11 +75,11 @@ export const transformarEstado = (status: string) => {
 }
 
 export const colorEstado = (status: string) => {
-    return status === "pendiente" ? "text-blue-700 border-blue-200"
-        : status === "confirmado" ? "text-green-700 border-green-200"
-            : status === "enviado" ? "text-green-700 border-green-200"
-                : status === "entregado" ? "text-green-700 border-green-200"
-                    : status === "cancelado" ? "text-red-700 border-red-200"
+    return status === "pendiente" ? "bg-orange-500 text-white border-blue-200"
+        : status === "confirmado" ? "bg-blue-600 text-white border-green-200"
+            : status === "enviado" ? "bg-green-600 text-white border-green-200"
+                : status === "entregado" ? " bg-ambar-300 text-white border-green-200"
+                    : status === "cancelado" ? "bg-red-300  text-white border-red-200"
                         : "text-yellow-700 border-yellow-200";
 }
 

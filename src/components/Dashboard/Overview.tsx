@@ -143,7 +143,7 @@ const Overview = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: 0.2 }}
-                    className="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
+                    className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-full"
                 >
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">
                         Pedidos Recientes
