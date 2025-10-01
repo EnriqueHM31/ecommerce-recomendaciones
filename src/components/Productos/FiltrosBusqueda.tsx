@@ -13,6 +13,7 @@ export default function FiltrosBusqueda({ handleAbrirFiltros }: FiltrosBusquedaP
     const { eliminarCategoriaFiltro, buscarProducto, categoriasSeleccionadas, productosAgrupados } = useCartStore();
 
 
+
     return (
         <>
             <div className="max-w-7xl mx-auto px-3">
@@ -49,7 +50,7 @@ export default function FiltrosBusqueda({ handleAbrirFiltros }: FiltrosBusquedaP
                         </div>
                     </div>
                     <div className="relative">
-                        <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-theme-secondary" />
+                        <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-theme-primary" />
                         <input
                             type="text"
                             placeholder="Buscar productos..."

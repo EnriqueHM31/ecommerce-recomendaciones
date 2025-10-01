@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { obtenerProductos, obtenerProductosTop } from '../services/productos';
+import { obtenerProductos, obtenerProductosActivos, obtenerProductosTop } from '../services/productos';
 import type { CartStore, Producto } from '../types/productos';
 import { agruparProductos } from '../utils/productos';
 import { toast } from 'sonner';
@@ -796,14 +796,36 @@ export const useCartStore = create<CartStore>()(
                 const productosMezclados = shuffleArray(productosDB);
 
 
-                set({ products: productosMezclados, productFiltrados: productosAdaptados.flat(), productosPlanos, productosAgrupados: productosMezclados.flat() });
+                set({ products: productosMezclados, productFiltrados: productosAdaptados.flat(), productosPlanos });
             },
+
+            fetchProductosActivos: async () => {
+                const { success, message, data } = await obtenerProductosActivos();
+
+                if (!success) {
+                    console.error("Error al cargar productos:", message);
+                    return;
+                }
+
+                const productosDB = mapProductos(data);
+
+                const productosAdaptados = agruparProductos(productosDB);
+
+                const productosMezclados = shuffleArray(productosAdaptados);
+
+
+                set({ productosAgrupados: productosMezclados.flat() });
+            },
+
             buscarProducto: (query: string) => {
                 set({ query }); // guardamos la búsqueda en el estado
 
                 const { products, categoriasSeleccionadas } = get();
 
-                const filtrados = products.filter(p => {
+                const productsActivos = products.filter(p => Boolean(p.active));
+                console.log({ productsActivos });
+
+                const filtrados = productsActivos.filter(p => {
                     // --- Categorías ---
                     const categoriasSinRecomendados = categoriasSeleccionadas.filter(c => c !== "Recomendados");
 
@@ -839,7 +861,9 @@ export const useCartStore = create<CartStore>()(
 
                 const { products, query } = get();
 
-                const filtrados = products.filter(p => {
+                const productsActivos = products.filter(p => Boolean(p.active));
+
+                const filtrados = productsActivos.filter(p => {
                     // --- Categorías ---
                     const categoriasSinRecomendados = nuevasCategorias.filter(c => c !== "Recomendados");
 
@@ -895,6 +919,13 @@ export const useCartStore = create<CartStore>()(
                 set((state) => ({
                     products: [...state.products, product],
                 })),
+
+            deleteProductDashboard: (id: number) =>
+                set((state) => ({
+                    products: state.products.map((p) =>
+                        p.id === id ? { ...p, active: !p.active } : p
+                    ),
+                }))
 
 
         }),

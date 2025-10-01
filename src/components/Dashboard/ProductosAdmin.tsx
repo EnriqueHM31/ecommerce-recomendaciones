@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { FaPlus, FaEdit, FaTrash, FaSearch, FaFilter } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaTrash, FaSearch, FaFilter, FaCheckCircle } from 'react-icons/fa';
 import { useCartStore } from '../../store/cartStore';
 import type { Producto } from '../../types/productos';
 import { useToggle } from '../../hooks/Open/open';
 import CrearProductoModal from './FormularioProducto';
 import { useTecnicosStore } from '../../store/tecnicosStore';
+import { toast } from 'sonner';
 
 const ProductosAdmin = () => {
-    const { products, fetchProductos } = useCartStore();
+    const { products, fetchProductos, deleteProductDashboard } = useCartStore();
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -31,12 +32,18 @@ const ProductosAdmin = () => {
     }, [fetchProductos]);
 
     // Filtrar productos
-    const filteredProducts = products.filter(product => {
-        const matchesSearch = product.producto.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            product.descripcion.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === '' || product.categoria === selectedCategory;
-        return matchesSearch && matchesCategory;
-    });
+    const filteredProducts = useMemo(() => {
+        return products.filter(product => {
+            const matchesSearch =
+                product.producto.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                product.descripcion.toLowerCase().includes(searchTerm.toLowerCase());
+
+            const matchesCategory =
+                selectedCategory === '' || product.categoria === selectedCategory;
+
+            return matchesSearch && matchesCategory;
+        });
+    }, [products, searchTerm, selectedCategory]);
 
     // Obtener categorías únicas
     const categories = [...new Set(products.map(product => product.categoria))];
@@ -46,18 +53,73 @@ const ProductosAdmin = () => {
         console.log('Editar producto:', product);
     };
 
-    const handleDeleteProduct = (product: Producto) => {
-        // TODO: Implementar eliminación de producto
-        console.log('Eliminar producto:', product);
+    const handleToggleProduct = async (product: Producto) => {
+
+        const toastId = toast.loading('Actualizando...');
+        try {
+            // 1️⃣ Determinar el método: PATCH en lugar de DELETE, porque solo actualizaremos 'active'
+            const response = await fetch(`${import.meta.env.VITE_API}/api/create/productos-sku/${product.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ active: !product.active }), // invertimos el valor de active
+            });
+
+            if (!response.ok) {
+                toast.error('Error al actualizar el producto', {
+                    id: toastId,
+                });
+                return;
+            }
+
+            const { data } = await response.json();
+            const { id } = data[0];
+
+            console.log('Producto toggle:', data);
+
+            // 2️⃣ Actualizar el estado en el dashboard
+            deleteProductDashboard(id); // tu función de Zustand toggleActive
+
+            // 3️⃣ Mensaje según acción
+            toast.success(product.active ? 'Producto desactivado' : 'Producto activado', {
+                id: toastId,
+            });
+
+            console.log('Producto toggle:', product);
+        } catch (error) {
+            console.error('Error al toggle product:', error, {
+                id: toastId,
+            });
+            toast.error('Error al actualizar el producto');
+        }
     };
 
+
     const handleAddProduct = () => {
-        // TODO: Implementar agregar producto
         openAgregar();
         console.log('Agregar nuevo producto');
     };
+    const filteredAndSortedProducts = useMemo(() => {
+        return [...products]
+            .filter(product => {
+                const matchesSearch =
+                    product.producto.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    product.descripcion.toLowerCase().includes(searchTerm.toLowerCase());
 
+                const matchesCategory =
+                    selectedCategory === '' || product.categoria === selectedCategory;
 
+                return matchesSearch && matchesCategory;
+            })
+            .sort((a, b) => {
+                const nameCompare = a.producto.localeCompare(b.producto);
+                if (nameCompare !== 0) return nameCompare; // Si los nombres son diferentes
+                return a.id - b.id; // Si los nombres son iguales, ordenar por id
+            });
+    }, [products, searchTerm, selectedCategory]);
+
+    console.log({ filteredAndSortedProducts });
     return (
         <div className="space-y-6">
             {
@@ -157,7 +219,7 @@ const ProductosAdmin = () => {
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {filteredProducts.map((product, index) => (
+                                {filteredAndSortedProducts.map((product, index) => (
                                     <motion.tr
                                         key={product.id}
                                         initial={{ opacity: 0, y: 20 }}
@@ -197,7 +259,7 @@ const ProductosAdmin = () => {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${product.stock > 10
-                                                ? 'bg-green-100 text-green-800'
+                                                ? 'bg-yellow-100 text-yellow-800'
                                                 : product.stock > 0
                                                     ? 'bg-yellow-100 text-yellow-800'
                                                     : 'bg-red-100 text-red-800'
@@ -206,6 +268,17 @@ const ProductosAdmin = () => {
                                                     product.stock > 0 ? 'Stock Bajo' : 'Sin Stock'}
                                             </span>
                                         </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            <span
+                                                className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${product.active
+                                                    ? 'bg-green-100 text-green-800' // Producto activo
+                                                    : 'bg-gray-200 text-gray-500'   // Producto inactivo
+                                                    }`}
+                                            >
+                                                {product.active ? 'Activo' : 'Inactivo'}
+                                            </span>
+                                        </td>
+
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <div className="flex space-x-2">
                                                 <motion.button
@@ -219,10 +292,13 @@ const ProductosAdmin = () => {
                                                 <motion.button
                                                     whileHover={{ scale: 1.1 }}
                                                     whileTap={{ scale: 0.9 }}
-                                                    onClick={() => handleDeleteProduct(product)}
-                                                    className="text-red-600 hover:text-red-900 p-1"
+                                                    onClick={() => handleToggleProduct(product)}
+                                                    className=" p-1"
                                                 >
-                                                    <FaTrash className="w-4 h-4" />
+                                                    {
+                                                        product.active ? <FaTrash className="w-4 h-4 text-red-600 hover:text-red-900" /> : <FaCheckCircle className="w-4 h-4 text-green-600 hover:text-green-900" />
+                                                    }
+
                                                 </motion.button>
                                             </div>
                                         </td>

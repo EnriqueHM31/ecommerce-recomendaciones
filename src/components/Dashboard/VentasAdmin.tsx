@@ -95,8 +95,6 @@ const VentasAdmin = () => {
         });
     };
 
-    console.log({ datosVentas });
-
 
     const rangosTiempo = [
         { valor: '7', etiqueta: 'Últimos 7 días' },
@@ -111,28 +109,24 @@ const VentasAdmin = () => {
             valor: `$${datosVentas.ingresosTotales.toLocaleString()}`,
             icono: FaDollarSign,
             color: 'bg-green-500',
-            cambio: '+12.5%'
         },
         {
             titulo: 'Pedidos Totales',
             valor: datosVentas.totalPedidos.toString(),
             icono: FaShoppingCart,
             color: 'bg-blue-500',
-            cambio: '+8.3%'
         },
         {
             titulo: 'Valor Promedio',
             valor: `$${datosVentas.valorPromedioPedido.toLocaleString()}`,
             icono: FaChartLine,
             color: 'bg-purple-500',
-            cambio: '+5.2%'
         },
         {
             titulo: 'Tasa de Conversión',
             valor: `${datosVentas.tasaConversion.toFixed(1)}%`,
             icono: FaUsers,
             color: 'bg-orange-500',
-            cambio: '+2.1%'
         }
     ];
 
@@ -191,7 +185,6 @@ const VentasAdmin = () => {
                                 <div>
                                     <p className="text-sm font-medium text-gray-600 mb-1">{tarjeta.titulo}</p>
                                     <p className="text-2xl font-bold text-gray-900">{tarjeta.valor}</p>
-                                    <p className="text-sm text-green-600 mt-1">{tarjeta.cambio} vs período anterior</p>
                                 </div>
                                 <div className={`w-12 h-12 ${tarjeta.color} rounded-lg flex items-center justify-center`}>
                                     <Icono className="w-6 h-6 text-white" />

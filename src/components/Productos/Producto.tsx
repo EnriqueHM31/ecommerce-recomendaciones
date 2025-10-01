@@ -13,7 +13,7 @@ interface ProductosProps {
 }
 
 
-export default function Producto({ product, index }: ProductosProps) {
+export default function Producto({ product }: ProductosProps) {
 
     const navigate = useNavigate();
     const { addToCart, productFiltrados } = useCartStore();
@@ -28,14 +28,13 @@ export default function Producto({ product, index }: ProductosProps) {
         <>
             <motion.div
                 key={product.id}
-                initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.05 }}
-                whileHover={{
-                    y: -8,
-                    scale: 1.05,
-                    transition: { duration: 0.1 }
+                variants={{
+                    hidden: { opacity: 0, y: 50, scale: 0.9 },
+                    visible: { opacity: 1, y: 0, scale: 1 }
                 }}
+                initial="hidden"
+                animate="visible"
+                transition={{ duration: 0.5 }}
                 className="bg-secondary-dark border border-theme rounded-2xl p-6 shadow-theme hover:shadow-theme-dark transition-all duration-300 cursor-pointer flex flex-col justify-between"
                 onClick={() => navigate(`/products/${product.id}`)}
             >

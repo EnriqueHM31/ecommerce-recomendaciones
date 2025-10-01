@@ -26,6 +26,7 @@ export function mapProductos(productosRaw: ProductoRaw[]): Producto[] {
         almacenamiento: p.almacenamientos?.capacidad ?? "N/A",
         color: p.colores?.nombre ?? "Sin color",
         total_vendido: p.total_vendido ?? 0,
+        active: Boolean(p.active),
     }));
 }
 

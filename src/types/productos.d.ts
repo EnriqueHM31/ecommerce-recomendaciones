@@ -34,6 +34,7 @@ interface ProductoRaw {
     precio: string;
     stock: number;
     imagen_url: string;
+    active: boolean;
     productos_base: {
         id: number;
         nombre: string;
@@ -115,6 +116,7 @@ export interface Producto {
     sku: string;
     stock: number;
     total_vendido?: number;
+    active: boolean;
 }
 
 
@@ -171,6 +173,7 @@ export interface CartStore {
     buscarProducto: (query: string) => void;
     fetchProductosTop: () => Promise<void>;
     fetchProductos: () => Promise<void>;
+    fetchProductosActivos: () => Promise<void>;
     filtrarCategoria: ({ categoria, checked }: { categoria: string; checked: boolean }) => void;
     eliminarCategoriaFiltro: (categoria: string) => void;
 
@@ -180,4 +183,5 @@ export interface CartStore {
     getProductById: (id: number) => Product | undefined;
 
     addProductDashboard: (product: Producto) => void;
+    deleteProductDashboard: (id: number) => void;
 }
