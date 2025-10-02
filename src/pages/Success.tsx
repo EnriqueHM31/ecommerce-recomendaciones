@@ -1,3 +1,4 @@
+import { adaptPedidosToPaymentSessions } from "@/adapters/pedidos";
 import { BlobProvider } from "@react-pdf/renderer";
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
@@ -10,115 +11,63 @@ import Factura from '../components/Pago/Factura';
 import PdfFactura from '../components/Pago/PDFFactura';
 import FacturaSkeleton from '../components/Success/Skeleton';
 import { useNavegacion } from '../hooks/Navigate/navegacion';
-import { useUsuario } from '../hooks/Usuarios/Usuario';
 import { useCartStore } from '../store/cartStore';
 import type { PaymentSession } from '../types/pago';
-import type { CheckoutSession } from '../types/session';
 import { containerAnimacion, itemAnimacion } from '../utils/animaciones';
+import Loading from "@/components/Compras/Loading";
 
 export default function PaymentSuccess() {
-    const [sessionDetails, setSessionDetails] = useState<CheckoutSession | null>(null);
+    const [sessionDetails, setSessionDetails] = useState<PaymentSession | null>(null);
     const { handleRedirigirPagina } = useNavegacion();
     const { clearCart } = useCartStore();
-    const { user, isLoaded } = useUsuario();
     const idSession = useRef('');
-
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        const fetchSession = async () => {
+        const procesarPedido = async () => {
+            setIsLoading(true);
             try {
                 const urlParams = new URLSearchParams(window.location.search);
                 const sessionId = urlParams.get("session_id");
                 if (!sessionId) return;
 
-                const res = await fetch(`${import.meta.env.VITE_API}/api/compra/checkout-session?sessionId=${sessionId}`);
-                if (!res.ok) throw new Error("Error al obtener la sesión");
+                // Crear pedido
+                const crearRes = await fetch(`${import.meta.env.VITE_API}/api/crear-pedido`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ checkout_session_id: sessionId })
+                });
+                if (!crearRes.ok) throw new Error("Error al crear el pedido");
 
-                const { data } = await res.json();
+                // Traer pedido
+                const fetchRes = await fetch(`${import.meta.env.VITE_API}/api/compra/checkout-session?sessionId=${sessionId}`);
+                if (!fetchRes.ok) throw new Error("Error al obtener la sesión");
+
+                const { data } = await fetchRes.json();
+                const pedidoAdaptado = adaptPedidosToPaymentSessions([data])[0];
+
                 idSession.current = sessionId;
+                setSessionDetails(pedidoAdaptado);
 
-                setSessionDetails(data);
+                // Limpiar carrito
+                clearCart();
 
             } catch (err) {
-                console.error("Error al obtener detalles de sesión:", err);
+                console.error("Error en flujo de creación y fetch de pedido:", err);
+            } finally {
+                setIsLoading(false); // <-- Se asegura que siempre se desactive al final
             }
         };
-        fetchSession();
+
+        procesarPedido();
     }, []);
 
-    useEffect(() => {
-        if (!user || !sessionDetails || !isLoaded) return;
-
-        const ids = sessionDetails.metadata?.carrito ? JSON.parse(sessionDetails.metadata.carrito) : [];
-
-        async function crearPedido(sessionDetails: CheckoutSession) {
-            const response = await fetch(`${import.meta.env.VITE_API}/api/crear-pedido`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    user_id: user?.id, // ahora seguro que existe
-                    cart_items: sessionDetails.line_items.data.map((item, index) => ({
-                        id: ids[index].producto_id,
-                        quantity: ids[index].cantidad,
-                        price: item.price.unit_amount,
-                        amount_total: item.amount_total,
-                    })),
-                    direccion_envio: sessionDetails.customer_details?.address,
-                    checkout_session_id: idSession.current
-                })
-            });
-
-            if (!response.ok) throw new Error("Error al crear el pedido");
 
 
-
-        }
-
-        crearPedido(sessionDetails);
-    }, [sessionDetails, isLoaded, user]); // <--- agregamos user
-
-    if (!sessionDetails) return null;
-
-    const pedidoCreado: PaymentSession | null = {
-        id: sessionDetails?.id,
-        amount: sessionDetails?.amount_total.toString(),
-        currency: sessionDetails?.currency,
-        created: sessionDetails.created.toString(),
-        email: sessionDetails.customer_details?.email,
-        name: sessionDetails.customer_details?.name,
-        line_items: sessionDetails.line_items.data.map((item) => ({
-            id: item.id,
-            description: item.description,
-            quantity: item.quantity,
-            amount_total: item.amount_total,
-            currency: item.currency,
-            price: {
-                price: item.price.unit_amount,
-                product: {
-                    images: item.price.product.images,
-                    name: item.price.product.name,
-                    description: item.price.product.description,
-                }
-            }
-        })),
-        amount_total: sessionDetails.amount_total,
-        customer: {
-            address: {
-                city: sessionDetails.customer_details?.address?.city ?? "No disponible",
-                country: sessionDetails.customer_details?.address?.country ?? "No disponible",
-                line1: sessionDetails.customer_details?.address?.line1 ?? "No disponible",
-                line2: sessionDetails.customer_details?.address?.line2 ?? "No disponible",
-                postal_code: sessionDetails.customer_details?.address?.postal_code ?? "No disponible",
-                state: sessionDetails.customer_details?.address?.state ?? "No disponible",
-            },
-            email: sessionDetails.customer_details?.email ?? "No disponible",
-            name: sessionDetails.customer_details?.name ?? "No disponible",
-        },
-        status: sessionDetails.status
-
+    if (isLoading || !sessionDetails) {
+        return <Loading text="Cargando tu factura" />;
     }
+
 
 
 
@@ -133,7 +82,6 @@ export default function PaymentSuccess() {
                         initial="hidden"
                         animate="show"
                     >
-
                         <Factura sessionDetails={sessionDetails} />
 
                         {/* Botones */}
@@ -146,7 +94,7 @@ export default function PaymentSuccess() {
                                 </p>
                             </motion.div>
                             <motion.div className=" flex items-center justify-center w-full" variants={itemAnimacion(0.9)}>
-                                <BlobProvider document={<PdfFactura sessionDetails={pedidoCreado} />}>
+                                <BlobProvider document={<PdfFactura sessionDetails={sessionDetails} />}>
                                     {({ url }) => (
                                         <a
                                             href={url || "#"}

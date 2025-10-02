@@ -24,7 +24,7 @@ const Compras: React.FC = () => {
     } = useComprasStore();
 
     const { pedidosCargados, onOpenDetalles, pedidoSeleccionado, onCloseDetalles } = useMisCompras({ user });
-    if (loading || !pedidosCargados) return <Loading />;
+    if (loading || !pedidosCargados) return <Loading text="Cargando tus pedidos..." />;
 
     if (error) return <ErrorCompras />
 

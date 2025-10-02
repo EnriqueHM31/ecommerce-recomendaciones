@@ -1,4 +1,4 @@
-import type { PedidoRow, PedidoItem } from "@/types/compras";
+import type { PedidoItem, PedidoRow } from "@/types/compras";
 import type { LineItem, PaymentSession } from "@/types/pago";
 
 export function adaptPedidosToPaymentSessions(pedidos: PedidoRow[]): PaymentSession[] {
@@ -8,7 +8,7 @@ export function adaptPedidosToPaymentSessions(pedidos: PedidoRow[]): PaymentSess
             id: item.id.toString(),
             description: item.producto.productos_base.descripcion,
             quantity: item.cantidad,
-            amount_total: item.subtotal * item.cantidad,
+            amount_total: item.producto.precio * item.cantidad,
             currency: "MXN",
             price: {
                 price: item.precio_unitario,

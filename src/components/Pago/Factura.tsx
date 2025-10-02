@@ -1,13 +1,12 @@
+import { formatearFechaES, formatearPrecio, formatPrecio } from '@/utils/Formateo';
 import { motion } from 'framer-motion';
 import { FaCheckCircle, FaCreditCard, FaDirections, FaShoppingCart } from 'react-icons/fa';
-import type { StripeLineItem } from '../../types/pago';
-import type { CheckoutSession } from '../../types/session';
+import type { PaymentSession } from '../../types/pago';
 import { containerAnimacion, itemAnimacion } from '../../utils/animaciones';
-import { formatearFecha, formatearPrecio2 } from '@/utils/Formateo';
 
 
 
-export default function Factura({ sessionDetails }: { sessionDetails: CheckoutSession }) {
+export default function Factura({ sessionDetails }: { sessionDetails: PaymentSession }) {
     return (
         <>
             <div id="invoice" className="bg-gray-50 rounded-lg md:p-4 mb-6 text-left w-full">
@@ -43,19 +42,19 @@ export default function Factura({ sessionDetails }: { sessionDetails: CheckoutSe
                     <section className="text-sm flex flex-col lg:gap-2">
                         <div className="flex md:flex-row flex-col md:items-center gap-1 md:gap-4">
                             <span className="text-gray-600 md:flex-1">Nombre:</span>
-                            <span className="font-medium text-black md:flex-4 text-start flex-wrap">{sessionDetails?.customer_details?.name}</span>
+                            <span className="font-medium text-black md:flex-4 text-start flex-wrap">{sessionDetails.customer?.name}</span>
                         </div>
                         <div className="flex md:flex-row flex-col md:items-center gap-1 md:gap-4">
                             <span className="text-gray-600 md:flex-1">Email:</span>
-                            <span className="font-medium text-black md:flex-4 text-start flex-wrap">{sessionDetails?.customer_details?.email}</span>
+                            <span className="font-medium text-black md:flex-4 text-start flex-wrap">{sessionDetails.customer?.email}</span>
                         </div>
-                        <div className="flex md:flex-row flex-col md gap-1:md:gap-4">
+                        <div className="flex md:flex-row flex-col md:items-center gap-1 md:gap-4">
                             <span className="text-gray-600 md:flex-1">Monto:</span>
-                            <span className="font-medium text-black md:flex-4 text-start">{formatearPrecio2(Number(sessionDetails?.amount_total), sessionDetails?.currency)}</span>
+                            <span className="font-medium text-black md:flex-4 text-start">{formatPrecio((sessionDetails.amount_total))}</span>
                         </div>
                         <div className="flex md:flex-row flex-col md:items-center gap-1 md:gap-4">
                             <span className="text-gray-600 md:flex-1">Fecha:</span>
-                            <span className="font-medium text-black md:flex-4 text-start">{formatearFecha(sessionDetails?.created)}</span>
+                            <span className="font-medium text-black md:flex-4 text-start">{formatearFechaES(sessionDetails?.created)}</span>
                         </div>
                     </section>
                 </motion.div>
@@ -84,12 +83,12 @@ export default function Factura({ sessionDetails }: { sessionDetails: CheckoutSe
                                 </thead>
                                 <tbody>
                                     <tr className="bg-white">
-                                        <td className="px-4 py-2 text-black">{sessionDetails.customer_details?.address?.line1}</td>
-                                        <td className="px-4 py-2 text-black">{sessionDetails.customer_details?.address?.line2}</td>
-                                        <td className="px-4 py-2 text-black">{sessionDetails.customer_details?.address?.city}</td>
-                                        <td className="px-4 py-2 text-black">{sessionDetails.customer_details?.address?.state}</td>
-                                        <td className="px-4 py-2 text-black">{sessionDetails.customer_details?.address?.postal_code}</td>
-                                        <td className="px-4 py-2 text-black">{sessionDetails.customer_details?.address?.country}</td>
+                                        <td className="px-4 py-2 text-black">{sessionDetails.customer?.address?.line1}</td>
+                                        <td className="px-4 py-2 text-black">{sessionDetails.customer?.address?.line2}</td>
+                                        <td className="px-4 py-2 text-black">{sessionDetails.customer?.address?.city}</td>
+                                        <td className="px-4 py-2 text-black">{sessionDetails.customer?.address?.state}</td>
+                                        <td className="px-4 py-2 text-black">{sessionDetails.customer?.address?.postal_code}</td>
+                                        <td className="px-4 py-2 text-black">{sessionDetails.customer?.address?.country}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -122,7 +121,7 @@ export default function Factura({ sessionDetails }: { sessionDetails: CheckoutSe
 
                                 <tbody>
 
-                                    {sessionDetails?.line_items.data.map((item: StripeLineItem) => (
+                                    {sessionDetails?.line_items.map((item) => (
                                         <tr key={item.id} className="even:bg-gray-50">
                                             <td className="px-4 py-2 text-black flex items-center justify-center">
                                                 <motion.img src={item.price.product?.images[0] || "https://via.placeholder.com/150"} alt="producto" className="size-10 object-contain rounded-lg" />
@@ -138,12 +137,12 @@ export default function Factura({ sessionDetails }: { sessionDetails: CheckoutSe
                                             </td>
                                             <td className="px-4 py-2 text-right text-black">
                                                 <motion.div >
-                                                    {formatearPrecio2(item.amount_total, item.currency)}
+                                                    {formatearPrecio(item.price.price, item.currency)}
                                                 </motion.div>
                                             </td>
                                             <td className="px-4 py-2 text-right font-medium text-black">
                                                 <motion.div >
-                                                    {formatearPrecio2(item.amount_total, item.currency)}
+                                                    {formatearPrecio(item.amount_total, item.currency)}
                                                 </motion.div>
                                             </td>
 

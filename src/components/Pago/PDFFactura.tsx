@@ -24,7 +24,12 @@ const styles = StyleSheet.create({
     subtitle: { fontSize: 12, marginTop: 4, color: "#374151" },
 
     // SECCIONES
-    section: { marginBottom: 15, borderWidth: 1, borderColor: "#d1d5db", borderRadius: 6 },
+    section: {
+        marginBottom: 15,
+        borderWidth: 1,
+        borderColor: "#d1d5db",
+        borderRadius: 6
+    },
     sectionHeader: {
         backgroundColor: "#032b53",
         color: "#fff",
@@ -44,8 +49,16 @@ const styles = StyleSheet.create({
     value: { flex: 1 },
 
     // TABLA
-    table: { display: "flex", width: "auto" },
-    tableRow: { flexDirection: "row" },
+    table: {
+        display: "flex",
+        width: "auto",
+    },
+    tableRow: {
+        flexDirection: "row",
+        minHeight: 100,
+        // CLAVE: wrap permite que las filas se dividan entre páginas
+        wrap: false,
+    },
 
     tableColHeader: {
         flex: 1,
@@ -53,35 +66,32 @@ const styles = StyleSheet.create({
         color: "#fff",
         fontWeight: "bold",
         textAlign: "center",
-        padding: 5,
+        padding: 10,
     },
 
     tableCol: {
         flex: 1,
         borderWidth: 1,
         borderColor: "#032b53",
-        alignItems: "center",       // centra horizontal
-        justifyContent: "center",   // centra vertical
-        padding: 5,
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 10,
         display: "flex",
     },
 
     image: {
-        width: 40,
-        height: 40,
+        width: 80,
+        height: 80,
         objectFit: "contain",
     },
 });
-
-
 
 interface PdfFacturaProps {
     sessionDetails: PaymentSession;
 }
 
 export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => (
-
-    <Document  >
+    <Document>
         <Page style={styles.page}>
             {/* Header */}
             <View style={styles.headerBox}>
@@ -146,11 +156,11 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => (
             </View>
 
             {/* Tabla de productos */}
-            <View style={styles.section}>
+            <View style={styles.section} wrap>
                 <Text style={styles.sectionHeader}>Productos</Text>
                 <View style={styles.table}>
-                    {/* Header */}
-                    <View style={styles.tableRow}>
+                    {/* Header - se repite en cada página */}
+                    <View style={styles.tableRow} fixed>
                         <Text style={styles.tableColHeader}>Imagen</Text>
                         <Text style={styles.tableColHeader}>Producto</Text>
                         <Text style={styles.tableColHeader}>Cantidad</Text>
@@ -160,7 +170,7 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => (
 
                     {/* Filas */}
                     {sessionDetails.line_items.map((item) => (
-                        <View style={styles.tableRow} key={item.id}>
+                        <View style={styles.tableRow} key={item.id} wrap={false}>
                             <View style={styles.tableCol}>
                                 <Image
                                     src={item.price?.product?.images?.[0] ?? "https://via.placeholder.com/50"}
@@ -169,7 +179,8 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => (
                             </View>
                             <View style={styles.tableCol}>
                                 <Text>
-                                    {item.price?.product?.name} <br />
+                                    {item.price?.product?.name}
+                                    {"\n"}
                                     {item.description}
                                 </Text>
                             </View>
@@ -194,7 +205,7 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => (
                 </View>
             </View>
         </Page>
-    </Document >
+    </Document>
 );
 
 export default PdfFactura;
