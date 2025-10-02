@@ -51,6 +51,43 @@ export const formatearFecha = (timestamp: number) => {
     });
 };
 
+export function formatearFechaES(fechaStr: string): string {
+    // Separar fecha y hora
+    const [fechaParte, horaParte] = fechaStr.split(", ");
+
+    // Separar día, mes y año
+    const [dia, mes, anio] = fechaParte.split("/").map(Number);
+
+    // Convertir hora a 24h
+    const data = horaParte
+        .replace("a.m.", "AM")
+        .replace("p.m.", "PM")
+        .split(/[: ]/)
+        .map(Number);
+
+    let hora = data[0];
+    const minuto = data[1];
+    const segundo = data[2];
+
+    if (horaParte.includes("p.m.") && hora !== 12) hora += 12;
+    if (horaParte.includes("a.m.") && hora === 12) hora = 0;
+
+    // Crear objeto Date
+    const fecha = new Date(anio, mes - 1, dia, hora, minuto, segundo);
+
+    // Formatear fecha en español
+    const opcionesFecha: Intl.DateTimeFormatOptions = {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+    };
+
+    const fechaFormateada = `${fecha.toLocaleDateString("es-ES", opcionesFecha)}, ${fecha.getHours()}:${fecha.getMinutes().toString().padStart(2, "0")}`;
+
+    return fechaFormateada;
+}
+
+
 export const tranformarStatus = (status: string) => {
     return status === "paid" ? "Pagado"
         : status === "canceled" ? "Cancelado"

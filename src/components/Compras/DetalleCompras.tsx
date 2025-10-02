@@ -19,7 +19,7 @@ export default function DetalleCompra({ pedidoSeleccionado, onCloseDetalles }: D
                     exit={{ opacity: 0 }}
                 >
                     <motion.div
-                        className="bg-theme-secondary rounded-xl shadow-2xl max-w-full md:max-w-4xl w-full p-4 md:p-16 relative md:max-h-[80vh] max-h-screen h-[80vh] md:h-auto overflow-x-auto"
+                        className="bg-theme-secondary rounded-xl shadow-2xl max-w-full md:max-w-4xl w-full p-4 md:p-16 relative md:max-h-[80vh] max-h-screen h-[80vh] md:h-auto overflow-x-auto scrollbar-none"
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}

@@ -1,8 +1,8 @@
 // utils/pdfGenerator.tsx
+import { formatearFechaES, formatearPrecio } from "@/utils/Formateo";
 import { Document, Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import React from "react";
 import type { PaymentSession } from "../../types/pago";
-import { formatearFecha, formatearPrecio2 } from "@/utils/Formateo";
 
 const styles = StyleSheet.create({
     page: { padding: 20, fontSize: 12, fontFamily: "Helvetica" },
@@ -104,12 +104,12 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => (
                     <View style={styles.row}>
                         <Text style={styles.label}>Monto:</Text>
                         <Text style={styles.value}>
-                            {formatearPrecio2(Number(sessionDetails.amount_total), sessionDetails.currency)}
+                            {formatearPrecio(Number(sessionDetails.amount_total), sessionDetails.currency)}
                         </Text>
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.label}>Fecha:</Text>
-                        <Text style={styles.value}>{formatearFecha(Number(sessionDetails.created))}</Text>
+                        <Text style={styles.value}>{formatearFechaES(sessionDetails.created)}</Text>
                     </View>
                 </View>
             </View>
@@ -169,8 +169,8 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => (
                             </View>
                             <View style={styles.tableCol}>
                                 <Text>
+                                    {item.price?.product?.name} <br />
                                     {item.description}
-
                                 </Text>
                             </View>
                             <View style={styles.tableCol}>
@@ -178,15 +178,15 @@ export const PdfFactura: React.FC<PdfFacturaProps> = ({ sessionDetails }) => (
                             </View>
                             <View style={styles.tableCol}>
                                 <Text>
-                                    {formatearPrecio2(
-                                        item.amount_total / item.quantity,
+                                    {formatearPrecio(
+                                        item.price.price,
                                         item.currency
                                     )}
                                 </Text>
                             </View>
                             <View style={styles.tableCol}>
                                 <Text>
-                                    {formatearPrecio2(item.amount_total, item.currency)}
+                                    {formatearPrecio(item.price.price * item.quantity, item.currency)}
                                 </Text>
                             </View>
                         </View>

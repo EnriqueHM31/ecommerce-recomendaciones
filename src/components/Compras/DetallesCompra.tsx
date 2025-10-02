@@ -1,7 +1,7 @@
+import { formatearFechaES, formatearPrecio } from "@/utils/Formateo";
 import { motion } from "framer-motion";
 import { FaCalendarAlt, FaCheckCircle, FaClock, FaShoppingCart, FaUser } from "react-icons/fa";
 import type { PaymentSession } from "../../types/pago";
-import { formatearFecha, formatearPrecio2 } from "@/utils/Formateo";
 
 interface DetallesCompraProps {
     pedido: PaymentSession;
@@ -10,7 +10,7 @@ interface DetallesCompraProps {
 export default function DetallesCompra({ pedido }: DetallesCompraProps) {
     return (
         <motion.div
-            className="rounded-2xl shadow-xl md:p-6 py-8 px-3 flex flex-col gap-6 bg-theme-secondary"
+            className="rounded-2xl shadow-xl md:p-6 py-8 px-3 flex flex-col gap-6 bg-theme-secondary scrollbar-none"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
@@ -36,7 +36,7 @@ export default function DetallesCompra({ pedido }: DetallesCompraProps) {
                         <FaCalendarAlt className="text-gray-600" size={18} />
                         <span className="text-sm text-gray-700">
                             <strong>Fecha:</strong>{" "}
-                            {formatearFecha(Number(pedido.created)).split(",")[0]}
+                            {formatearFechaES(pedido.created).split(",")[0]}
                         </span>
                     </div>
                     <div className="flex items-center gap-3">
@@ -57,7 +57,7 @@ export default function DetallesCompra({ pedido }: DetallesCompraProps) {
                         <FaClock className="text-gray-600" size={18} />
                         <span className="text-sm text-gray-700">
                             <strong>Hora:</strong>{" "}
-                            {formatearFecha(Number(pedido.created)).split(",")[1]}
+                            {formatearFechaES(pedido.created).split(",")[1]}
                         </span>
                     </div>
                 </div>
@@ -72,6 +72,7 @@ export default function DetallesCompra({ pedido }: DetallesCompraProps) {
                             <th className="px-3 py-2 text-left">Producto</th>
                             <th className="px-3 py-2">Cantidad</th>
                             <th className="px-3 py-2">Precio</th>
+                            <th className="px-3 py-2">Subtotal</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -89,12 +90,19 @@ export default function DetallesCompra({ pedido }: DetallesCompraProps) {
                                         />
                                     </div>
                                 </td>
-                                <td className="px-3 py-3">{item.description}</td>
+                                <td className="px-3 py-3">
+                                    {item.price.product.name} <br />
+                                    {item.description}
+                                </td>
                                 <td className="px-3 py-3 text-center">{item.quantity}</td>
                                 <td className="px-3 py-3 text-center">
-                                    {formatearPrecio2(item.amount_total, item.currency)}
+                                    {formatearPrecio(item.price.price, item.currency)}
+                                </td>
+                                <td className="px-3 py-3 text-center">
+                                    {formatearPrecio((item.price.price * item.quantity), item.currency)}
                                 </td>
                             </tr>
+
                         ))}
                     </tbody>
                 </table>
@@ -105,7 +113,7 @@ export default function DetallesCompra({ pedido }: DetallesCompraProps) {
                 <div className="bg-gray-50 px-6 py-3 rounded-xl shadow-sm">
                     <p className="text-sm text-gray-600">Total pagado</p>
                     <p className="text-lg font-semibold text-theme-accent">
-                        {formatearPrecio2(pedido.amount_total, pedido.currency)}
+                        {formatearPrecio(pedido.amount_total, pedido.currency)}
                     </p>
                 </div>
             </div>

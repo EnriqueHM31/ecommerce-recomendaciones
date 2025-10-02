@@ -16,7 +16,7 @@ export default function ErrorCompras() {
                 </h3>
                 <p className="text-red-600 mb-4">{error}</p>
                 <button
-                    onClick={() => fetchPedidos(user?.emailAddresses?.[0]?.emailAddress ?? "")}
+                    onClick={() => fetchPedidos(user?.id ?? "")}
                     className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                 >
                     <FaSyncAlt className="w-4 h-4 mr-2" />

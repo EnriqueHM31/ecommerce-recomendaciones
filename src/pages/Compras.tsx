@@ -28,6 +28,8 @@ const Compras: React.FC = () => {
 
     if (error) return <ErrorCompras />
 
+    console.log({ pedidos });
+
     return (
         <Layout>
             <AnimatePresence>
@@ -65,7 +67,7 @@ const Compras: React.FC = () => {
                                     <div className="flex flex-col items-center justify-center mt-4">
                                         <motion.button
                                             onClick={() =>
-                                                fetchPedidos(user?.emailAddresses?.[0]?.emailAddress ?? "", user?.id ?? "")
+                                                fetchPedidos(user?.id ?? "")
                                             }
                                             className="inline-flex items-center px-3 py-2 text-sm bg-theme-primary text-theme-secondary hover:text-theme-accent transition-colors rounded-2xl cursor-pointer"
                                             disabled={loading}

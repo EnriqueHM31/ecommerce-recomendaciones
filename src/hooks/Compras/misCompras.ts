@@ -13,11 +13,10 @@ export function useMisCompras({ user }: useMisComprasProps) {
     useEffect(() => {
         if (!user) return;
 
-        const email = user?.emailAddresses?.[0]?.emailAddress ?? "";
         const id = user?.id ?? "";
-        if (!email || !id) return;
+        if (!id) return;
 
-        fetchPedidos(email, id).then(() => setPedidosCargados(true));
+        fetchPedidos(id).then(() => setPedidosCargados(true));
     }, [user]);
     const [pedidoSeleccionado, setPedidoSeleccionado] = useState<PaymentSession | null>(null);
 

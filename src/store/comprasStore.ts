@@ -1,3 +1,5 @@
+import { adaptPedidosToPaymentSessions } from "@/adapters/pedidos";
+import type { PedidoRow } from "@/types/compras";
 import { create } from "zustand";
 import type { PaymentSession, Pedido } from "../types/pago";
 // Item de un pedido
@@ -23,7 +25,7 @@ interface ComprasStore {
     pages: number[];
 
     // Actions
-    fetchPedidos: (email: string, id: string) => Promise<void>;
+    fetchPedidos: (id: string) => Promise<void>;
     fetchTodosPedidos: () => Promise<void>;
 
     setPage: (page: number) => void;
@@ -52,8 +54,8 @@ export const useComprasStore = create<ComprasStore>()((set, get) => ({
     pages: [],
 
     // 🔹 Traer todos los pedidos y luego dividir en páginas en frontend
-    fetchPedidos: async (email: string, id: string) => {
-        if (!email) {
+    fetchPedidos: async (id: string) => {
+        if (!id) {
             set({ error: "No se encontró el email del usuario", loading: false });
             return;
         }
@@ -62,7 +64,7 @@ export const useComprasStore = create<ComprasStore>()((set, get) => ({
             set({ loading: true, error: null });
 
             const response = await fetch(
-                `${import.meta.env.VITE_API}/api/compra/pedidos/${email}/${id}`,
+                `${import.meta.env.VITE_API}/api/compra/pedidos/${id}`,
                 { method: "GET" }
             );
 
@@ -70,7 +72,10 @@ export const useComprasStore = create<ComprasStore>()((set, get) => ({
                 throw new Error("Error al obtener los pedidos");
             }
 
-            const { data } = await response.json();
+            const { data }: { data: PedidoRow[] } = await response.json();
+
+
+            const pedidosAdaptados = adaptPedidosToPaymentSessions(data);
 
             const pageSize = get().pageSize;
             const total = data.length;
@@ -81,10 +86,11 @@ export const useComprasStore = create<ComprasStore>()((set, get) => ({
             const currentPage = 1;
             const start = (currentPage - 1) * pageSize;
             const end = start + pageSize;
-            const visible = data.slice(start, end);
+            const visible = pedidosAdaptados.slice(start, end);
+
 
             set({
-                allPedidos: data,
+                allPedidos: pedidosAdaptados,
                 pedidos: visible,
                 total,
                 totalPages,

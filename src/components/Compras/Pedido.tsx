@@ -1,13 +1,13 @@
+import {
+    colorEstado,
+    formatearFechaES,
+    formatearPrecio,
+    transformarEstado
+} from "@/utils/Formateo";
 import { BlobProvider } from "@react-pdf/renderer";
 import { motion } from "framer-motion";
 import { FaCalendarAlt, FaDownload, FaEye } from "react-icons/fa";
 import type { PaymentSession } from "../../types/pago";
-import {
-    colorStatus,
-    formatearFecha,
-    formatearPrecio2,
-    tranformarStatus
-} from "@/utils/Formateo";
 import PdfFactura from "../Pago/PDFFactura";
 
 interface PedidoProps {
@@ -33,20 +33,22 @@ export default function Pedido({ pedido, onOpenDetalles, index }: PedidoProps) {
 
                 <div className="flex items-center text-sm text-gray-500 mb-2">
                     <FaCalendarAlt className="w-4 h-4 mr-1" />
-                    {formatearFecha(Number(pedido.created))}
+                    {
+                        formatearFechaES(pedido.created)
+                    }
                 </div>
 
                 <div className="mt-auto">
                     <div className="text-xl font-bold text-gray-900 mb-2">
-                        {formatearPrecio2(Number(pedido.amount_total.toFixed(2)), pedido.currency)}
+                        {formatearPrecio(Number(pedido.amount_total), pedido.currency)}
                     </div>
 
                     <div
-                        className={`text-2xl font-semibold text-center rounded-full px-3 py-1 ${colorStatus(
+                        className={`text-2xl font-semibold text-center rounded-full mx-auto w-fit px-3 py-1 ${colorEstado(
                             pedido.status
                         )}`}
                     >
-                        {tranformarStatus(pedido.status)}
+                        {transformarEstado(pedido.status)}
                     </div>
                 </div>
             </div>
