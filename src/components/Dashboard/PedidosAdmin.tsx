@@ -83,8 +83,36 @@ const PedidosAdmin = () => {
             console.error('Error al enviar pedido', err);
             toast.error('Error al enviar pedido', { id: toastId });
         }
-
     };
+
+
+    // Función para convertir string a Date
+    function parseFecha(fechaStr: string): Date {
+        // Separar la fecha de la hora
+        const [fechaParte, horaParte] = fechaStr.split(", ");
+
+        // Separar día, mes, año
+        const [dia, mes, anio] = fechaParte.split("/").map(Number);
+
+        // Separar hora, minuto, segundo y a.m./p.m.
+        const data = horaParte.split(/[: ]/).map(Number);
+        let hora = data[0];
+        const minuto = data[1];
+        const segundo = data[2];
+        const ampm = horaParte.includes("p.m.") ? "PM" : "AM";
+
+        if (ampm === "PM" && hora < 12) hora += 12;
+        if (ampm === "AM" && hora === 12) hora = 0;
+
+        return new Date(anio, mes - 1, dia, hora, minuto, segundo);
+    }
+
+    const fechasOrdenadas = filteredOrders.sort(
+        (a, b) => parseFecha(b.fecha_pedido).getTime() - parseFecha(a.fecha_pedido).getTime()
+    );
+
+
+
 
     return (
         <div className="space-y-6 scrollbar-none">
@@ -160,7 +188,7 @@ const PedidosAdmin = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm font-medium text-gray-600">Ingresos</p>
-                            <p className="text-2xl font-bold text-gray-900">${getTotalRevenue().toLocaleString()}</p>
+                            <p className="text-2xl font-bold text-gray-900">${getTotalRevenue().toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                         </div>
                         <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
                             <span className="text-white font-bold">$</span>
@@ -201,7 +229,7 @@ const PedidosAdmin = () => {
                     {/* Stats */}
                     <div className="flex items-center justify-center">
                         <span className="text-sm text-gray-600">
-                            Mostrando {filteredOrders.length} de {todosPedidosUsuarios.length} pedidos
+                            Mostrando {fechasOrdenadas.length} de {todosPedidosUsuarios.length} pedidos
                         </span>
                     </div>
                 </div>
@@ -237,7 +265,7 @@ const PedidosAdmin = () => {
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200 ">
-                                {filteredOrders.map((order, index) => (
+                                {fechasOrdenadas.map((order, index) => (
                                     <motion.tr
                                         key={order.id}
                                         initial={{ opacity: 0, y: 20 }}

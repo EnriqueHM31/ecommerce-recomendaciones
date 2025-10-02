@@ -10,6 +10,7 @@ import {
 import { useCartStore } from '../../store/cartStore';
 import { useComprasStore } from '../../store/comprasStore';
 import { useEffect, useState } from 'react';
+import { parseFecha } from '@/utils/Formateo';
 
 const Overview = () => {
     const { products, productosTop } = useCartStore();
@@ -64,7 +65,7 @@ const Overview = () => {
         },
         {
             title: 'Ingresos Totales',
-            value: `$${stats.totalRevenue.toLocaleString()}`,
+            value: `$${stats.totalRevenue.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
             icon: FaDollarSign,
             color: 'bg-yellow-500',
             change: `+${stats.revenueGrowth}%`,
@@ -80,7 +81,9 @@ const Overview = () => {
         }
     ];
 
-    console.log({ todosPedidosUsuarios });
+    const fechasOrdenadas = todosPedidosUsuarios.sort(
+        (a, b) => parseFecha(b.fecha_pedido).getTime() - parseFecha(a.fecha_pedido).getTime()
+    );
 
     return (
         <div className="space-y-6">
@@ -149,7 +152,7 @@ const Overview = () => {
                         Pedidos Recientes
                     </h3>
                     <div className="space-y-3">
-                        {todosPedidosUsuarios.slice(0, 5).map((order) => (
+                        {fechasOrdenadas.slice(0, 5).map((order) => (
                             <div key={order.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
                                 <div>
                                     <p className="font-medium text-gray-900">
@@ -162,15 +165,15 @@ const Overview = () => {
                                 </div>
                                 <div className="text-right">
                                     <p className="font-semibold text-gray-900">
-                                        ${order.total.toLocaleString()}
+                                        ${order.total.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </p>
                                     <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${order.estado === 'confirmado'
                                         ? 'bg-green-100 text-green-800'
                                         : order.estado === 'pendiente'
                                             ? 'bg-yellow-100 text-yellow-800'
-                                            : 'bg-red-100 text-red-800'
+                                            : 'bg-blue-100 text-blue-800'
                                         }`}>
-                                        {order.estado === 'confirmado' ? 'Pagado' :
+                                        {order.estado === 'enviado' ? 'Enviado' :
                                             order.estado === 'pendiente' ? 'Pendiente' : 'Cancelado'}
                                     </span>
                                 </div>
@@ -201,8 +204,13 @@ const Overview = () => {
                                         />
                                     </div>
                                     <div>
-                                        <p className="font-medium text-gray-900">{product.producto}</p>
-                                        <p className="text-sm text-gray-500">{product.categoria}</p>
+                                        <p className="font-medium text-gray-900">
+                                            {`${product.producto} ${product.total_vendido !== undefined ? `(${product.total_vendido} unidades vendidas)` : ""}`}
+                                        </p>
+                                        <p className="text-sm text-gray-500">
+                                            {`${product.categoria} ${product.almacenamiento ?? ""} ${product.ram_variante ?? ""} ${product.ram_especificacion ?? ""}`.trim()}
+
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="text-right">

@@ -87,6 +87,27 @@ export function formatearFechaES(fechaStr: string): string {
     return fechaFormateada;
 }
 
+// Función para convertir string a Date
+export function parseFecha(fechaStr: string): Date {
+    // Separar la fecha de la hora
+    const [fechaParte, horaParte] = fechaStr.split(", ");
+
+    // Separar día, mes, año
+    const [dia, mes, anio] = fechaParte.split("/").map(Number);
+
+    // Separar hora, minuto, segundo y a.m./p.m.
+    const data = horaParte.split(/[: ]/).map(Number);
+    let hora = data[0];
+    const minuto = data[1];
+    const segundo = data[2];
+    const ampm = horaParte.includes("p.m.") ? "PM" : "AM";
+
+    if (ampm === "PM" && hora < 12) hora += 12;
+    if (ampm === "AM" && hora === 12) hora = 0;
+
+    return new Date(anio, mes - 1, dia, hora, minuto, segundo);
+}
+
 
 export const tranformarStatus = (status: string) => {
     return status === "paid" ? "Pagado"
