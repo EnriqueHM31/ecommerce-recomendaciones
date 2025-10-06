@@ -793,10 +793,9 @@ export const useCartStore = create<CartStore>()(
 
                 const productosPlanos = productosAdaptados.flatMap(product => product);
 
-                const productosMezclados = shuffleArray(productosDB);
 
 
-                set({ products: productosMezclados, productFiltrados: productosAdaptados.flat(), productosPlanos });
+                set({ products: productosDB, productFiltrados: productosAdaptados.flat(), productosPlanos });
             },
 
             fetchProductosActivos: async () => {

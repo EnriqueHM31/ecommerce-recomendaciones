@@ -11,6 +11,7 @@ import VentasAdmin from '../components/Dashboard/VentasAdmin';
 import { useCartStore } from '../store/cartStore';
 import { useComprasStore } from '../store/comprasStore';
 import { useCategoriasStore } from '../store/categoriasStore';
+import Loading from '@/components/Compras/Loading';
 
 type DashboardSection = 'overview' | 'productos' | 'categorias' | 'pedidos' | 'ventas';
 
@@ -41,12 +42,7 @@ const Dashboard = () => {
     // Mostrar loading mientras se carga Clerk
     if (!isLoaded) {
         return (
-            <div className="min-h-screen bg-theme-secondary flex items-center justify-center">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-theme-primary mx-auto mb-4"></div>
-                    <p className="text-theme-primary">Cargando...</p>
-                </div>
-            </div>
+            <Loading text='Cargando el dashboard...' />
         );
     }
 

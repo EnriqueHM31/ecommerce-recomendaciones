@@ -9,36 +9,87 @@ export interface IPredicciones {
 
 interface IPrediccionesStore {
     predicciones: Producto[];
+    recomendado: boolean
     fetchPredicciones: (id_usuario: string | undefined) => Promise<void>;
 }
 
 const prediccionesStore = create<IPrediccionesStore>((set) => ({
     predicciones: [],
+    recomendado: false,
     fetchPredicciones: async (id_usuario: string | undefined) => {
 
-        const response = await fetch(`${import.meta.env.VITE_API}/api/usuario/${id_usuario}`, {
-            method: 'GET',
-        });
-        const { recomendaciones, populares } = await response.json();
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API}/api/recomendaciones?userId=${id_usuario}`, {
+                method: 'GET',
+            });
 
-        if (recomendaciones) {
-            const skus = recomendaciones.map((recomendacion: IPredicciones) => recomendacion.producto.split(' - ')[0]);
+            const data = await response.json();
 
-            const productosPlanos = useCartStore.getState().productosPlanos;
-            const predicciones = productosPlanos.filter(producto => producto.sku !== '' && skus.includes(producto.sku));
+            // 'detalle' contiene array de { producto_id, sku }
+            const { detalle, recomendado } = data;
 
-            set({ predicciones: predicciones });
-            return
+            console.log({ recomendado });
+
+            if (!recomendado) {
+                console.log({ detalle });
+                console.log({ data: useCartStore.getState().products });
+
+                if (!detalle || detalle.length === 0) {
+                    // Si no hay detalle, fallback opcional: mostrar productos populares de tu store
+                    const productosPopulares = useCartStore
+                        .getState()
+                        .products.slice(0, 4); // por ejemplo, los primeros 5
+                    set({ predicciones: productosPopulares });
+                    return;
+                }
+
+                // 1️⃣ Obtener los SKUs recomendados
+                const productosRecomendadosSKUs = detalle.map((item: Producto) => item.producto_id);
+
+                // 2️⃣ Filtrar los productos que ya están en tu store
+                const productosFiltrados = useCartStore
+                    .getState()
+                    .products.filter(p => productosRecomendadosSKUs.includes(p.id));
+
+                // 3️⃣ Actualizar el estado
+                set({ predicciones: productosFiltrados });
+            } else {
+                console.log({ detalle });
+                console.log({ data: useCartStore.getState().products });
+
+                if (!detalle || detalle.length === 0) {
+                    // Si no hay detalle, fallback opcional: mostrar productos populares de tu store
+                    const productosPopulares = useCartStore
+                        .getState()
+                        .products.slice(0, 4); // por ejemplo, los primeros 5
+                    set({ predicciones: productosPopulares });
+                    return;
+                }
+
+                // 1️⃣ Obtener los SKUs recomendados
+                const productosRecomendadosSKUs = detalle.map((item: Producto) => item.producto);
+
+                // 2️⃣ Filtrar los productos que ya están en tu store
+                const productosFiltrados = useCartStore
+                    .getState()
+                    .products.filter(p => productosRecomendadosSKUs.includes(p.sku));
+
+                // 3️⃣ Actualizar el estado
+                set({ predicciones: productosFiltrados });
+            }
+            set({ recomendado });
+
+        } catch (err) {
+            console.error("❌ Error al obtener predicciones:", err);
+
+            // Fallback opcional: mostrar productos populares
+            const productosPopulares = useCartStore
+                .getState()
+                .products.slice(0, 5);
+            set({ predicciones: productosPopulares });
         }
-        const skus = populares.map((recomendacion: IPredicciones) => recomendacion.producto.split(' - ')[0]);
-
-        const productosPlanos = useCartStore.getState().productosPlanos;
-        const predicciones = productosPlanos.filter(producto => producto.sku !== '' && skus.includes(producto.sku));
-
-
-        set({ predicciones });
-
     },
+
 }));
 
 export default prediccionesStore;

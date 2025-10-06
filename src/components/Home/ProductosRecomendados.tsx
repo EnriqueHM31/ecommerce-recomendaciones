@@ -1,23 +1,28 @@
+import type { Producto } from '@/types/productos';
+import { formatearPrecio } from '@/utils/Formateo';
 import { motion } from 'framer-motion';
-import { usePrediccionesStore } from '../../store/prediccionesStore';
-import { useNavegacion } from '../../hooks/Navigate/navegacion';
-import { useCartStore } from '../../store/cartStore';
-import SkeletonCard from '../Productos/Skeleton';
 import { useEffect } from 'react';
+import { useNavegacion } from '../../hooks/Navigate/navegacion';
 import { useUsuario } from '../../hooks/Usuarios/Usuario';
+import { useCartStore } from '../../store/cartStore';
+import { usePrediccionesStore } from '../../store/prediccionesStore';
+import SkeletonCard from '../Productos/Skeleton';
 
 export default function ProductosRecomendados() {
 
-    const { predicciones, fetchPredicciones } = usePrediccionesStore();
+    const { predicciones, fetchPredicciones, recomendado } = usePrediccionesStore();
+    const { fetchProductos } = useCartStore();
     const { handleRedirigirPagina } = useNavegacion();
     const { addToCart } = useCartStore();
 
-    const { user, isLoaded } = useUsuario();
+    const { user } = useUsuario();
 
     useEffect(() => {
-        if (!isLoaded) return;
-        fetchPredicciones(user?.id);
-    }, [isLoaded, user]);
+        fetchProductos();
+        fetchPredicciones(user?.id ?? '');
+    }, [user]);
+
+    console.log({ predicciones });
 
     return (
         <>
@@ -38,14 +43,14 @@ export default function ProductosRecomendados() {
                         viewport={{ once: true }}
                         className="text-center text-2xl md:text-4xl text-theme-primary mb-12 font-bold"
                     >
-                        Productos Recomendados
+                        {recomendado ? "Productos Recomendados" : "Productos Mas Vendidos"}
                     </motion.h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-3 lg:px-0">
                         {
                             predicciones.length === 0 &&
                             Array(4).fill(0).map((_, i) => <SkeletonCard key={i} />)
                         }
-                        {predicciones.map((product) => (
+                        {predicciones.map((product: Producto) => (
                             <motion.div
                                 key={product.sku}
                                 initial={{ opacity: 0, y: 50, scale: 0.9 }}
@@ -72,8 +77,13 @@ export default function ProductosRecomendados() {
                                     />
                                 </div>
                                 <h3 className="text-theme-primary mb-2 text-xl font-semibold">{product.producto}</h3>
-                                <p className="text-theme-primary mb-2">{product.descripcion}</p>
-                                <span className="block text-2xl font-bold text-theme-accent mb-3">${product.precio_base}</span>
+                                <p className="text-theme-primary mb-2 line-clamp-2">{product.descripcion}</p>
+                                <div className='flex flex-wrap gap-2 my-3'>
+                                    <span className='bg-theme-accent text-white px-4 py-1 rounded-2xl'>  Color: {product.color ? product.color : ''} </span>
+                                    <span className='bg-theme-accent text-white px-4 py-1 rounded-2xl'>{product.ram_especificacion ? `RAM: ${product.ram_especificacion}` : ''}</span>
+                                    <span className='bg-theme-accent text-white px-4 py-1 rounded-2xl'>{product.almacenamiento ? `Almacenamiento: ${product.almacenamiento}` : ''}</span>
+                                </div>
+                                <span className="block text-2xl font-bold text-theme-accent mb-3">{formatearPrecio(product.precio_base, 'MXN')}</span>
 
                                 <motion.button
                                     onClick={(e) => {
