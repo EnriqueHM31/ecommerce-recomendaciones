@@ -33,7 +33,7 @@ export default function Hero() {
                                     className="text-sm text-theme-secondary bg-theme-primary w-fit px-4 py-2 rounded-2xl mb-4 leading-tight text-center"
 
                                 >
-                                    {`Bienvenido ${user?.firstName} ${user?.lastName}`}
+                                    {`Bienvenido ${user?.firstName === null ? user?.firstName : ''} ${user?.lastName === null ? user?.lastName : ''}`}
                                 </motion.p>
                             )
                         }
