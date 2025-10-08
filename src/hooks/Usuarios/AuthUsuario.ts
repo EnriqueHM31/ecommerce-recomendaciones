@@ -31,7 +31,6 @@ export const AuthCheck = () => {
                 }
             } catch (error) {
                 console.error("Error al crear usuario en BD:", error);
-                toast.error("Error al sincronizar usuario");
             }
         };
 
