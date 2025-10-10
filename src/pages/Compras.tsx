@@ -28,7 +28,24 @@ const Compras: React.FC = () => {
 
     if (error) return <ErrorCompras />
 
-    console.log({ pedidos });
+    function parseFecha(fechaStr: string) {
+        const [fecha, hora] = fechaStr.split(", ");
+        const [dia, mes, año] = fecha.split("/").map(Number);
+
+        // separar hora, minutos, segundos y si es AM/PM
+        const [tiempo, ampm] = hora.split(" ");
+        const data = tiempo.split(":").map(Number);
+        let h = data[0];
+        const m = data[1];
+        const s = data[2];
+
+        if (ampm.toLowerCase().includes("p") && h !== 12) h += 12;
+        if (ampm.toLowerCase().includes("a") && h === 12) h = 0;
+
+        return new Date(año, mes - 1, dia, h, m, s);
+    }
+
+    const fechasOrdenadas = pedidos.sort((a, b) => parseFecha(b.created).getTime() - parseFecha(a.created).getTime());
 
     return (
         <Layout>
@@ -88,7 +105,7 @@ const Compras: React.FC = () => {
                                 {/* Lista de pedidos */}
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 grid-rows-2">
                                     {
-                                        pedidos.map((pedido, index) => (
+                                        fechasOrdenadas.map((pedido, index) => (
                                             <Pedido
                                                 key={pedido.id}
                                                 pedido={pedido}

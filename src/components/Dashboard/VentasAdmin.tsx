@@ -325,9 +325,10 @@ const VentasAdmin = () => {
                                     <div>
                                         <p className="font-medium text-gray-900">
                                             {item.producto}
-                                            {item.almacenamiento && ` (${item.almacenamiento})`}
-                                            {item.ram_variante && ` (${item.ram_variante})`}
-                                            {item.ram_especificacion && ` (${item.ram_especificacion})`}
+                                            {item.almacenamiento !== null && item.almacenamiento !== 'N/A' && ` (${item.almacenamiento})`}
+                                            {item.ram_variante !== null && item.ram_variante !== 'N/A' && ` (${item.ram_variante})`}
+                                            {item.ram_especificacion !== null && item.ram_especificacion !== 'N/A' && ` (${item.ram_especificacion})`}
+                                            {item.almacenamiento === 'N/A' && ` (${item.conectividad})`}
                                         </p>
                                         <p className="text-sm text-gray-500">{item.total_vendido} unidades vendidas</p>
                                     </div>

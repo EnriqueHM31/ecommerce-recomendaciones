@@ -1,6 +1,6 @@
-import { useComprasStore } from "../../store/comprasStore";
-import { formatearPrecio2 } from "@/utils/Formateo";
+import { formatearPrecio } from "@/utils/Formateo";
 import { motion } from "framer-motion";
+import { useComprasStore } from "../../store/comprasStore";
 
 
 export default function FooterCompras() {
@@ -21,13 +21,13 @@ export default function FooterCompras() {
                     </div>
                     <div className="text-center">
                         <div className="text-2xl font-bold text-green-600">
-                            {pedidos.filter(p => p.status === "paid").length}
+                            {pedidos.filter(p => p.status === "enviado").length}
                         </div>
-                        <div className="text-sm text-gray-500">Completados</div>
+                        <div className="text-sm text-gray-500">Enviados</div>
                     </div>
                     <div className="text-center">
                         <div className="text-2xl font-bold text-gray-900">
-                            {formatearPrecio2(pedidos.reduce((sum, p) => sum + Number(p.amount_total), 0), pedidos[0]?.currency || "usd")}
+                            {formatearPrecio(pedidos.reduce((sum, p) => sum + Number(p.amount_total), 0), pedidos[0]?.currency || "usd")}
                         </div>
                         <div className="text-sm text-gray-500">Total gastado</div>
                     </div>
