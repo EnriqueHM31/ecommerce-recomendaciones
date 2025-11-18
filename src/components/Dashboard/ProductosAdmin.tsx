@@ -1,12 +1,12 @@
-import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { FaPlus, FaEdit, FaTrash, FaSearch, FaFilter, FaCheckCircle } from 'react-icons/fa';
-import { useCartStore } from '../../store/cartStore';
-import type { Producto } from '../../types/productos';
-import { useToggle } from '../../hooks/Open/open';
-import CrearProductoModal from './FormularioProducto';
-import { useTecnicosStore } from '../../store/tecnicosStore';
+import { useEffect, useMemo, useState } from 'react';
+import { FaCheckCircle, FaFilter, FaPlus, FaSearch, FaTrash } from 'react-icons/fa';
 import { toast } from 'sonner';
+import { useToggle } from '../../hooks/Open/open';
+import { useCartStore } from '../../store/cartStore';
+import { useTecnicosStore } from '../../store/tecnicosStore';
+import type { Producto } from '../../types/productos';
+import CrearProductoModal from './FormularioProducto';
 
 const ProductosAdmin = () => {
     const { products, fetchProductos, deleteProductDashboard } = useCartStore();
@@ -48,10 +48,6 @@ const ProductosAdmin = () => {
     // Obtener categorías únicas
     const categories = [...new Set(products.map(product => product.categoria))];
 
-    const handleEditProduct = (product: Producto) => {
-        // TODO: Implementar edición de producto
-        console.log(product);
-    };
 
     const handleToggleProduct = async (product: Producto) => {
 
@@ -280,14 +276,6 @@ const ProductosAdmin = () => {
                                                 <motion.button
                                                     whileHover={{ scale: 1.1 }}
                                                     whileTap={{ scale: 0.9 }}
-                                                    onClick={() => handleEditProduct(product)}
-                                                    className="text-blue-600 hover:text-blue-900 p-1 cursor-pointer"
-                                                >
-                                                    <FaEdit className="size-6" />
-                                                </motion.button>
-                                                <motion.button
-                                                    whileHover={{ scale: 1.1 }}
-                                                    whileTap={{ scale: 0.9 }}
                                                     onClick={() => handleToggleProduct(product)}
                                                     className=" p-1 cursor-pointer"
                                                 >
@@ -305,7 +293,7 @@ const ProductosAdmin = () => {
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 };
 

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest",
-    "dev": "vite --host 192.168.1.104",
+    "dev": "vite --host 172.16.75.19",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
