@@ -52,7 +52,7 @@ const Dashboard = () => {
     }
 
     // Verificar si es administrador (puedes ajustar esta lógica según tus necesidades)
-    const isAdmin = user.publicMetadata?.role === 'admin';
+    const isAdmin = user.publicMetadata?.role === 'Administrador';
 
     if (!isAdmin) {
         return (
@@ -61,6 +61,7 @@ const Dashboard = () => {
                     <div className="text-6xl mb-4">🚫</div>
                     <h1 className="text-2xl font-bold text-theme-primary mb-2">Acceso Denegado</h1>
                     <p className="text-theme-primary">No tienes permisos para acceder al dashboard administrativo.</p>
+                    <a href="/" className="text-theme-primary">Volver a la página principal</a>
                 </div>
             </div>
         );

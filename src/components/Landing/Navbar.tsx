@@ -87,7 +87,7 @@ export default function Navbar() {
                                 </a>
                             </motion.li>
                         )}
-                        {user && (user.publicMetadata?.role === 'admin' ||
+                        {user && (user.publicMetadata?.role === 'Administrador' ||
                             user.emailAddresses[0]?.emailAddress === 'admin@ecommerce.com') && (
                                 <motion.li
                                     key="dashboard"
