@@ -11,6 +11,9 @@ const PedidosAdmin = () => {
     const { todosPedidosUsuarios, fetchTodosPedidos, updateStatusPedido } = useComprasStore();
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
+
+
+
     const [isLoading, setIsLoading] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState<Pedido | null>(null);
 

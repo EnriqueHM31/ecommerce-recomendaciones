@@ -49,6 +49,11 @@ const ProductosAdmin = () => {
     const categories = [...new Set(products.map(product => product.categoria))];
 
 
+    console.log(categories);
+
+
+    console.log(products);
+
     const handleToggleProduct = async (product: Producto) => {
 
         const toastId = toast.loading('Actualizando...');

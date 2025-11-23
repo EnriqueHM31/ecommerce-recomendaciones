@@ -62,6 +62,7 @@ const prediccionesStore = create<IPrediccionesStore>((set) => ({
                     const productosPopulares = useCartStore
                         .getState()
                         .products.slice(0, 4); // por ejemplo, los primeros 5
+                    console.log({ productosPopulares });
                     set({ predicciones: productosPopulares });
                     return;
                 }

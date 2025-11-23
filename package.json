@@ -5,13 +5,13 @@
   "type": "module",
   "scripts": {
     "test": "vitest",
-    "dev": "vite --host 172.16.75.19",
+    "dev": "vite --host",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@clerk/clerk-react": "^5.45.0",
+    "@clerk/clerk-react": "^5.56.0",
     "@clerk/localizations": "^3.24.0",
     "@clerk/themes": "^2.4.15",
     "@fontsource/montserrat": "^5.2.6",
